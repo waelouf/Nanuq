@@ -19,4 +19,5 @@
 - Built-in
   - Logs
   - ELK stack
+  - OpenTelemetry
 - Aspire?
