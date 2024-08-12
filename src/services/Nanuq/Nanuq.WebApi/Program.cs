@@ -6,7 +6,6 @@ using Nanuq.Sqlite.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
-
 builder.Services.AddFastEndpoints();
 
 builder.Services.AddSingleton<IDbContext, DbContext>();
