@@ -7,9 +7,9 @@ namespace Nanuq.Sqlite.Repositories;
 
 public class KafkaRepository : IKafkaRepository
 {
-	private DbContext dbContext;
+	private IDbContext dbContext;
 
-    public KafkaRepository(DbContext context)
+    public KafkaRepository(IDbContext context)
     {
         dbContext = context;
     }

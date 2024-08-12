@@ -1,10 +1,10 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
+using Nanuq.Sqlite.Interfaces;
 using System.Data;
-
 namespace Nanuq.Sqlite;
 
-public class DbContext
+public class DbContext : IDbContext
 {
 	protected readonly IConfiguration Configuration;
 
