@@ -4,6 +4,7 @@
 
 
 # Nanuq
+[![.NET](https://github.com/waelouf/Nanuq/actions/workflows/dotnet.yml/badge.svg)](https://github.com/waelouf/Nanuq/actions/workflows/dotnet.yml)
 
 ## To-do
 - Store connection in Sqlite database
