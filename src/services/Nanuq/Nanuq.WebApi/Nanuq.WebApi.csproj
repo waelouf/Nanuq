@@ -26,12 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\db\Nanuq.db" Link="Database\Nanuq.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Database\Nanuq.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
