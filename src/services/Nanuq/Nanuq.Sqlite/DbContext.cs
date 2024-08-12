@@ -15,7 +15,6 @@ public class DbContext
 
 	public IDbConnection CreateConnection()
 	{
-		return new SqliteConnection(Configuration.GetConnectionString("NanuqSqlLiteConfigurations"));
+		return new SqliteConnection(Configuration.GetConnectionString("NanuqSqliteConfigurations"));
 	}
-
 }
