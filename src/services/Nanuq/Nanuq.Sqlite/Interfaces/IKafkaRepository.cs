@@ -8,9 +8,9 @@ public interface IKafkaRepository
 
 	public Task<KafkaRecord> Get(int id);
 	
-	public Task Add(KafkaRecord record);
+	public Task<int> Add(KafkaRecord record);
 
 	public Task<bool> Delete(int id);
 
-	public Task Update(KafkaRecord record);
+	public Task<bool> Update(KafkaRecord record);
 }

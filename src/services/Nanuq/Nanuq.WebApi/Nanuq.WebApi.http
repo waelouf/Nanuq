@@ -1,6 +1,16 @@
 @Nanuq.WebApi_HostAddress = http://localhost:5224
 
-GET {{Nanuq.WebApi_HostAddress}}/weatherforecast/
+GET {{Nanuq.WebApi_HostAddress}}/kafka/
 Accept: application/json
 
 ###
+
+GET {{Nanuq.WebApi_HostAddress}}/kafka/1
+Accept: application/json
+
+### 
+
+DELETE {{Nanuq.WebApi_HostAddress}}/kafka/4
+Accept: application/json
+
+### 
