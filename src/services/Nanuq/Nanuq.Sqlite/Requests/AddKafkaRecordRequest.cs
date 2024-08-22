@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Nanuq.Sqlite.Records;
+﻿using Nanuq.Sqlite.Records;
 
 namespace Nanuq.Sqlite.Requests;
 
-public class AddKafkaRequest
+public class AddKafkaRecordRequest
 {
     public string BootstrapServer { get; set; }
 
@@ -12,7 +11,7 @@ public class AddKafkaRequest
 
 public static partial class Extension
 {
-    public static KafkaRecord ToRecord(this AddKafkaRequest request)
+    public static KafkaRecord ToRecord(this AddKafkaRecordRequest request)
     {
         return new KafkaRecord(request.BootstrapServer, request.Alias);
     }

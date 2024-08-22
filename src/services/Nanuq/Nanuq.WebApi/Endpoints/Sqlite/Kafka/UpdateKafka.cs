@@ -5,6 +5,7 @@ using Nanuq.Sqlite.Requests;
 namespace Nanuq.WebApi.Endpoints.Sqlite.Kafka;
 
 public class UpdateKafka : Endpoint<UpdateKafkaRequest, bool>
+
 {
     private IKafkaRepository kafkaRepository;
 
@@ -15,7 +16,7 @@ public class UpdateKafka : Endpoint<UpdateKafkaRequest, bool>
 
     public override void Configure()
     {
-        Put("/kafka");
+        Put("/sqlite/kafka");
         AllowAnonymous();
     }
 

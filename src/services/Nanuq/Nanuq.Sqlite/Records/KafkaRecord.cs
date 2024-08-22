@@ -9,7 +9,7 @@ public record KafkaRecord(int Id, string BootstrapServer, string Alias)
 	{
 	}
 
-    public KafkaRecord(AddKafkaRequest addKafkaRequest) : 
+    public KafkaRecord(AddKafkaRecordRequest addKafkaRequest) : 
         this(0, addKafkaRequest.BootstrapServer, addKafkaRequest.Alias)
     {
     }

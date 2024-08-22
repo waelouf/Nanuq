@@ -4,7 +4,7 @@ using Nanuq.Sqlite.Requests;
 
 namespace Nanuq.WebApi.Endpoints.Sqlite.Kafka;
 
-public class AddKafka : Endpoint<AddKafkaRequest, int>
+public class AddKafka : Endpoint<AddKafkaRecordRequest, int>
 {
     private IKafkaRepository kafkaRepository;
 
@@ -15,11 +15,11 @@ public class AddKafka : Endpoint<AddKafkaRequest, int>
 
     public override void Configure()
     {
-        Post("/kafka");
+        Post("/sqlite/kafka");
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(AddKafkaRequest req, CancellationToken ct)
+    public override async Task HandleAsync(AddKafkaRecordRequest req, CancellationToken ct)
     {
         var inserted = await kafkaRepository.Add(req.ToRecord());
         await SendOkAsync(inserted, ct);

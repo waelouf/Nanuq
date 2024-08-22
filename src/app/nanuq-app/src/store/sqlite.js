@@ -14,7 +14,7 @@ export default {
   },
   actions: {
     loadKafkaServers({ commit }) {
-      axios.get('/kafka')
+      axios.get('/sqlite/kafka')
         .then((result) => commit('loadKafkaServers', result.data))
         .catch(console.error);
     },

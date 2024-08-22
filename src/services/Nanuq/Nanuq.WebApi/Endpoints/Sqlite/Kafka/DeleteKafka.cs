@@ -14,7 +14,7 @@ public class DeleteKafka : EndpointWithoutRequest<bool>
 
     public override void Configure()
     {
-        Delete("/kafka/{id}");
+        Delete("/sqlite/kafka/{id}");
         AllowAnonymous();
     }
 

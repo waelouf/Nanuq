@@ -15,7 +15,7 @@ public class GetKafka : EndpointWithoutRequest<KafkaRecord>
 
     public override void Configure()
     {
-        Get("/kafka/{id}");
+        Get("/sqlite/kafka/{id}");
         AllowAnonymous();
     }
 
