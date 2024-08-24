@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka;
 using Confluent.Kafka.Admin;
+using Microsoft.Extensions.Logging;
 using Nanuq.Kafka.Entities;
 using Nanuq.Kafka.Interfaces;
 using Nanuq.Kafka.Requests;
@@ -8,6 +9,13 @@ namespace Nanuq.Kafka.Repositories;
 
 public class TopicsRepository : ITopicsRepository
 {
+	private ILogger<TopicsRepository> logger;
+
+	public TopicsRepository(ILogger<TopicsRepository> logger)
+	{
+		this.logger = logger;
+	}
+
 	public async Task<IEnumerable<Topic>> GetTopicsAsync(string bootstrapServers)
     {
 		var config = new AdminClientConfig
@@ -24,6 +32,7 @@ public class TopicsRepository : ITopicsRepository
         }
         catch (KafkaException kExc)
         {
+			logger.LogError(kExc.Message, kExc);
             return null;
         }
     }
@@ -64,6 +73,7 @@ public class TopicsRepository : ITopicsRepository
 		}
 		catch (KafkaException e)
 		{
+			logger.LogError(e.Message, e);
 			return null;
 		}
 
@@ -88,10 +98,12 @@ public class TopicsRepository : ITopicsRepository
 		}
 		catch (DeleteTopicsException e)
 		{
+			logger.LogError(e.Message, e);
 			throw;
 		}
 		catch (KafkaException e)
 		{
+			logger.LogError(e.Message, e);
 			throw;
 		}
 
@@ -123,10 +135,12 @@ public class TopicsRepository : ITopicsRepository
 		}
 		catch (CreateTopicsException e)
 		{
+			logger.LogError(e.Message, e);
 			throw;
 		}
 		catch (KafkaException e)
 		{
+			logger.LogError(e.Message, e);
 			throw;
 		}
 

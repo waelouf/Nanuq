@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Nanuq.Sqlite.Interfaces;
 using System.Data;
+
 namespace Nanuq.Sqlite;
 
 public class DbContext : IDbContext

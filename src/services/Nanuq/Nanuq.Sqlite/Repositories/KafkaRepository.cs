@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Logging;
 using Nanuq.Sqlite.Interfaces;
 using Nanuq.Sqlite.Records;
 using System.Data;
@@ -9,12 +10,15 @@ public class KafkaRepository : IKafkaRepository
 {
 	private IDbContext dbContext;
 
-    public KafkaRepository(IDbContext context)
-    {
-        dbContext = context;
-    }
+	private ILogger<KafkaRepository> logger;
 
-    public async Task<int> Add(KafkaRecord record)
+	public KafkaRepository(IDbContext context, ILogger<KafkaRepository> logger)
+	{
+		dbContext = context;
+		this.logger = logger;
+	}
+
+	public async Task<int> Add(KafkaRecord record)
 	{
 		var query = """
 			INSERT INTO kafka (bootstrap_server, alias)

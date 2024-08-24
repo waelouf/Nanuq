@@ -13,6 +13,7 @@ builder.Services.AddFastEndpoints();
 builder.Services.AddSingleton<IDbContext, DbContext>();
 builder.Services.AddSingleton<IKafkaRepository, KafkaRepository>();
 builder.Services.AddSingleton<ITopicsRepository, TopicsRepository>();
+builder.Services.AddSingleton<IActivityLogRepository, ActivityLogRepository>();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
