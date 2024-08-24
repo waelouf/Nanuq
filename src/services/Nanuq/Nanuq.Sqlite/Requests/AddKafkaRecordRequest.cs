@@ -2,12 +2,7 @@
 
 namespace Nanuq.Sqlite.Requests;
 
-public class AddKafkaRecordRequest
-{
-    public string BootstrapServer { get; set; }
-
-    public string Alias { get; set; }
-}
+public record AddKafkaRecordRequest(string BootstrapServer, string Alias);
 
 public static partial class Extension
 {

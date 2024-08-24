@@ -1,6 +1,8 @@
 ﻿using Confluent.Kafka;
 using Confluent.Kafka.Admin;
 using Microsoft.Extensions.Logging;
+using Nanuq.Common.Audit;
+using Nanuq.Common.Enums;
 using Nanuq.Kafka.Entities;
 using Nanuq.Kafka.Interfaces;
 using Nanuq.Kafka.Requests;
@@ -11,9 +13,12 @@ public class TopicsRepository : ITopicsRepository
 {
 	private ILogger<TopicsRepository> logger;
 
-	public TopicsRepository(ILogger<TopicsRepository> logger)
+	private IAuditLogRepository activityLog;
+
+	public TopicsRepository(ILogger<TopicsRepository> logger, IAuditLogRepository activityLog)
 	{
 		this.logger = logger;
+		this.activityLog = activityLog;
 	}
 
 	public async Task<IEnumerable<Topic>> GetTopicsAsync(string bootstrapServers)
@@ -107,6 +112,12 @@ public class TopicsRepository : ITopicsRepository
 			throw;
 		}
 
+		if(deleted)
+		{
+			activityLog.Audit(ActivityTypeEnum.RemoveKafkaTopic,
+				$"Topic {request.TopicName} removed successfully to the server ${request.BootstrapServers}");
+		}
+
 		return await Task.FromResult(deleted);
 	}
 
@@ -142,6 +153,12 @@ public class TopicsRepository : ITopicsRepository
 		{
 			logger.LogError(e.Message, e);
 			throw;
+		}
+
+		if (created)
+		{
+			activityLog.Audit(ActivityTypeEnum.AddKafkaTopic,
+				$"Topic {topicRequest.TopicName} removed successfully to the server ${topicRequest.BootstrapServers}");
 		}
 
 		return await Task.FromResult(created);
