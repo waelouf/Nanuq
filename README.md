@@ -8,13 +8,13 @@
 [![Frontend](https://github.com/waelouf/Nanuq/actions/workflows/vue-app.yml/badge.svg)](https://github.com/waelouf/Nanuq/actions/workflows/vue-app.yml)
 
 ## To-do
-- Store connection in Sqlite database ✅
+- ✅ Store connection in Sqlite database
 - All-in-one docker compose
 - Connect to the following
   - Kafka
-    - Show topics ✅
-    - How many items in each topic ✅
-    - Add Topic ✅
+    - ✅ Show topics
+    - ✅ How many items in each topic
+    - ✅ Add Topic
     - Real time
   - RabbitMQ
     - Topic
@@ -28,4 +28,4 @@
   - Logs
   - ELK stack
   - OpenTelemetry
-- Aspire ✅
+- ✅ Aspire
