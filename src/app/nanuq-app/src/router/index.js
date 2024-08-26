@@ -28,7 +28,7 @@ const routes = [
     component: ListServers,
   },
   {
-    path: '/kafka/connect/:id',
+    path: '/kafka/connect/:serverName',
     name: 'KafkaConnect',
     component: KafkaConnect,
     props: true,
