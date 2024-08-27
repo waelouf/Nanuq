@@ -10,6 +10,7 @@
 ## To-do
 - ✅ Store connection in Sqlite database
 - All-in-one docker compose
+- k8s deploy 
 - Connect to the following
   - Kafka
     - ✅ Show topics
