@@ -12,7 +12,8 @@
             <tr>
               <th>Topic Name</th>
               <th>Number of Partitions</th>
-              <th></th>
+              <th>View topics</th>
+              <th>Add topic</th>
             </tr>
         </thead>
         <tbody>
@@ -20,6 +21,11 @@
            :key="index">
            <td>{{ topic.topicName }}</td>
            <td>{{ topic.numberOfPartitions }}</td>
+           <td>
+            <span @click="handleShowListTopicModal(topic.topicName)">
+              View topics
+            </span>
+           </td>
            <td></td>
           </tr>
         </tbody>
@@ -28,16 +34,26 @@
     <div class="datatable-bottom"></div>
     </div>
     </div>
+    <v-dialog v-model="showListTopicsModal" width="600px" >
+      <v-card
+      prepend-icon="mdi-update"
+    >
+    <TopicDetails :serverName="serverName" :topicName="selectedTopicName"
+          @showModal="show => showModal(show)">
+
+      </TopicDetails>
+    </v-card>
+    </v-dialog>
   </div>
 </template>
 <script>
+import TopicDetails from './TopicDetails.vue';
 
 export default {
   name: 'KafkaConnect',
+  components: { TopicDetails },
   created() {
     this.$store.dispatch('kafka/loadKafkaTopics', this.serverName);
-    console.log(this.serverName);
-    console.log(this.$store.state.kafka.kafkaTopics);
   },
   computed: {
     availableTopics() {
@@ -49,11 +65,25 @@ export default {
       type: String,
       required: true,
     },
+    // selectedTopicName: {
+    //   type: String,
+    //   required: false,
+    // },
   },
   data() {
     return {
-
+      showListTopicsModal: false,
+      selectedTopicName: '',
     };
+  },
+  methods: {
+    handleShowListTopicModal(topicName) {
+      this.selectedTopicName = topicName;
+      this.showModal(true);
+    },
+    showModal(isShown) {
+      this.showListTopicsModal = isShown;
+    },
   },
 };
 </script>
