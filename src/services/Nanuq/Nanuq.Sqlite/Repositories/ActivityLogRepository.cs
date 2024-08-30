@@ -1,31 +1,28 @@
-﻿using Dapper;
-using Microsoft.Extensions.Logging;
-using Nanuq.Sqlite.Interfaces;
-using Nanuq.Sqlite.Records;
+﻿using Microsoft.Extensions.Logging;
+using Nanuq.Common.Records;
+using Nanuq.Common.Interfaces;
+using Nanuq.EF;
 
 namespace Nanuq.Sqlite.Repositories;
 
 public class ActivityLogRepository : IActivityLogRepository
 {
-	private IDbContext dbContext;
-
 	private ILogger<ActivityLogRepository> logger;
 
-	public ActivityLogRepository(IDbContext context, ILogger<ActivityLogRepository> logger)
+	NanuqContext context;
+
+	public ActivityLogRepository(ILogger<ActivityLogRepository> logger)
 	{
-		dbContext = context;
 		this.logger = logger;
+		context = new NanuqContext();
 	}
 
 	public async Task<IEnumerable<ActivityType>> GetAllActivityTypes()
 	{
-		var query = "SELECT id, name, description, color, icon FROM activity_types";
-		
 		try
-		{			
-			using var conn = dbContext.CreateConnection();
-			var rows = await conn.QueryAsync(query);
-			return rows.Select(row => (ActivityType)ActivityTypeMapper.CreateActivityTypeRecord(row));
+		{
+			var types= context.ActivityTypes.ToList();
+			return await Task.FromResult(types);
 		}
 		catch (Exception ex)
 		{
@@ -36,13 +33,11 @@ public class ActivityLogRepository : IActivityLogRepository
 
 	public async Task<IEnumerable<ActivityLog>> GetAllActivityLogs()
 	{
-		var query = "SELECT id, timestamp, activity_type_id, log, details FROM activity_log";
 
 		try
 		{
-			using var conn = dbContext.CreateConnection();
-			var rows = await conn.QueryAsync(query);
-			return rows.Select(row => (ActivityLog)ActivityLogMapper.CreateActivityLogRecord(row));
+			var logs = context.ActivityLogs.ToList();
+			return await Task.FromResult(logs);
 		}
 		catch (Exception ex)
 		{

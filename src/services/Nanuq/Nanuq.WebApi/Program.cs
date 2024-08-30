@@ -3,9 +3,10 @@ using Nanuq.Common.Audit;
 using Nanuq.Kafka.Interfaces;
 using Nanuq.Kafka.Repositories;
 using Nanuq.Sqlite;
-using Nanuq.Sqlite.Interfaces;
+using Nanuq.Common.Interfaces;
 using Nanuq.Sqlite.Repositories;
 using Serilog;
+using Nanuq.Common.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 

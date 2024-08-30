@@ -7,7 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.1.35" />
+    <Compile Remove="Interfaces\**" />
+    <Compile Remove="Records\**" />
+    <Compile Remove="Requests\**" />
+    <EmbeddedResource Remove="Interfaces\**" />
+    <EmbeddedResource Remove="Records\**" />
+    <EmbeddedResource Remove="Requests\**" />
+    <None Remove="Interfaces\**" />
+    <None Remove="Records\**" />
+    <None Remove="Requests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FastEndpoints" Version="5.28.0" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.7" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
@@ -15,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Nanuq.Common\Nanuq.Common.csproj" />
+    <ProjectReference Include="..\Nanuq.EF\Nanuq.EF.csproj" />
   </ItemGroup>
 
 </Project>

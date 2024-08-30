@@ -1,6 +1,6 @@
-﻿using Nanuq.Sqlite.Records;
+﻿using Nanuq.Common.Records;
 
-namespace Nanuq.Sqlite.Requests;
+namespace Nanuq.Common.Requests;
 
 public record UpdateKafkaRequest(int Id, string BootstrapServer, string Alias);
 

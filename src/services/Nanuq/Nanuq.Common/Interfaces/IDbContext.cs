@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace Nanuq.Sqlite.Interfaces;
+namespace Nanuq.Common.Interfaces;
 
 public  interface IDbContext
 {

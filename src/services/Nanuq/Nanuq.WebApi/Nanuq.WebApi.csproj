@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Nanuq.Common\Nanuq.Common.csproj" />
+    <ProjectReference Include="..\Nanuq.EF\Nanuq.EF.csproj" />
     <ProjectReference Include="..\Nanuq.Kafka\Nanuq.Kafka.csproj" />
     <ProjectReference Include="..\Nanuq.ServiceDefaults\Nanuq.ServiceDefaults.csproj" />
     <ProjectReference Include="..\Nanuq.Sqlite\Nanuq.Sqlite.csproj" />

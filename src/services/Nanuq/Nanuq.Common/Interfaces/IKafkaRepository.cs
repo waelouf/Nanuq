@@ -1,6 +1,6 @@
-﻿using Nanuq.Sqlite.Records;
+﻿using Nanuq.Common.Records;
 
-namespace Nanuq.Sqlite.Interfaces;
+namespace Nanuq.Common.Interfaces;
 
 public interface IKafkaRepository
 {

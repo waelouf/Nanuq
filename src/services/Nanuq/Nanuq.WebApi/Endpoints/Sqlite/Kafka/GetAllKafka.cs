@@ -1,6 +1,6 @@
 ﻿using FastEndpoints;
-using Nanuq.Sqlite.Interfaces;
-using Nanuq.Sqlite.Records;
+using Nanuq.Common.Interfaces;
+using Nanuq.Common.Records;
 
 namespace Nanuq.WebApi.Endpoints.Sqlite.Kafka;
 

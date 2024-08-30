@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
-using Nanuq.Sqlite.Interfaces;
+using Nanuq.Common.Interfaces;
 using System.Data;
 
 namespace Nanuq.Sqlite;

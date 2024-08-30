@@ -1,78 +1,92 @@
-﻿using Dapper;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Nanuq.Sqlite.Interfaces;
-using Nanuq.Sqlite.Records;
+using Nanuq.Common.Interfaces;
+using Nanuq.Common.Records;
+using Nanuq.EF;
 using System.Data;
 
-namespace Nanuq.Sqlite.Repositories;
+namespace Nanuq.Common.Repositories;
 
-public class KafkaRepository : IKafkaRepository
+public class KafkaRepository : IKafkaRepository, IDisposable
 {
-	private IDbContext dbContext;
-
 	private ILogger<KafkaRepository> logger;
 
-	public KafkaRepository(IDbContext context, ILogger<KafkaRepository> logger)
+	private NanuqContext dbContext;
+	private bool disposedValue;
+
+	public KafkaRepository(ILogger<KafkaRepository> logger)
 	{
-		dbContext = context;
 		this.logger = logger;
+		dbContext = new NanuqContext();
 	}
 
 	public async Task<int> Add(KafkaRecord record)
 	{
-		var query = """
-			INSERT INTO kafka (bootstrap_server, alias)
-			VALUES (@bootstrap_server, @alias)
-			""";
-		using var conn = dbContext.CreateConnection();
-		await conn.ExecuteAsync(query, 
-			new { bootstrap_server = record.BootstrapServer, alias = record.Alias }, 
-			commandType: CommandType.Text);
-		query = "SELECT last_insert_rowid()";
-		var insertedId = await conn.QueryAsync<int>(query);
-		return insertedId.FirstOrDefault();
+		dbContext.Kafka.Add(record);
+		await dbContext.SaveChangesAsync();
+		return record.Id;
 	}
 
 	public async Task<bool> Delete(int id)
 	{
-		var query = """
-			DELETE FROM kafka
-			WHERE id = @id
-			""";
-		using var conn = dbContext.CreateConnection();
-		var affectedRows = await conn.ExecuteAsync(query, new { id });
-		return affectedRows > 0;
+		var record = dbContext.Kafka.Where(x => x.Id == id).FirstOrDefault();
+		if (record == null)
+			return false;
+
+		dbContext.Kafka.Remove(record);
+		dbContext.SaveChanges();
+		return true;
 	}
 
 	public async Task<KafkaRecord> Get(int id)
 	{
-		var query = """
-			SELECT id, alias, bootstrap_server FROM kafka
-			where id = @id
-			""";
-		using var conn = dbContext.CreateConnection();
-		var row =  await conn.QueryFirstAsync(query, new { id });
-		return KafkaRecordMapper.CreateKafkaRecord(row);
+		var record = dbContext.Kafka.Where(x => x.Id == id).FirstOrDefault();
+
+		return await Task.FromResult(record);
 	}
 
 	public async Task<IEnumerable<KafkaRecord>> GetAll()
 	{
-		var query = "SELECT id, alias, bootstrap_server FROM kafka";
-		using var conn = dbContext.CreateConnection();
-		var rows = await conn.QueryAsync(query);
-		return rows.Select(row => (KafkaRecord)KafkaRecordMapper.CreateKafkaRecord(row));
+		return await dbContext.Kafka.ToListAsync();
 	}
 
 	public async Task<bool> Update(KafkaRecord record)
 	{
-		var query = """
-			UPDATE kafka
-			SET bootstrap_server = @bootstrap_server,
-				alias = @alias
-			WHERE id = @id
-			""";
-		using var conn = dbContext.CreateConnection();
-		var affectedRows = await conn.ExecuteAsync(query, new { id = record.Id, bootstrap_server = record.BootstrapServer, alias = record.Alias });
+		var recordToUpdate = dbContext.Kafka.Where(x => x.Id == record.Id).FirstOrDefault();
+		if (recordToUpdate == null) return false;
+
+		recordToUpdate.BootstrapServer = record.BootstrapServer;
+		recordToUpdate.Alias = record.Alias;
+
+		dbContext.Kafka.Update(recordToUpdate);
+		var affectedRows = await dbContext.SaveChangesAsync();
 		return affectedRows > 0;
+	}
+
+	protected virtual void Dispose(bool disposing)
+	{
+		if (!disposedValue)
+		{
+			if (disposing)
+			{
+				dbContext.Dispose();
+			}
+
+			disposedValue = true;
+		}
+	}
+
+	// // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+	~KafkaRepository()
+	{
+		// Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+		Dispose(disposing: false);
+	}
+
+	public void Dispose()
+	{
+		// Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+		Dispose(disposing: true);
+		GC.SuppressFinalize(this);
 	}
 }
