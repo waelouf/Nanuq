@@ -11,10 +11,10 @@ public class ActivityLogRepository : IActivityLogRepository
 
 	NanuqContext context;
 
-	public ActivityLogRepository(ILogger<ActivityLogRepository> logger)
+	public ActivityLogRepository(ILogger<ActivityLogRepository> logger, NanuqContext context)
 	{
 		this.logger = logger;
-		context = new NanuqContext();
+		this.context = context;
 	}
 
 	public async Task<IEnumerable<ActivityType>> GetAllActivityTypes()

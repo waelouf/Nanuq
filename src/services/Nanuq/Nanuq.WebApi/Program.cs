@@ -7,6 +7,8 @@ using Nanuq.Common.Interfaces;
 using Nanuq.Sqlite.Repositories;
 using Serilog;
 using Nanuq.Common.Repositories;
+using Nanuq.EF;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,11 +20,21 @@ builder.Services.AddSerilog((services, loggerConfiguration) => loggerConfigurati
 	.Enrich.FromLogContext()
 	.WriteTo.Console());
 
-builder.Services.AddSingleton<IDbContext, DbContext>();
-builder.Services.AddSingleton<IAuditLogRepository, AuditLogRepository>();
-builder.Services.AddSingleton<IActivityLogRepository, ActivityLogRepository>();
-builder.Services.AddSingleton<IKafkaRepository, KafkaRepository>();
-builder.Services.AddSingleton<ITopicsRepository, TopicsRepository>();
+builder.Services.AddDbContext<NanuqContext>(
+	opt =>
+	{
+		opt.UseSqlite(builder.Configuration.GetConnectionString("NanuqSqliteConfigurations"))
+		.EnableSensitiveDataLogging()
+		.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+	}
+	);
+
+// Database
+builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
+builder.Services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
+builder.Services.AddScoped<IKafkaRepository, KafkaRepository>();
+
+builder.Services.AddScoped<ITopicsRepository, TopicsRepository>();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

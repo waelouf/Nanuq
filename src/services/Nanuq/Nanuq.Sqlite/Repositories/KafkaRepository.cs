@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using Nanuq.Common.Interfaces;
 using Nanuq.Common.Records;
 using Nanuq.EF;
-using System.Data;
 
 namespace Nanuq.Common.Repositories;
 
@@ -14,10 +13,10 @@ public class KafkaRepository : IKafkaRepository, IDisposable
 	private NanuqContext dbContext;
 	private bool disposedValue;
 
-	public KafkaRepository(ILogger<KafkaRepository> logger)
+	public KafkaRepository(ILogger<KafkaRepository> logger, NanuqContext dbContext)
 	{
 		this.logger = logger;
-		dbContext = new NanuqContext();
+		this.dbContext = dbContext;
 	}
 
 	public async Task<int> Add(KafkaRecord record)
@@ -29,20 +28,21 @@ public class KafkaRepository : IKafkaRepository, IDisposable
 
 	public async Task<bool> Delete(int id)
 	{
-		var record = dbContext.Kafka.Where(x => x.Id == id).FirstOrDefault();
-		if (record == null)
-			return false;
+		var record = await dbContext.Kafka.FindAsync(id);
+		if (record != null)
+		{
+			dbContext.Kafka.Remove(record);
+			dbContext.SaveChanges();
+			return true;
+		}
 
-		dbContext.Kafka.Remove(record);
-		dbContext.SaveChanges();
-		return true;
+		return false;
 	}
 
 	public async Task<KafkaRecord> Get(int id)
 	{
-		var record = dbContext.Kafka.Where(x => x.Id == id).FirstOrDefault();
-
-		return await Task.FromResult(record);
+		var record = await dbContext.Kafka.FindAsync(id);
+		return record;
 	}
 
 	public async Task<IEnumerable<KafkaRecord>> GetAll()
@@ -52,7 +52,7 @@ public class KafkaRepository : IKafkaRepository, IDisposable
 
 	public async Task<bool> Update(KafkaRecord record)
 	{
-		var recordToUpdate = dbContext.Kafka.Where(x => x.Id == record.Id).FirstOrDefault();
+		var recordToUpdate = await dbContext.Kafka.FindAsync(record.Id);
 		if (recordToUpdate == null) return false;
 
 		recordToUpdate.BootstrapServer = record.BootstrapServer;

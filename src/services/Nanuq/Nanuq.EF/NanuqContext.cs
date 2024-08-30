@@ -11,9 +11,12 @@ namespace Nanuq.EF
 
 		public DbSet<ActivityLog> ActivityLogs { get; set; }
 
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-		{
-			optionsBuilder.UseSqlite("Data Source=Database/Nanuq.db");
-		}
-	}
+		public DbSet<RedisRecord> Redis { get; set; }
+
+        public NanuqContext(DbContextOptions<NanuqContext> options)
+            :base(options)
+        {
+            
+        }
+    }
 }

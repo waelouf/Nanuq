@@ -11,10 +11,10 @@ public class AuditLogRepository : IAuditLogRepository
 
 	private NanuqContext context;
 
-	public AuditLogRepository(ILogger<AuditLogRepository> logger)
+	public AuditLogRepository(ILogger<AuditLogRepository> logger, NanuqContext context)
 	{
 		this.logger = logger;
-		context = new NanuqContext();
+		this.context = context;
 	}
 
 	public async Task<int> Audit(ActivityTypeEnum activityType, string log, string details = "")
