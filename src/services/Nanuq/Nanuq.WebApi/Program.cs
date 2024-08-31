@@ -2,13 +2,14 @@ using FastEndpoints;
 using Nanuq.Common.Audit;
 using Nanuq.Kafka.Interfaces;
 using Nanuq.Kafka.Repositories;
-using Nanuq.Sqlite;
 using Nanuq.Common.Interfaces;
 using Nanuq.Sqlite.Repositories;
 using Serilog;
 using Nanuq.Common.Repositories;
 using Nanuq.EF;
 using Microsoft.EntityFrameworkCore;
+using Nanuq.Redis.Interfaces;
+using Nanuq.Redis.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,8 @@ builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
 builder.Services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
 builder.Services.AddScoped<IKafkaRepository, KafkaRepository>();
 builder.Services.AddScoped<IRedisRepository, RedisRepository>();
+builder.Services.AddScoped<IRedisManagerRepository, RedisManagerRepository>();
+
 
 builder.Services.AddScoped<ITopicsRepository, TopicsRepository>();
 
