@@ -33,6 +33,7 @@ builder.Services.AddDbContext<NanuqContext>(
 builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
 builder.Services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
 builder.Services.AddScoped<IKafkaRepository, KafkaRepository>();
+builder.Services.AddScoped<IRedisRepository, RedisRepository>();
 
 builder.Services.AddScoped<ITopicsRepository, TopicsRepository>();
 
