@@ -4,7 +4,7 @@ using Nanuq.Kafka.Requests;
 
 namespace Nanuq.WebApi.Endpoints.Kafka;
 
-public class DeleteKafkaTopic : Endpoint<DeleteKafkaTopicRequest, bool>
+public class DeleteKafkaTopic : EndpointWithoutRequest<bool>
 {
 	private ITopicsRepository topicsRepository;
 
@@ -15,12 +15,17 @@ public class DeleteKafkaTopic : Endpoint<DeleteKafkaTopicRequest, bool>
 
 	public override void Configure()
 	{
-		Delete("/kafka/topic");
+		Delete("/kafka/topic/{bootstrapServer}/{topicName}");
 		AllowAnonymous();
 	}
 
-	public override async Task HandleAsync(DeleteKafkaTopicRequest req, CancellationToken ct)
+	public override async Task HandleAsync(CancellationToken ct)
 	{
+		var server = Route<string>("bootstrapServer", isRequired: true);
+		var topicName = Route<string>("topicName", isRequired: true);
+
+		var req = new DeleteKafkaTopicRequest(server, topicName);
+
 		var deleted = await topicsRepository.DeleteTopicAsync(req);
 		if (deleted)
 		{

@@ -14,6 +14,7 @@
             <th>alias</th>
             <th>Server</th>
             <th></th>
+            <th></th>
           </tr>
       </thead>
       <tbody>
@@ -32,6 +33,11 @@
           Topics
           </router-link>
          </td>
+         <td>
+          <a @click="deleteServer(server.id)" class="delete-icon">
+            <i class="fa-regular fa-trash-can"></i>
+          </a>
+         </td>
         </tr>
       </tbody>
     </table>
@@ -39,12 +45,26 @@
   <div class="datatable-bottom"></div>
   </div>
   </div>
+  <v-btn class="mt-2" @click="addServer" type="submit" block>Add Server</v-btn>
+  <v-dialog v-model="showAddServerDialog" width="600px" >
+    <v-card
+      prepend-icon="mdi-update">
+    <AddServer @showModal="show => {
+      showAddServerDialog = show;
+      reloadServers();
+    }"></AddServer>
+  </v-card>
+
+  </v-dialog>
 </div>
 
 </template>
 <script>
+import AddServer from './AddServer.vue';
+
 export default ({
   name: 'ListServers',
+  components: { AddServer },
   created() {
     this.$store.dispatch('sqlite/loadKafkaServers');
   },
@@ -53,6 +73,28 @@ export default ({
       return this.$store.state.sqlite.kafkaServers;
     },
   },
-  methods: { },
+  data() {
+    return {
+      showAddServerDialog: false,
+    };
+  },
+  methods: {
+    addServer() {
+      this.showAddServerDialog = true;
+    },
+    reloadServers() {
+      this.$store.dispatch('sqlite/loadKafkaServers');
+    },
+    async deleteServer(id) {
+      await this.$store.dispatch('sqlite/deleteKafkaServer', id);
+      this.reloadServers();
+    },
+  },
 });
 </script>
+<style>
+.delete-icon{
+  color: blue;
+  cursor: pointer;
+}
+</style>

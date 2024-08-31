@@ -2,7 +2,6 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import HomePage from '@/home/HomePage.vue';
 import ListServers from '@/kafka/ListServers.vue';
 import AddServer from '@/kafka/AddServer.vue';
-import KafkaHome from '@/kafka/KafkaHome.vue';
 import KafkaConnect from '@/kafka/KafkaConnect.vue';
 
 const routes = [
@@ -14,7 +13,7 @@ const routes = [
   {
     path: '/kafka',
     name: 'Kafka',
-    component: KafkaHome,
+    component: ListServers,
     children: [],
   },
   {

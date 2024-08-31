@@ -10,7 +10,7 @@
   <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <router-link to="/" class="navbar-brand ps-3" >Nanuq</router-link>
+        <router-link to="/" class="navbar-brand ps-3" ><img src="./assets/logo.png" alt="Nanuq" class="logo-header">Nanuq</router-link>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
@@ -46,9 +46,7 @@
                         </a>
                         <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <router-link to="/kafka" class="nav-link" >Manage Kafka</router-link>
                                 <router-link to="/kafka/list" class="nav-link" >List Servers</router-link>
-                                <router-link to="/kafka/add" class="nav-link" >Add Server</router-link>
                             </nav>
                         </div>
                     </div>
@@ -85,4 +83,8 @@ export default {
 
 <style>
 @import './css/styles.css';
+.logo-header{
+width:60px;
+margin-top: 5px;
+}
 </style>

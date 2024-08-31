@@ -91,7 +91,7 @@ public class TopicsRepository : ITopicsRepository
 		bool deleted = false;
 		var config = new AdminClientConfig
 		{
-			BootstrapServers = request.BootstrapServers
+			BootstrapServers = request.BootstrapServer
 		};
 
 		using var adminClient = new AdminClientBuilder(config).Build();
@@ -115,7 +115,7 @@ public class TopicsRepository : ITopicsRepository
 		if(deleted)
 		{
 			activityLog.Audit(ActivityTypeEnum.RemoveKafkaTopic,
-				$"Topic {request.TopicName} removed successfully to the server ${request.BootstrapServers}");
+				$"Topic {request.TopicName} removed successfully to the server ${request.BootstrapServer}");
 		}
 
 		return await Task.FromResult(deleted);

@@ -12,8 +12,8 @@
             <tr>
               <th>Topic Name</th>
               <th>Number of Partitions</th>
-              <th>View topics</th>
-              <th>Add topic</th>
+              <th></th>
+              <th></th>
             </tr>
         </thead>
         <tbody>
@@ -22,11 +22,15 @@
            <td>{{ topic.topicName }}</td>
            <td>{{ topic.numberOfPartitions }}</td>
            <td>
-            <span @click="handleShowListTopicModal(topic.topicName)">
-              View topics
+            <span @click="handleShowListTopicModal(topic.topicName)" class="delete-icon">
+              Topic Details
             </span>
            </td>
-           <td></td>
+           <td>
+            <a @click="deleteTopic(topic.topicName)" class="delete-icon">
+              <i class="fa-regular fa-trash-can"></i>
+            </a>
+           </td>
           </tr>
         </tbody>
       </table>
@@ -34,6 +38,7 @@
     <div class="datatable-bottom"></div>
     </div>
     </div>
+    <v-btn class="mt-2" @click="showAddTopicModalModal(true)" type="submit" block>Add Topic</v-btn>
     <v-dialog v-model="showListTopicsModal" width="600px" >
       <v-card
       prepend-icon="mdi-update"
@@ -44,14 +49,27 @@
       </TopicDetails>
     </v-card>
     </v-dialog>
+
+    <v-dialog v-model="showAddTopicModal" width="600px" >
+      <v-card
+      prepend-icon="mdi-update"
+    >
+      <AddTopic :serverName="serverName"
+        @showAddTopicModal="show => showAddTopicModalModal(show)"
+      >
+
+      </AddTopic>
+    </v-card>
+    </v-dialog>
   </div>
 </template>
 <script>
 import TopicDetails from './TopicDetails.vue';
+import AddTopic from './AddTopic.vue';
 
 export default {
   name: 'KafkaConnect',
-  components: { TopicDetails },
+  components: { TopicDetails, AddTopic },
   created() {
     this.$store.dispatch('kafka/loadKafkaTopics', this.serverName);
   },
@@ -65,14 +83,11 @@ export default {
       type: String,
       required: true,
     },
-    // selectedTopicName: {
-    //   type: String,
-    //   required: false,
-    // },
   },
   data() {
     return {
       showListTopicsModal: false,
+      showAddTopicModal: false,
       selectedTopicName: '',
     };
   },
@@ -83,6 +98,23 @@ export default {
     },
     showModal(isShown) {
       this.showListTopicsModal = isShown;
+    },
+    showAddTopicModalModal(show) {
+      this.showAddTopicModal = show;
+      if (!show) {
+        this.reloadTopics();
+      }
+    },
+    reloadTopics() {
+      this.$store.dispatch('kafka/loadKafkaTopics', this.serverName);
+    },
+    async deleteTopic(topicName) {
+      const topicToDelete = {
+        bootstrapServer: this.serverName,
+        topicName,
+      };
+      await this.$store.dispatch('kafka/deleteKafkaTopic', topicToDelete);
+      this.reloadTopics();
     },
   },
 };

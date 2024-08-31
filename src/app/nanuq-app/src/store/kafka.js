@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import axios from 'axios';
 
 export default {
@@ -30,6 +31,17 @@ export default {
     async loadKafkaTopicDetails({ commit }, { serverName, topicName }) {
       await axios.get(`/kafka/topic/${serverName}/${topicName}`)
         .then((result) => commit('updateTopicDetails', { data: result.data, serverName, topicName }));
+    },
+    async addKafkaTopic({ commit }, topicDetails) {
+      console.log(topicDetails);
+      await axios.post('kafka/topic', topicDetails)
+        .then(() => {})
+        .catch(console.error);
+    },
+    async deleteKafkaTopic({ commit }, { bootstrapServer, topicName }) {
+      await axios.delete(`kafka/topic/${bootstrapServer}/${topicName}`)
+        .then(() => {})
+        .catch(console.error);
     },
   },
 };
