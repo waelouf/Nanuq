@@ -50,6 +50,20 @@
                             </nav>
                         </div>
                     </div>
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading"></div>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutsRedis" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fas fa-columns">
+                            </i></div>
+                            Redis
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseLayoutsRedis" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <router-link to="/redis" class="nav-link" >List Servers</router-link>
+                            </nav>
+                        </div>
+                    </div>
                 </div>
                 <div class="sb-sidenav-footer">
                 </div>

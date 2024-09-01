@@ -32,6 +32,16 @@ public class RedisManagerRepository : IRedisManagerRepository
 
 		var server = redis.GetServer(serverUrl);
 		redisDetails.DatabaseCount = server.DatabaseCount;
+		var info = server.Info();
+
+		//foreach (var section in info)
+		//{
+		//	Console.WriteLine(section.Key);
+		//	foreach (var pair in section)
+		//	{
+		//		Console.WriteLine($"	{pair.Key}: {pair.Value}");
+		//	}
+		//}
 
 		return redisDetails;
 	}
@@ -149,9 +159,10 @@ public class RedisManagerRepository : IRedisManagerRepository
 		return await db.KeyDeleteAsync(key);
 	}
 
-	public List<string> GetAllDatabaseStringKeys(string serverUrl, int database)
+	public async Task<Dictionary<string, string>> GetAllDatabaseStringKeys(string serverUrl, int database)
 	{
 		var dbKeys = new List<string>();
+		var cacheDictionary = new Dictionary<string, string>();
 		var configOptions = new ConfigurationOptions
 		{
 			EndPoints = { serverUrl }
@@ -163,7 +174,13 @@ public class RedisManagerRepository : IRedisManagerRepository
 
 		var keys = server.Keys(database).
 			Where(k => db.KeyType(k) == RedisType.String).ToList();
-		dbKeys.AddRange(keys.Select(s => s.ToString()));
-		return dbKeys;
+
+		foreach (var key in keys)
+		{
+			var value = await db.StringGetAsync(key);
+			cacheDictionary.Add(key, value);
+		}
+
+		return cacheDictionary;
 	}
 }

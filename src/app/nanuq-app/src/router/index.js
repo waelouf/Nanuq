@@ -3,6 +3,9 @@ import HomePage from '@/home/HomePage.vue';
 import ListServers from '@/kafka/ListServers.vue';
 import AddServer from '@/kafka/AddServer.vue';
 import KafkaConnect from '@/kafka/KafkaConnect.vue';
+import ListRedisServers from '@/redis/ListRedisServers.vue';
+import ManageDatabases
+  from '@/redis/ManageDatabases.vue';
 
 const routes = [
   {
@@ -30,6 +33,17 @@ const routes = [
     path: '/kafka/connect/:serverName',
     name: 'KafkaConnect',
     component: KafkaConnect,
+    props: true,
+  },
+  {
+    path: '/redis',
+    name: 'Redis',
+    component: ListRedisServers,
+  },
+  {
+    path: '/redis/server/:serverUrl',
+    name: 'ManageServer',
+    component: ManageDatabases,
     props: true,
   },
 ];

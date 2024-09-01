@@ -16,5 +16,5 @@ public interface IRedisManagerRepository
 
 	Task<bool> InvalidateCache(string serverUrl, int database, string key);
 
-	List<string> GetAllDatabaseStringKeys(string serverUrl, int database);
+	Task<Dictionary<string, string>> GetAllDatabaseStringKeys(string serverUrl, int database);
 }

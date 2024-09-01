@@ -3,7 +3,7 @@ using Nanuq.Redis.Interfaces;
 
 namespace Nanuq.WebApi.Endpoints.Redis
 {
-	public class GetDatabaseStringKeys : EndpointWithoutRequest<List<string>>
+	public class GetDatabaseStringKeys : EndpointWithoutRequest<Dictionary<string, string>>
 	{
 		private IRedisManagerRepository redisManager;
 
@@ -23,7 +23,7 @@ namespace Nanuq.WebApi.Endpoints.Redis
 			var server = Route<string>("server", isRequired: true);
 			var database = Route<int>("database", isRequired: true);
 
-			var keys = redisManager.GetAllDatabaseStringKeys(server, database);
+			var keys = await redisManager.GetAllDatabaseStringKeys(server!, database);
 			await SendOkAsync(keys, ct);
 		}
 	}

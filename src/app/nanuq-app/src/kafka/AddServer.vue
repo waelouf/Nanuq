@@ -11,7 +11,7 @@
         label="Alias"
       ></v-text-field>
 
-      <v-btn class="mt-2" @click="saveServer" type="submit" block>Submit</v-btn>
+      <v-btn class="mt-2" @click="saveServer" type="submit" block>Add</v-btn>
       <br />
     </v-form>
   </v-sheet>
