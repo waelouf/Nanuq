@@ -20,7 +20,7 @@ export default {
   mutations: {
     updateServers(state, serverObject) {
       delete state.redisServers[serverObject.serverUrl];
-      state.redisServers[serverObject.serverUrl] = serverObject.databaseCount;
+      state.redisServers[serverObject.serverUrl] = serverObject.serverDetails;
     },
     updateDatabase(state, databaseObject) {
       const key = `${databaseObject.serverUrl}_${databaseObject.database}`;
@@ -45,7 +45,7 @@ export default {
   actions: {
     async getServerDetails({ commit }, serverUrl) {
       await axios.get(`/redis/${serverUrl}`)
-        .then((result) => commit('updateServers', { serverUrl, databaseCount: result.data.databaseCount }))
+        .then((result) => commit('updateServers', { serverUrl, serverDetails: result.data }))
         .catch(console.error);
     },
     getDatabaseDetails({ commit }, { serverUrl, database }) {

@@ -57,7 +57,7 @@ export default {
     },
   },
   computed: {
-    numberOfDatabases() {
+    serverDetails() {
       return this.$store.state.redis.redisServers[this.serverUrl];
     },
     databaseKeys() {
@@ -75,7 +75,7 @@ export default {
   async mounted() {
     await this.loadServerDetails();
     // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < Number(this.numberOfDatabases); i++) {
+    for (let i = 0; i < Number(this.serverDetails.databaseCount); i++) {
       this.databases.push(i);
     }
   },
