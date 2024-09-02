@@ -28,7 +28,7 @@
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6">
+        <div class="col-xl-3 col-md-6" style="display:none;" >
             <div class="card bg-primary text-white mb-4">
                 <div class="card-body">Manage RabbitMQ</div>
                 <router-link to="/rabbitmq" >

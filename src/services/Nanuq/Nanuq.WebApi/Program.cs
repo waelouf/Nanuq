@@ -10,6 +10,8 @@ using Nanuq.EF;
 using Microsoft.EntityFrameworkCore;
 using Nanuq.Redis.Interfaces;
 using Nanuq.Redis.Repository;
+using Nanuq.RabbitMQ.Interfaces;
+using Nanuq.RabbitMQ.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +39,7 @@ builder.Services.AddScoped<IKafkaRepository, KafkaRepository>();
 builder.Services.AddScoped<IRedisRepository, RedisRepository>();
 builder.Services.AddScoped<IRedisManagerRepository, RedisManagerRepository>();
 builder.Services.AddScoped<IRabbitMqRepository, RabbitMqRepository>();
+builder.Services.AddScoped<IRabbitMQManagerRepository, RabbitMQManagerRepository>();
 
 builder.Services.AddScoped<ITopicsRepository, TopicsRepository>();
 

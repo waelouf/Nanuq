@@ -9,7 +9,7 @@
 
 ## About
 
-Nanuq is an open-source application designed to simplify the management of Kafka, Redis, and RabbitMQ for developers. Instead of relying on command-line interfaces for each server, Nanuq provides a unified, user-friendly interface that streamlines daily tasks. Whether you're monitoring queues, managing datasets, or configuring clusters, Nanuq empowers you to handle these critical operations with ease, all from a single UI.
+Nanuq is an open-source application designed to simplify the management of Kafka, and Redis for developers. Instead of relying on command-line interfaces for each server, Nanuq provides a unified, user-friendly interface that streamlines daily tasks. Whether you're monitoring queues, managing datasets, or configuring clusters, Nanuq empowers you to handle these critical operations with ease, all from a single UI.
 
 Built with a focus on usability and efficiency, Nanuq aims to reduce the overhead associated with managing these powerful technologies, allowing developers to focus on building and deploying applications rather than managing infrastructure.
 
@@ -29,11 +29,9 @@ Built with a focus on usability and efficiency, Nanuq aims to reduce the overhea
 - Add item to cache
 - Invalidate cache
 
-### RabbitMQ
-
 ## Installation
 
-### Pull, build and run
+### Clone
 
 ### Docker compose
 
@@ -41,28 +39,9 @@ Built with a focus on usability and efficiency, Nanuq aims to reduce the overhea
 
 ## Disclaimer
 
-Nanuq is currently intended for use in local development and DEV environments only. While we strive to provide a reliable tool for managing Kafka, Redis, and RabbitMQ, this application is not yet ready for production environments. Users should exercise caution and thoroughly test Nanuq in non-production settings before considering any production use. We are continuously working on improvements and welcome contributions from the community to help make Nanuq production-ready in the future.
+Nanuq is currently intended for use in local development and DEV environments only. While we strive to provide a reliable tool for managing Kafka and Redis, this application is not yet ready for production environments. Users should exercise caution and thoroughly test Nanuq in non-production settings before considering any production use. We are continuously working on improvements and welcome contributions from the community to help make Nanuq production-ready in the future.
 
 
 ---
 
-## To-do
-- ✅ Store connection in Sqlite database
-- All-in-one docker compose
-- k8s deploy 
-- Connect to the following
-  - Kafka
-    - Real time
-  - RabbitMQ
-    - Topic
-    - Exchange
-    - How many item in each topic
-  - Redis
-    - Databases
-    - Sizes
-    - Invalidate?
-- Built-in
-  - Logs
-  - ELK stack
-  - OpenTelemetry
-- ✅ Aspire
+
