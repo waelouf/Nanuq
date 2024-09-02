@@ -13,6 +13,8 @@ namespace Nanuq.EF
 
 		public DbSet<RedisRecord> Redis { get; set; }
 
+        public DbSet<RabbitMQRecord> RabbitMQ { get; set; }
+
         public NanuqContext(DbContextOptions<NanuqContext> options)
             :base(options)
         {

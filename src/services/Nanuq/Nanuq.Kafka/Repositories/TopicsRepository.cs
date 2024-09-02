@@ -1,8 +1,8 @@
 ﻿using Confluent.Kafka;
 using Confluent.Kafka.Admin;
 using Microsoft.Extensions.Logging;
-using Nanuq.Common.Audit;
 using Nanuq.Common.Enums;
+using Nanuq.Common.Interfaces;
 using Nanuq.Kafka.Entities;
 using Nanuq.Kafka.Interfaces;
 using Nanuq.Kafka.Requests;

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using Nanuq.Common.Audit;
+using Nanuq.Common.Interfaces;
 using Nanuq.Redis.Entities;
 using Nanuq.Redis.Interfaces;
 using StackExchange.Redis;

@@ -13,6 +13,7 @@ public class ActivityLog
 	[Column("activity_type_id")]
 	public int ActivityTypeId { get; set; } 
 
-	public string Log { get; set; } 
+	public string Log { get; set; }
+
 	public string Details { get; set; }
 }

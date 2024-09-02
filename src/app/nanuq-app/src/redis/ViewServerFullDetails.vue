@@ -83,7 +83,7 @@
                     </v-card-item>
                     <v-card-text>
                         <p>
-                            <b>CPU usage:</b> {{ (serverDetails.cpu.usedCpuUser / serverDetails.cpu.usedCpuSys) * 100 }} %
+                            <b>CPU usage:</b> {{ ((serverDetails.cpu.usedCpuUser / serverDetails.cpu.usedCpuSys) * 100).toFixed(2) }} %
                         </p>
                     </v-card-text>
             </v-card>

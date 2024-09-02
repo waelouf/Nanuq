@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Nanuq.Common.Enums;
+using Nanuq.Common.Interfaces;
 using Nanuq.Common.Records;
 using Nanuq.EF;
 

@@ -36,7 +36,7 @@ builder.Services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
 builder.Services.AddScoped<IKafkaRepository, KafkaRepository>();
 builder.Services.AddScoped<IRedisRepository, RedisRepository>();
 builder.Services.AddScoped<IRedisManagerRepository, RedisManagerRepository>();
-
+builder.Services.AddScoped<IRabbitMqRepository, RabbitMqRepository>();
 
 builder.Services.AddScoped<ITopicsRepository, TopicsRepository>();
 
