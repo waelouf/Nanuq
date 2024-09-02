@@ -22,7 +22,10 @@
              :key="index">
              <td>{{ server.id }}</td>
              <td>{{ server.alias }}</td>
-             <td>{{ server.serverUrl }}</td>
+             <td>{{ server.serverUrl }}
+              <a @click="showServerDetails(server.serverUrl)" >
+                <i class="fa-solid fa-circle-info"></i>
+            </a></td>
              <td>
                 <router-link :to="{
                     name: 'ManageServer',
@@ -58,15 +61,26 @@
       </v-card>
 
       </v-dialog>
+      <v-dialog v-model="showServerDetailsDialog">
+        <v-card
+          prepend-icon="mdi-update">
+          <ViewServerFullDetails :serverUrl="selectedServerUrl"
+           @showServerDetails="show => {showServerDetailsDialog = show}">
+
+          </ViewServerFullDetails>
+      </v-card>
+
+      </v-dialog>
     </div>
 
 </template>
 <script>
 import AddRedisServer from './AddRedisServer.vue';
+import ViewServerFullDetails from './ViewServerFullDetails.vue';
 
 export default ({
   name: 'ListServers',
-  components: { AddRedisServer },
+  components: { AddRedisServer, ViewServerFullDetails },
   created() {
     this.$store.dispatch('sqlite/loadRedisServers');
   },
@@ -78,25 +92,32 @@ export default ({
   data() {
     return {
       showAddServerDialog: false,
+      showServerDetailsDialog: false,
+      selectedServerUrl: '',
     };
   },
   methods: {
     addServer() {
       this.showAddServerDialog = true;
     },
-    reloadServers() {
-      this.$store.dispatch('sqlite/loadRedisServers');
+    async reloadServers() {
+      await this.$store.dispatch('sqlite/loadRedisServers');
     },
     async deleteServer(id) {
       await this.$store.dispatch('sqlite/deleteRedisServer', id);
-      this.reloadServers();
+      await this.reloadServers();
+    },
+    async showServerDetails(serverUrl) {
+      await this.$store.dispatch('redis/getServerDetails', serverUrl);
+      this.selectedServerUrl = serverUrl;
+      this.showServerDetailsDialog = true;
     },
   },
 });
 </script>
-    <style>
-    .delete-icon{
-      color: blue;
-      cursor: pointer;
-    }
-    </style>
+<style>
+.delete-icon{
+  color: blue;
+  cursor: pointer;
+}
+</style>
