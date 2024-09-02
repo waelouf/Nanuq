@@ -31,6 +31,21 @@ Built with a focus on usability and efficiency, Nanuq aims to reduce the overhea
 
 ### RabbitMQ
 
+## Installation
+
+### Pull, build and run
+
+### Docker compose
+
+### Kubernetes deploy
+
+## Disclaimer
+
+Nanuq is currently intended for use in local development and DEV environments only. While we strive to provide a reliable tool for managing Kafka, Redis, and RabbitMQ, this application is not yet ready for production environments. Users should exercise caution and thoroughly test Nanuq in non-production settings before considering any production use. We are continuously working on improvements and welcome contributions from the community to help make Nanuq production-ready in the future.
+
+
+---
+
 ## To-do
 - ✅ Store connection in Sqlite database
 - All-in-one docker compose
