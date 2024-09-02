@@ -3,6 +3,9 @@
 - All-in-one docker compose
 - Docker compose
 - k8s deploy 
+- App
+  - Activity log
+  - Error handling (alerts instead of console)
 - Connect to the following
   - Kafka
     - Real time
