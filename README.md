@@ -57,9 +57,32 @@ Built with a focus on usability and efficiency, Nanuq aims to reduce the overhea
 
 ### Clone
 
+```powershell
+git clone git@github.com:waelouf/Nanuq.git
+
+# To run backend
+cd .\src\services\Nanuq\Nanuq.WebApi\
+
+dotnet run
+
+# To run frontend
+
+cd .\src\app\nanuq-app\
+npm i
+npm run serve
+```
+
+
 ### Docker compose
 
+```powershell
+cd .\Docker\
+docker-compose up -d
+```
+
 ### Kubernetes deploy
+
+In progress
 
 ## Disclaimer
 
