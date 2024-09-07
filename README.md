@@ -29,6 +29,30 @@ Built with a focus on usability and efficiency, Nanuq aims to reduce the overhea
 - Add item to cache
 - Invalidate cache
 
+## Screenshot
+
+### Kafka
+
+![alt text](images/kafka_1.png)
+
+![alt text](images/kafka_2.png)
+
+![alt text](images/kafka_3.png)
+
+![alt text](images/kafka_4.png)
+
+### Redis
+
+![alt text](images/redis_1.png)
+
+![alt text](/images/redis_1_1.png)
+
+![alt text](/images/redis_1_2.png)
+
+![alt text](/images/redis_2.png)
+
+![alt text](/images/redis_3.png)
+
 ## Installation
 
 ### Clone

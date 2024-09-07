@@ -15,7 +15,7 @@ services:
     networks:
         - nanuq-network
     environment:
-        - NANUQ_SERVER_URL=http://192.168.50.101:5000/
+        - VUE_APP_NANUQ_SERVER_URL=http://api-server:5000
     ports:
       - "8080:8080"
     depends_on:

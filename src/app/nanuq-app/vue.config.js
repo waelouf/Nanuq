@@ -5,9 +5,9 @@ module.exports = defineConfig({
   devServer: {
     proxy: {
       '/': {
-        target: 'http://192.168.50.101:5000',
+        target: process.env.VUE_APP_NANUQ_SERVER_URL || 'http://localhost:5000',
         changeOrigin: true,
-        ws: false, // Disable WebSocket proxying
+        ws: false, // Disable WebSocket
       },
     },
   },
