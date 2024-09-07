@@ -96,7 +96,6 @@ export default {
 </script>
 
 <style>
-@import './css/styles.css';
 .logo-header{
 width:60px;
 margin-top: 5px;
