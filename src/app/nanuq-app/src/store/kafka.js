@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import axios from 'axios';
+import apiClient from '@/services/apiClient';
 
 export default {
   namespaced: true,
@@ -25,21 +25,20 @@ export default {
   },
   actions: {
     loadKafkaTopics({ commit }, serverName) {
-      axios.get(`/kafka/topic/${serverName}`)
+      apiClient.get(`/kafka/topic/${serverName}`)
         .then((result) => commit('updateTopics', { data: result.data, serverName }));
     },
     async loadKafkaTopicDetails({ commit }, { serverName, topicName }) {
-      await axios.get(`/kafka/topic/${serverName}/${topicName}`)
+      await apiClient.get(`/kafka/topic/${serverName}/${topicName}`)
         .then((result) => commit('updateTopicDetails', { data: result.data, serverName, topicName }));
     },
     async addKafkaTopic({ commit }, topicDetails) {
-      console.log(topicDetails);
-      await axios.post('kafka/topic', topicDetails)
+      await apiClient.post('kafka/topic', topicDetails)
         .then(() => {})
         .catch(console.error);
     },
     async deleteKafkaTopic({ commit }, { bootstrapServer, topicName }) {
-      await axios.delete(`kafka/topic/${bootstrapServer}/${topicName}`)
+      await apiClient.delete(`kafka/topic/${bootstrapServer}/${topicName}`)
         .then(() => {})
         .catch(console.error);
     },

@@ -17,7 +17,10 @@ public class GetKafka : EndpointWithoutRequest<KafkaRecord>
     {
         Get("/sqlite/kafka/{id}");
         AllowAnonymous();
-    }
+		Options(b => b.RequireCors(x => x.AllowAnyOrigin()
+			.AllowAnyMethod()
+			.AllowAnyHeader()));
+	}
 
     public override async Task HandleAsync(CancellationToken ct)
     {

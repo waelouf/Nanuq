@@ -16,7 +16,10 @@ public class DeleteKafka : EndpointWithoutRequest<bool>
     {
         Delete("/sqlite/kafka/{id}");
         AllowAnonymous();
-    }
+		Options(b => b.RequireCors(x => x.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()));
+	}
 
     public override async Task HandleAsync(CancellationToken ct)
     {

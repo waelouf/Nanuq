@@ -16,6 +16,9 @@ namespace Nanuq.WebApi.Endpoints.Redis
 		{
 			Get("/redis/string/{server}/{database}/{key}");
 			AllowAnonymous();
+			Options(b => b.RequireCors(x => x.AllowAnyOrigin()
+			.AllowAnyMethod()
+			.AllowAnyHeader()));
 		}
 
 		public async override Task HandleAsync(CancellationToken ct)

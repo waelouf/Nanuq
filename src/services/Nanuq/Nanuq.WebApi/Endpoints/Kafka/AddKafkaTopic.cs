@@ -17,6 +17,9 @@ public class AddKafkaTopic : Endpoint<AddKafkaTopicRequest, bool>
 	{
 		Post("/kafka/topic");
 		AllowAnonymous();
+		Options(b => b.RequireCors(x => x.AllowAnyOrigin()
+			.AllowAnyMethod()
+			.AllowAnyHeader()));
 	}
 
 	public override async Task HandleAsync(AddKafkaTopicRequest req, CancellationToken ct)

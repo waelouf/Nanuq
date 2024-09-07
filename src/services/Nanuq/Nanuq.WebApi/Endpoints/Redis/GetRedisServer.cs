@@ -17,6 +17,9 @@ public class GetRedisServer : EndpointWithoutRequest<ServerDetails>
 	{
 		Get("/redis/{server}");
 		AllowAnonymous();
+		Options(b => b.RequireCors(x => x.AllowAnyOrigin()
+			.AllowAnyMethod()
+			.AllowAnyHeader()));
 	}
 
 	public override async Task HandleAsync(CancellationToken ct)

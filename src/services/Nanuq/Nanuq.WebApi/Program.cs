@@ -48,6 +48,18 @@ builder.Services.AddScoped<ITopicsRepository, TopicsRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var nanuqCorsPolicy = "_nanuqAllowOriginsHeadersMethods";
+
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy(nanuqCorsPolicy, policy =>
+	{
+		policy.AllowAnyOrigin()
+		.AllowAnyHeader()
+		.AllowAnyMethod();
+	});
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -58,8 +70,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseFastEndpoints();
-
 app.MapDefaultEndpoints();
+app.UseCors();
 
 try
 {

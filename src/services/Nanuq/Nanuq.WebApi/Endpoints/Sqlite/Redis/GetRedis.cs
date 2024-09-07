@@ -17,7 +17,10 @@ public class GetRedis : EndpointWithoutRequest<RedisRecord>
     {
         Get("/sqlite/redis/{id}");
         AllowAnonymous();
-    }
+		Options(b => b.RequireCors(x => x.AllowAnyOrigin()
+				.AllowAnyMethod()
+				.AllowAnyHeader()));
+	}
 
     public override async Task HandleAsync(CancellationToken ct)
     {

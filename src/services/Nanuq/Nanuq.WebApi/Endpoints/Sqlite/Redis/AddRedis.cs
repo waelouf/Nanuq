@@ -17,7 +17,10 @@ public class AddRedis : Endpoint<AddRedisRecordRequest, int>
     {
         Post("/sqlite/redis");
         AllowAnonymous();
-    }
+		Options(b => b.RequireCors(x => x.AllowAnyOrigin()
+			.AllowAnyMethod()
+			.AllowAnyHeader()));
+	}
 
     public override async Task HandleAsync(AddRedisRecordRequest req, CancellationToken ct)
     {

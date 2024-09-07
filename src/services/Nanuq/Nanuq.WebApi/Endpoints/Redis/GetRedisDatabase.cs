@@ -17,6 +17,9 @@ public class GetRedisDatabase : EndpointWithoutRequest<DatabaseDetails>
 	{
 		Get("/redis/{server}/{database}");
 		AllowAnonymous();
+		Options(b => b.RequireCors(x => x.AllowAnyOrigin()
+			.AllowAnyMethod()
+			.AllowAnyHeader()));
 	}
 
 	public override async Task HandleAsync(CancellationToken ct)

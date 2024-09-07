@@ -17,6 +17,9 @@ public class GetTopics : EndpointWithoutRequest<IEnumerable<Topic>>
 	{
 		Get("/kafka/topic/{server}");
 		AllowAnonymous();
+		Options(b => b.RequireCors(x => x.AllowAnyOrigin()
+			.AllowAnyMethod()
+			.AllowAnyHeader()));
 	}
 
 	public override async Task HandleAsync(CancellationToken ct)

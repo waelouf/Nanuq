@@ -17,6 +17,9 @@ public class AddRabbitMQ : Endpoint<AddRabbitMQRecordRequest, int>
 	{
 		Post("/sqlite/rabbitmq");
 		AllowAnonymous();
+		Options(b => b.RequireCors(x => x.AllowAnyOrigin()
+			.AllowAnyMethod()
+			.AllowAnyHeader()));
 	}
 
 	public override async Task HandleAsync(AddRabbitMQRecordRequest req, CancellationToken ct)

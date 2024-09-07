@@ -16,6 +16,9 @@ public class DeleteRabbitMQ : EndpointWithoutRequest<bool>
 	{
 		Delete("/sqlite/rabbitmq/{id}");
 		AllowAnonymous();
+		Options(b => b.RequireCors(x => x.AllowAnyOrigin()
+			.AllowAnyMethod()
+			.AllowAnyHeader()));
 	}
 
 	public override async Task HandleAsync(CancellationToken ct)

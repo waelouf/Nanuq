@@ -1,0 +1,27 @@
+version: '3'
+services:
+  api-server:
+    image: waelouf/nanuq-server:0.1.0
+    container_name: api-server
+    networks:
+        - nanuq-network
+    environment:
+        - ASPNETCORE_HTTP_PORTS=5000
+    ports:
+      - "5000:5000"
+  web:
+    image: waelouf/nanuq-app:0.1.0
+    container_name: nanuq-app
+    networks:
+        - nanuq-network
+    environment:
+        - NANUQ_SERVER_URL=http://192.168.50.101:5000/
+    ports:
+      - "8080:8080"
+    depends_on:
+      - api-server
+      
+
+networks:
+  nanuq-network:
+    driver: bridge

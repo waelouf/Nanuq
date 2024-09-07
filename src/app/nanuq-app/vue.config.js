@@ -5,7 +5,7 @@ module.exports = defineConfig({
   devServer: {
     proxy: {
       '/': {
-        target: 'http://localhost:5224/',
+        target: 'http://192.168.50.101:5000',
         changeOrigin: true,
         ws: false, // Disable WebSocket proxying
       },

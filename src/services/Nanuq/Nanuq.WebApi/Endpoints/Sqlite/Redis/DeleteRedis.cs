@@ -16,7 +16,10 @@ public class DeleteRedis : EndpointWithoutRequest<bool>
     {
         Delete("/sqlite/redis/{id}");
         AllowAnonymous();
-    }
+        Options(b => b.RequireCors(x => x.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()));
+	}
 
     public override async Task HandleAsync(CancellationToken ct)
     {

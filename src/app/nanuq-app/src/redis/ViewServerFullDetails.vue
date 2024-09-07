@@ -218,8 +218,6 @@ export default {
   }),
   computed: {
     serverDetails() {
-      console.log(this.$store.state.redis.redisServers);
-      console.log(this.$store.state.redis.redisServers[this.serverUrl]);
       return this.$store.state.redis.redisServers[this.serverUrl];
     },
   },

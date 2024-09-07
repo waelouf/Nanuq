@@ -16,6 +16,9 @@ public class InvalidateRedisCache : EndpointWithoutRequest<bool>
 	{
 		Delete("/redis/string/{server}/{database}/{key}");
 		AllowAnonymous();
+		Options(b => b.RequireCors(x => x.AllowAnyOrigin()
+			.AllowAnyMethod()
+			.AllowAnyHeader()));
 	}
 
 	public override async Task HandleAsync(CancellationToken ct)

@@ -17,6 +17,9 @@ public class SetRedisCache : Endpoint<SetStringCacheRequest, bool>
 	{
 		Post("/redis/string/");
 		AllowAnonymous();
+		Options(b => b.RequireCors(x => x.AllowAnyOrigin()
+			.AllowAnyMethod()
+			.AllowAnyHeader()));
 	}
 
 	public override async Task HandleAsync(SetStringCacheRequest req, CancellationToken ct)

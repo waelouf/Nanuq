@@ -17,7 +17,10 @@ public class AddKafka : Endpoint<AddKafkaRecordRequest, int>
     {
         Post("/sqlite/kafka");
         AllowAnonymous();
-    }
+		Options(b => b.RequireCors(x => x.AllowAnyOrigin()
+			.AllowAnyMethod()
+			.AllowAnyHeader()));
+	}
 
     public override async Task HandleAsync(AddKafkaRecordRequest req, CancellationToken ct)
     {
