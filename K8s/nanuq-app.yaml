@@ -1,0 +1,35 @@
+kind: Deployment
+metadata:
+  name: nanuq-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nanuq-app
+  template:
+    metadata:
+      labels:
+        app: nanuq-app
+    spec:
+      containers:
+      - name: nanuq-app
+        image: waelouf/nanuq-app:0.1.0
+        ports:
+        - containerPort: 8080
+        env:
+        - name: VUE_APP_API_BASE_URL
+          value: "http://api-server:5000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nanuq-app
+spec:
+  selector:
+    app: nanuq-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  # type: LoadBalancer
+  type: NodePort
