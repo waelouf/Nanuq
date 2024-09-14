@@ -17,6 +17,6 @@ COPY . .
 
 # build app for production with minification
 RUN npm run build
-
+ENV VUE_APP_API_BASE_URL=http://backend:5000
 EXPOSE 8080
 CMD [ "http-server", "dist" ]

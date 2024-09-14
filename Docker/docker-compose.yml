@@ -1,8 +1,8 @@
 version: '3'
 services:
-  api-server:
+  backend:
     image: waelouf/nanuq-server:0.1.0
-    container_name: api-server
+    container_name: backend
     networks:
         - nanuq-network
     environment:
@@ -11,15 +11,15 @@ services:
       - "5000:5000"
   web:
     image: waelouf/nanuq-app:0.1.0
-    container_name: nanuq-app
+    container_name: web
     networks:
         - nanuq-network
     environment:
-        - VUE_APP_NANUQ_SERVER_URL=http://api-server:5000
+        - VUE_APP_API_BASE_URL=http://backend:5000/
     ports:
       - "8080:8080"
     depends_on:
-      - api-server
+      - backend
       
 
 networks:

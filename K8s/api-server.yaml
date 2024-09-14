@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-server
+  name: backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: api-server
+      app: backend
   template:
     metadata:
       labels:
-        app: api-server
+        app: backend
     spec:
       containers:
-      - name: api-server
+      - name: backend
         image: waelouf/nanuq-server:0.1.0
         ports:
         - containerPort: 5000
@@ -24,10 +24,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: api-server
+  name: backend
 spec:
   selector:
-    app: api-server
+    app: backend
   ports:
     - protocol: TCP
       port: 5000
