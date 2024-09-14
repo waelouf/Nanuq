@@ -22,7 +22,7 @@ module.exports = {
     'no-shadow': 0,
     'vue/comment-directive': 0,
     'import/extensions': 0,
-    'requireConfigFile': false,
+    requireConfigFile: 0,
     // 'no-unresolved': 0,
     // 'html-indent': 0,
     // 'html-closing-bracket-spacing': 0,
