@@ -82,7 +82,13 @@ docker-compose up -d
 
 ### Kubernetes deploy
 
-In progress
+```powershell
+cd .\K8s
+
+kubectl apply -f api-server.yaml
+kubectl apply -f nanuq-app.yaml
+
+```
 
 ## Disclaimer
 
