@@ -69,7 +69,10 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 
-app.UseFastEndpoints();
+app.UseFastEndpoints(conf =>
+{
+	conf.Endpoints.RoutePrefix = "api";
+});
 app.MapDefaultEndpoints();
 app.UseCors();
 
