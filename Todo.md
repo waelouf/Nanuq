@@ -1,22 +1,23 @@
 ## Todo
 
-- All-in-one docker compose
-- Docker compose
-- k8s deploy 
+- k8s deploy - in progress
 - App
   - Activity log
   - Error handling (alerts instead of console)
 - Connect to the following
   - Kafka
+    - Secured login
     - Real time
-  - RabbitMQ
+  - RabbitMQ - in progress
     - Topic
     - Exchange
     - How many item in each topic
   - Redis
+    - Secured login
     - Pubsub Channels
     - Manage different types of objects (List, Set, SortedSet, Hash, Stream)
-- Built-in
+- Implement some vault for secured credential
+- More
   - Logs
   - ELK stack
   - OpenTelemetry
