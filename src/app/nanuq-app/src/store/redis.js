@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import apiClient from '@/services/apiClient';
+import logger from '@/utils/logger';
 
 export default {
   namespaced: true,
@@ -46,38 +47,38 @@ export default {
     async getServerDetails({ commit }, serverUrl) {
       await apiClient.get(`/redis/${serverUrl}`)
         .then((result) => commit('updateServers', { serverUrl, serverDetails: result.data }))
-        .catch(console.error);
+        .catch((error) => logger.handleApiError('RedisStore', 'getting server details', error));
     },
     getDatabaseDetails({ commit }, { serverUrl, database }) {
       apiClient.get(`/redis/${serverUrl}/${database}`)
         .then((result) => commit('updateDatabase', { serverUrl, database, messagesCount: result.data.messagesCount }))
-        .catch(console.error);
+        .catch((error) => logger.handleApiError('RedisStore', 'getting database details', error));
     },
     async cacheString({ commit }, cacheObject) {
       await apiClient.post('/redis/string', cacheObject)
         .then(() => {})
-        .catch(console.error);
+        .catch((error) => logger.handleApiError('RedisStore', 'caching string', error));
     },
     getCachedString({ commit }, { serverUrl, database, key }) {
       apiClient.get(`/redis/string/${serverUrl}/${database}/${key}`)
         .then((result) => commit('updateStringCache', {
           serverUrl, database, key, value: result.data,
         }))
-        .catch(console.error);
+        .catch((error) => logger.handleApiError('RedisStore', 'getting cached string', error));
     },
     async invalidateCachedString({ commit }, { serverUrl, database, key }) {
       await apiClient.delete(`/redis/string/${serverUrl}/${database}/${key}`)
         .then(() => commit('invalidateStringCache', {
           serverUrl, database, key,
         }))
-        .catch(console.error);
+        .catch((error) => logger.handleApiError('RedisStore', 'invalidating cached string', error));
     },
     async getAllStringKeys({ commit }, { serverUrl, database }) {
       await apiClient.get(`/redis/string/${serverUrl}/${database}`)
         .then((result) => commit('updateDatabaseKeys', {
           serverUrl, database, keys: result.data,
         }))
-        .catch(console.error);
+        .catch((error) => logger.handleApiError('RedisStore', 'getting all string keys', error));
     },
   },
 };

@@ -23,9 +23,9 @@ module.exports = {
     'vue/comment-directive': 0,
     'import/extensions': 0,
     'import/no-unresolved': 'off', // Disable import/no-unresolved errors
-    'requireConfigFile': 0,
+    requireConfigFile: 0,
     'vue/html-indent': 0,
     'vue/html-closing-bracket-spacing': 0,
-    'vue/html-self-closing': 0
+    'vue/html-self-closing': 0,
   },
 };

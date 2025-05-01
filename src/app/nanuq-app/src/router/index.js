@@ -1,11 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import HomePage from '@/home/HomePage.vue';
-import ListServers from '@/kafka/ListServers.vue';
-import AddServer from '@/kafka/AddServer.vue';
-import KafkaConnect from '@/kafka/KafkaConnect.vue';
-import ListRedisServers from '@/redis/ListRedisServers.vue';
-import ManageDatabases
-  from '@/redis/ManageDatabases.vue';
+
+// Lazy load other components to reduce initial bundle size
 
 const routes = [
   {
@@ -16,34 +12,34 @@ const routes = [
   {
     path: '/kafka',
     name: 'Kafka',
-    component: ListServers,
+    component: () => import(/* webpackChunkName: "kafka" */ '@/kafka/ListServers.vue'),
     children: [],
   },
   {
     path: '/kafka/add',
     name: 'KafkaAdd',
-    component: AddServer,
+    component: () => import(/* webpackChunkName: "kafka" */ '@/kafka/AddServer.vue'),
   },
   {
     path: '/kafka/list',
     name: 'KafkaList',
-    component: ListServers,
+    component: () => import(/* webpackChunkName: "kafka" */ '@/kafka/ListServers.vue'),
   },
   {
     path: '/kafka/connect/:serverName',
     name: 'KafkaConnect',
-    component: KafkaConnect,
+    component: () => import(/* webpackChunkName: "kafka" */ '@/kafka/KafkaConnect.vue'),
     props: true,
   },
   {
     path: '/redis',
     name: 'Redis',
-    component: ListRedisServers,
+    component: () => import(/* webpackChunkName: "redis" */ '@/redis/ListRedisServers.vue'),
   },
   {
     path: '/redis/server/:serverUrl',
     name: 'ManageServer',
-    component: ManageDatabases,
+    component: () => import(/* webpackChunkName: "redis" */ '@/redis/ManageDatabases.vue'),
     props: true,
   },
 ];

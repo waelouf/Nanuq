@@ -40,7 +40,10 @@ export default {
         numberOfMessages.value = store.state.kafka.kafkaTopicDetails[key];
         loading.value = true;
       } catch (error) {
-        console.error('API call failed:', error);
+        import('@/utils/logger').then((module) => {
+          const logger = module.default;
+          logger.error('TopicDetails', 'Failed to load topic details', error);
+        });
       } finally {
         //
       }
