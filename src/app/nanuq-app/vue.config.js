@@ -1,7 +1,6 @@
-const { defineConfig } = require('@vue/cli-service');
-
-module.exports = defineConfig({
-  transpileDependencies: true,
+// CommonJS syntax
+module.exports = {
+  transpileDependencies: [],
   devServer: {
     proxy: {
       '/': {
@@ -10,5 +9,5 @@ module.exports = defineConfig({
         ws: false, // Disable WebSocket
       },
     },
-  },
-});
+  }
+};

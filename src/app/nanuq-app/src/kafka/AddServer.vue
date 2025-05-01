@@ -4,12 +4,12 @@
       <v-text-field
         v-model="bootstrapServer"
         label="Bootstrap Server"
-      ></v-text-field>
+      />
 
       <v-text-field
         v-model="alias"
         label="Alias"
-      ></v-text-field>
+      />
 
       <v-btn class="mt-2" @click="saveServer" type="submit" block>Add</v-btn>
       <br />

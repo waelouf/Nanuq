@@ -1,35 +1,35 @@
 <template>
-    <v-sheet class="mx-auto" width="300">
-        <v-form fast-fail @submit.prevent>
-          <v-text-field
-            v-model="serverUrl"
-            label="Server URL"
-          ></v-text-field>
+  <v-sheet class="mx-auto" width="300">
+    <v-form fast-fail @submit.prevent>
+      <v-text-field
+        v-model="serverUrl"
+        label="Server URL"
+      />
 
-          <v-text-field
-            v-model="database"
-            label="Database"
-          ></v-text-field>
+      <v-text-field
+        v-model="database"
+        label="Database"
+      />
 
-          <v-text-field
-            v-model="key"
-            label="Key"
-          ></v-text-field>
+      <v-text-field
+        v-model="key"
+        label="Key"
+      />
 
-          <v-text-field
-            v-model="value"
-            label="Value"
-          ></v-text-field>
+      <v-text-field
+        v-model="value"
+        label="Value"
+      />
 
-          <v-text-field
-            v-model="ttl"
-            label="Time to live (in milliseconds)"
-          ></v-text-field>
+      <v-text-field
+        v-model="ttl"
+        label="Time to live (in milliseconds)"
+      />
 
-          <v-btn class="mt-2" @click="addCache" type="submit" block>Save</v-btn>
-          <br />
-        </v-form>
-      </v-sheet>
+      <v-btn class="mt-2" @click="addCache" type="submit" block>Save</v-btn>
+      <br />
+    </v-form>
+  </v-sheet>
 </template>
 <script>
 export default {

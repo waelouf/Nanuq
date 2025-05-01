@@ -1,21 +1,21 @@
 <template>
-    <div>
-        <v-card :title="topicName">
-            <v-card-text v-if="loading">
-                Number of messages: {{ numberOfMessages }}
-            </v-card-text>
-            <v-card-text v-if="!loading">
-                Loading...
-            </v-card-text>
-        <v-card-actions>
+  <div>
+    <v-card :title="topicName">
+      <v-card-text v-if="loading">
+        Number of messages: {{ numberOfMessages }}
+      </v-card-text>
+      <v-card-text v-if="!loading">
+        Loading...
+      </v-card-text>
+      <v-card-actions>
         <v-btn
           text="Close"
           class="ms-auto"
           @click="$emit('showModal', false)"
-        ></v-btn>
-    </v-card-actions>
-</v-card>
-    </div>
+        />
+      </v-card-actions>
+    </v-card>
+  </div>
 </template>
 <script>
 import { ref, onMounted } from 'vue';

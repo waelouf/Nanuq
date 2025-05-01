@@ -1,48 +1,48 @@
 <template>
+  <div>
+    <v-select
+      label="Database"
+      :items="databases"
+      v-model="selectedDatabase"
+      @update:modelValue="onItemSelected" />
     <div>
-        <v-select label="Database"
-        :items="databases"
-        v-model="selectedDatabase"
-        @update:modelValue="onItemSelected">
-        </v-select>
-        <div>
-            <v-table v-if="databaseKeys" width="300px">
-                <thead>
-                  <tr>
-                    <th class="text-left">
-                      Key : value
-                    </th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="[key, value] in Object.entries(databaseKeys)"
-                    :key="key"
-                  >
-                    <td>{{ key }} : {{ value }}</td>
-                    <td>
-                        <a @click="invalidateCache(key)" class="delete-icon">
-                            <i class="fa-regular fa-trash-can"></i>
-                          </a>
-                    </td>
-                  </tr>
-                </tbody>
-              </v-table>
-        </div>
-        <v-btn class="mt-2" @click="handleAddCacheDialog(true)" type="submit" block>Add cache</v-btn>
-        <v-dialog v-model="showAddCacheModal" width="600px" >
-            <v-card
-            prepend-icon="mdi-update"
+      <v-table v-if="databaseKeys" width="300px">
+        <thead>
+          <tr>
+            <th class="text-left">
+              Key : value
+            </th>
+            <th />
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="[key, value] in Object.entries(databaseKeys)"
+            :key="key"
           >
-            <AddCache :selectedServerUrl="serverUrl" :selectedDatabase="selectedDatabase"
-            @showModal="show => handleAddCacheDialog(show)"
-            >
-
-            </AddCache>
-          </v-card>
-          </v-dialog>
+            <td>{{ key }} : {{ value }}</td>
+            <td>
+              <a @click="invalidateCache(key)" class="delete-icon">
+                <i class="fa-regular fa-trash-can" />
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </v-table>
     </div>
+    <v-btn class="mt-2" @click="handleAddCacheDialog(true)" type="submit" block>Add cache</v-btn>
+    <v-dialog v-model="showAddCacheModal" width="600px">
+      <v-card
+        prepend-icon="mdi-update"
+      >
+        <AddCache
+          :selectedServerUrl="serverUrl"
+          :selectedDatabase="selectedDatabase"
+          @showModal="show => handleAddCacheDialog(show)"
+        />
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 <script>
 import AddCache from './AddCache.vue';
@@ -91,7 +91,11 @@ export default {
       await this.$store.dispatch('redis/getAllStringKeys', requestObject);
     },
     async invalidateCache(key) {
-      const invalidateCacheObject = { serverUrl: this.serverUrl, database: this.selectedDatabase, key };
+      const invalidateCacheObject = {
+        serverUrl: this.serverUrl,
+        database: this.selectedDatabase,
+        key,
+      };
       await this.$store.dispatch('redis/invalidateCachedString', invalidateCacheObject);
       await this.loadDatabaseKeys();
     },
