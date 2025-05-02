@@ -399,3 +399,4 @@ FodyWeavers.xsd
 Docker/ssl/*
 src/services/Nanuq/.idea/.idea.Nanuq/.idea/.gitignore
 .idea/
+src/app/nanuq-app/package-lock.json
