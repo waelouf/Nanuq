@@ -10,6 +10,7 @@ on:
       - 'src/app/nanuq-app/**'
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
