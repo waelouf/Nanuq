@@ -20,7 +20,8 @@ describe('Redis Store', () => {
   describe('State', () => {
     it('should initialize with empty state', () => {
       expect(store.state.redis.redisServers).toEqual({});
-      expect(store.state.redis.redisDatabases).toEqual({});
+      expect(store.state.redis.redisDatabaseMessageCounter).toEqual({});
+      expect(store.state.redis.redisCachedStrings).toEqual({});
       expect(store.state.redis.redisDatabaseKeys).toEqual({});
     });
   });
@@ -28,30 +29,32 @@ describe('Redis Store', () => {
   describe('Mutations', () => {
     it('should update redis server info', () => {
       const serverUrl = 'localhost:6379';
-      const serverInfo = { version: '7.0', uptime: 1000 };
+      const serverDetails = { version: '7.0', uptime: 1000 };
 
-      store.commit('redis/updateRedisServer', { serverUrl, data: serverInfo });
+      store.commit('redis/updateServers', { serverUrl, serverDetails });
 
-      expect(store.state.redis.redisServers[serverUrl]).toEqual(serverInfo);
+      expect(store.state.redis.redisServers[serverUrl]).toEqual(serverDetails);
     });
 
     it('should update redis databases', () => {
       const serverUrl = 'localhost:6379';
-      const databases = [{ id: 0 }, { id: 1 }];
+      const database = 0;
+      const messagesCount = 100;
 
-      store.commit('redis/updateRedisDatabases', { serverUrl, data: databases });
+      store.commit('redis/updateDatabase', { serverUrl, database, messagesCount });
 
-      expect(store.state.redis.redisDatabases[serverUrl]).toEqual(databases);
+      const key = `${serverUrl}_${database}`;
+      expect(store.state.redis.redisDatabaseMessageCounter[key]).toEqual(messagesCount);
     });
 
     it('should update database keys', () => {
       const serverUrl = 'localhost:6379';
-      const databaseId = '0';
+      const database = 0;
       const keys = ['key1', 'key2', 'key3'];
 
-      store.commit('redis/updateDatabaseKeys', { serverUrl, databaseId, data: keys });
+      store.commit('redis/updateDatabaseKeys', { serverUrl, database, keys });
 
-      const key = `${serverUrl}-${databaseId}`;
+      const key = `${serverUrl}_${database}`;
       expect(store.state.redis.redisDatabaseKeys[key]).toEqual(keys);
     });
   });
@@ -63,33 +66,36 @@ describe('Redis Store', () => {
 
       apiClient.get.mockResolvedValue({ data: mockServerInfo });
 
-      await store.dispatch('redis/loadRedisServer', serverUrl);
+      await store.dispatch('redis/getServerDetails', serverUrl);
 
-      expect(apiClient.get).toHaveBeenCalledWith(`/redis/server/${serverUrl}`);
+      expect(apiClient.get).toHaveBeenCalledWith(`/redis/${serverUrl}`);
       expect(store.state.redis.redisServers[serverUrl]).toEqual(mockServerInfo);
     });
 
     it('should load redis databases successfully', async () => {
       const serverUrl = 'localhost:6379';
-      const mockDatabases = [{ id: 0 }, { id: 1 }];
+      const database = 0;
+      const mockDatabaseInfo = { messagesCount: 100 };
 
-      apiClient.get.mockResolvedValue({ data: mockDatabases });
+      apiClient.get.mockResolvedValue({ data: mockDatabaseInfo });
 
-      await store.dispatch('redis/loadRedisDatabases', serverUrl);
+      await store.dispatch('redis/getDatabaseDetails', { serverUrl, database });
 
-      expect(apiClient.get).toHaveBeenCalledWith(`/redis/database/${serverUrl}`);
-      expect(store.state.redis.redisDatabases[serverUrl]).toEqual(mockDatabases);
+      expect(apiClient.get).toHaveBeenCalledWith(`/redis/${serverUrl}/${database}`);
+      const key = `${serverUrl}_${database}`;
+      expect(store.state.redis.redisDatabaseMessageCounter[key]).toEqual(100);
     });
 
     it('should invalidate cache successfully', async () => {
-      const cacheKey = 'test-key';
+      const key = 'test-key';
       const serverUrl = 'localhost:6379';
+      const database = 0;
 
       apiClient.delete.mockResolvedValue({ data: {} });
 
-      await store.dispatch('redis/invalidateCache', { cacheKey, serverUrl });
+      await store.dispatch('redis/invalidateCachedString', { serverUrl, database, key });
 
-      expect(apiClient.delete).toHaveBeenCalledWith(`redis/cache/${serverUrl}/${cacheKey}`);
+      expect(apiClient.delete).toHaveBeenCalledWith(`/redis/string/${serverUrl}/${database}/${key}`);
     });
   });
 });

@@ -21,7 +21,6 @@ describe('SQLite Store', () => {
     it('should initialize with empty arrays', () => {
       expect(store.state.sqlite.kafkaServers).toEqual([]);
       expect(store.state.sqlite.redisServers).toEqual([]);
-      expect(store.state.sqlite.rabbitMQServers).toEqual([]);
     });
   });
 
@@ -32,7 +31,7 @@ describe('SQLite Store', () => {
         { id: 2, name: 'server2', url: 'localhost:9093' },
       ];
 
-      store.commit('sqlite/updateKafkaServers', servers);
+      store.commit('sqlite/loadKafkaServers', servers);
 
       expect(store.state.sqlite.kafkaServers).toEqual(servers);
     });
@@ -42,19 +41,9 @@ describe('SQLite Store', () => {
         { id: 1, name: 'server1', url: 'localhost:6379' },
       ];
 
-      store.commit('sqlite/updateRedisServers', servers);
+      store.commit('sqlite/loadRedisServers', servers);
 
       expect(store.state.sqlite.redisServers).toEqual(servers);
-    });
-
-    it('should update rabbitMQ servers list', () => {
-      const servers = [
-        { id: 1, name: 'server1', url: 'localhost:5672' },
-      ];
-
-      store.commit('sqlite/updateRabbitMQServers', servers);
-
-      expect(store.state.sqlite.rabbitMQServers).toEqual(servers);
     });
   });
 
@@ -68,7 +57,7 @@ describe('SQLite Store', () => {
 
       await store.dispatch('sqlite/loadKafkaServers');
 
-      expect(apiClient.get).toHaveBeenCalledWith('/kafka/servers');
+      expect(apiClient.get).toHaveBeenCalledWith('/sqlite/kafka');
       expect(store.state.sqlite.kafkaServers).toEqual(mockServers);
     });
 
@@ -79,7 +68,7 @@ describe('SQLite Store', () => {
 
       await store.dispatch('sqlite/addKafkaServer', newServer);
 
-      expect(apiClient.post).toHaveBeenCalledWith('/kafka/servers', newServer);
+      expect(apiClient.post).toHaveBeenCalledWith('/sqlite/kafka', newServer);
     });
 
     it('should delete kafka server successfully', async () => {
@@ -89,7 +78,7 @@ describe('SQLite Store', () => {
 
       await store.dispatch('sqlite/deleteKafkaServer', serverId);
 
-      expect(apiClient.delete).toHaveBeenCalledWith(`/kafka/servers/${serverId}`);
+      expect(apiClient.delete).toHaveBeenCalledWith(`/sqlite/kafka/${serverId}`);
     });
   });
 });
