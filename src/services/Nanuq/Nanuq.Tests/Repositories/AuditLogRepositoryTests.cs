@@ -1,8 +1,11 @@
 using Xunit;
 using FluentAssertions;
-using Nanuq.Common.Repositories;
+using Nanuq.Sqlite.Repositories;
 using Nanuq.EF;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
+using Nanuq.Common.Records;
 
 namespace Nanuq.Tests.Repositories;
 
@@ -10,6 +13,7 @@ public class ActivityLogRepositoryTests : IDisposable
 {
     private readonly NanuqContext _context;
     private readonly ActivityLogRepository _repository;
+    private readonly Mock<ILogger<ActivityLogRepository>> _mockLogger;
 
     public ActivityLogRepositoryTests()
     {
@@ -19,14 +23,15 @@ public class ActivityLogRepositoryTests : IDisposable
             .Options;
 
         _context = new NanuqContext(options);
-        _repository = new ActivityLogRepository(_context);
+        _mockLogger = new Mock<ILogger<ActivityLogRepository>>();
+        _repository = new ActivityLogRepository(_mockLogger.Object, _context);
     }
 
     [Fact]
-    public async Task GetAllAsync_ShouldReturnEmptyList_WhenNoActivityLogs()
+    public async Task GetAllActivityLogs_ShouldReturnEmptyList_WhenNoActivityLogs()
     {
         // Act
-        var result = await _repository.GetAllAsync();
+        var result = await _repository.GetAllActivityLogs();
 
         // Assert
         result.Should().NotBeNull();
@@ -34,54 +39,63 @@ public class ActivityLogRepositoryTests : IDisposable
     }
 
     [Fact]
-    public async Task AddAsync_ShouldAddActivityLog()
+    public async Task GetAllActivityLogs_ShouldReturnActivityLogs_WhenLogsExist()
     {
         // Arrange
-        var activityLog = new Common.Records.ActivityLog
+        var activityLog = new ActivityLog
         {
             Log = "Test Log",
             Details = "Test Details",
-            CreatedDate = DateTime.UtcNow
+            Timestamp = DateTime.UtcNow,
+            ActivityTypeId = 1
         };
 
+        _context.ActivityLogs.Add(activityLog);
+        await _context.SaveChangesAsync();
+
         // Act
-        await _repository.AddAsync(activityLog);
-        var result = await _repository.GetAllAsync();
+        var result = await _repository.GetAllActivityLogs();
 
         // Assert
+        result.Should().NotBeNull();
         result.Should().HaveCount(1);
         result.First().Log.Should().Be("Test Log");
         result.First().Details.Should().Be("Test Details");
     }
 
     [Fact]
-    public async Task GetByIdAsync_ShouldReturnActivityLog_WhenExists()
+    public async Task GetAllActivityTypes_ShouldReturnEmptyList_WhenNoTypes()
     {
-        // Arrange
-        var activityLog = new Common.Records.ActivityLog
-        {
-            Log = "Test Log",
-            Details = "Test Details",
-            CreatedDate = DateTime.UtcNow
-        };
-        await _repository.AddAsync(activityLog);
-
         // Act
-        var result = await _repository.GetByIdAsync(activityLog.Id);
+        var result = await _repository.GetAllActivityTypes();
 
         // Assert
         result.Should().NotBeNull();
-        result!.Log.Should().Be("Test Log");
+        result.Should().BeEmpty();
     }
 
     [Fact]
-    public async Task GetByIdAsync_ShouldReturnNull_WhenNotExists()
+    public async Task GetAllActivityTypes_ShouldReturnTypes_WhenTypesExist()
     {
+        // Arrange
+        var activityType = new ActivityType
+        {
+            Name = "Test Type",
+            Description = "Test Description",
+            Color = "#FF0000",
+            Icon = "test-icon"
+        };
+
+        _context.ActivityTypes.Add(activityType);
+        await _context.SaveChangesAsync();
+
         // Act
-        var result = await _repository.GetByIdAsync(999);
+        var result = await _repository.GetAllActivityTypes();
 
         // Assert
-        result.Should().BeNull();
+        result.Should().NotBeNull();
+        result.Should().HaveCount(1);
+        result.First().Name.Should().Be("Test Type");
     }
 
     public void Dispose()

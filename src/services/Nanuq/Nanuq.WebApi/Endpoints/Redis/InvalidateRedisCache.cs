@@ -28,6 +28,6 @@ public class InvalidateRedisCache : EndpointWithoutRequest<bool>
 		var key = Route<string>("key", isRequired: true);
 
 		var deleted = await redisManager.InvalidateCache(server!, database, key!);
-		await SendOkAsync(deleted, ct);
+		await Send.OkAsync(deleted, ct);
 	}
 }

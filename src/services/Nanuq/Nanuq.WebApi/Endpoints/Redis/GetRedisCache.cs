@@ -31,11 +31,11 @@ namespace Nanuq.WebApi.Endpoints.Redis
 			
 			if(val == null)
 			{
-				await SendNotFoundAsync(ct);
+				await Send.NotFoundAsync(ct);
 			}
 			else
 			{
-				await SendOkAsync(val, ct);
+				await Send.OkAsync(val, ct);
 			}
 			
 		}

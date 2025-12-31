@@ -25,6 +25,6 @@ public class AddRedis : Endpoint<AddRedisRecordRequest, int>
     public override async Task HandleAsync(AddRedisRecordRequest req, CancellationToken ct)
     {
         var inserted = await redisRepository.Add(req.ToRecord());
-        await SendOkAsync(inserted, ct);
+        await Send.OkAsync(inserted, ct);
     }
 }

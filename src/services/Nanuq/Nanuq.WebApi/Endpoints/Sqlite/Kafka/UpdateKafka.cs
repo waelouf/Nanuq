@@ -28,11 +28,11 @@ public class UpdateKafka : Endpoint<UpdateKafkaRequest, bool>
         var updated = await kafkaRepository.Update(req.ToRecord());
         if (updated)
         {
-            await SendOkAsync(updated, ct);
+            await Send.OkAsync(updated, ct);
         }
         else
         {
-            await SendNotFoundAsync(ct);
+            await Send.NotFoundAsync(ct);
         }
     }
 }

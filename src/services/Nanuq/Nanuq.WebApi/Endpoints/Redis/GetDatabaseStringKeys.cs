@@ -27,7 +27,7 @@ namespace Nanuq.WebApi.Endpoints.Redis
 			var database = Route<int>("database", isRequired: true);
 
 			var keys = await redisManager.GetAllDatabaseStringKeys(server!, database);
-			await SendOkAsync(keys, ct);
+			await Send.OkAsync(keys, ct);
 		}
 	}
 }

@@ -28,6 +28,6 @@ public class GetTopicDetails : EndpointWithoutRequest<TopicDetails>
 		var topicName = Route<string>("topicName", isRequired: true);
 		
 		var topicDetails = await topicsRepository.GetTopicDetailsAsync(server!, topicName!);
-		await SendOkAsync(topicDetails, ct);
+		await Send.OkAsync(topicDetails, ct);
 	}
 }

@@ -25,6 +25,6 @@ public class GetAllKafka : EndpointWithoutRequest<IEnumerable<KafkaRecord>>
     public override async Task HandleAsync(CancellationToken ct)
     {
         var kafkaRecords = await kafkaRepository.GetAll();
-        await SendOkAsync(kafkaRecords, ct);
+        await Send.OkAsync(kafkaRecords, ct);
     }
 }

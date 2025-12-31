@@ -25,7 +25,7 @@ namespace Nanuq.WebApi.Endpoints.Sqlite.RabbitMQ
 		public override async Task HandleAsync(CancellationToken ct)
 		{
 			var rabbitMqRecords = await rabbitMqRepository.GetAll();
-			await SendOkAsync(rabbitMqRecords, ct);
+			await Send.OkAsync(rabbitMqRecords, ct);
 		}
 	}
 }

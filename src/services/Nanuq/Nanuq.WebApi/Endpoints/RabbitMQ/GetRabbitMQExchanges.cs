@@ -29,7 +29,7 @@ public class GetRabbitMQExchanges : EndpointWithoutRequest<bool>
 		var password = Route<string>("password", isRequired: true);
 
 		rabbitMQManager.GetConnection(serverUrl!, username!, password!);
-		await SendOkAsync(ct);
+		await Send.OkAsync(ct);
 	}
 
 }

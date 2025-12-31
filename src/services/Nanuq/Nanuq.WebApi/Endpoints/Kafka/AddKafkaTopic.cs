@@ -25,6 +25,6 @@ public class AddKafkaTopic : Endpoint<AddKafkaTopicRequest, bool>
 	public override async Task HandleAsync(AddKafkaTopicRequest req, CancellationToken ct)
 	{
 		var added = await topicsRepository.AddTopicAsync(req);
-		await SendOkAsync(added, ct);
+		await Send.OkAsync(added, ct);
 	}
 }

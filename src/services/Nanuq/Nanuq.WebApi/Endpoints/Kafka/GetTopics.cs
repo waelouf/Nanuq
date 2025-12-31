@@ -26,6 +26,6 @@ public class GetTopics : EndpointWithoutRequest<IEnumerable<Topic>>
 	{
 		var server = Route<string>("server", isRequired: true);
 		var topics = await topicsRepository.GetTopicsAsync(server!);
-		await SendOkAsync(topics, ct);
+		await Send.OkAsync(topics, ct);
 	}
 }

@@ -32,11 +32,11 @@ public class DeleteKafkaTopic : EndpointWithoutRequest<bool>
 		var deleted = await topicsRepository.DeleteTopicAsync(req);
 		if (deleted)
 		{
-			await SendOkAsync(deleted, ct);
+			await Send.OkAsync(deleted, ct);
 		}
 		else
 		{
-			await SendNotFoundAsync(ct);
+			await Send.NotFoundAsync(ct);
 		}
 	}
 }

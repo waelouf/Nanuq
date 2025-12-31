@@ -10,7 +10,7 @@ public class RabbitMQManagerRepository : IRabbitMQManagerRepository
 		var urlParts = serverUrl.Split(':');
 
 		var factory = new ConnectionFactory() { HostName = urlParts[0], Port = int.Parse(urlParts[1]), UserName = username, Password = password };
-		using var connection = factory.CreateConnection();
+		using var connection = factory.CreateConnectionAsync();
 
 		// Not implemented yet
 	}

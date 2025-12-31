@@ -25,8 +25,8 @@ public class GetTopicsTests
         var serverName = "test-server";
         var expectedTopics = new List<Topic>
         {
-            new Topic { Name = "topic1", Partitions = 3 },
-            new Topic { Name = "topic2", Partitions = 5 }
+            new Topic("topic1", 3),
+            new Topic("topic2", 5)
         };
 
         _mockTopicsRepository
@@ -41,7 +41,7 @@ public class GetTopicsTests
         // Assert
         topics.Should().NotBeNull();
         topics.Should().HaveCount(2);
-        topics.First().Name.Should().Be("topic1");
+        topics.First().TopicName.Should().Be("topic1");
     }
 
     [Fact]

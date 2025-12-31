@@ -28,10 +28,10 @@ public class GetRedis : EndpointWithoutRequest<RedisRecord>
         var redisRecord = await redisRepository.Get(id);
         if (redisRecord is null)
         {
-            await SendNotFoundAsync(ct);
+            await Send.NotFoundAsync(ct);
             return;
         }
 
-        await SendOkAsync(redisRecord, ct);
+        await Send.OkAsync(redisRecord, ct);
     }
 }

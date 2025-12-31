@@ -26,6 +26,6 @@ public class GetRedisServer : EndpointWithoutRequest<ServerDetails>
 	{
 		var server = Route<string>("server", isRequired: true);
 		var redisDetails = redisManager.GetDatabases(server!);
-		await SendOkAsync(redisDetails, ct);
+		await Send.OkAsync(redisDetails, ct);
 	}
 }

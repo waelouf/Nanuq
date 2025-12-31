@@ -25,6 +25,6 @@ public class AddRabbitMQ : Endpoint<AddRabbitMQRecordRequest, int>
 	public override async Task HandleAsync(AddRabbitMQRecordRequest req, CancellationToken ct)
 	{
 		var inserted = await rabbitMqRepository.Add(req.ToRecord());
-		await SendOkAsync(inserted, ct);
+		await Send.OkAsync(inserted, ct);
 	}
 }

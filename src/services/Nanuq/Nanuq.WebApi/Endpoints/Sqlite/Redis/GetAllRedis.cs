@@ -25,6 +25,6 @@ public class GetAllRedis : EndpointWithoutRequest<IEnumerable<RedisRecord>>
     public override async Task HandleAsync(CancellationToken ct)
     {
         var redisRecords = await redisRepository.GetAll();
-        await SendOkAsync(redisRecords, ct);
+        await Send.OkAsync(redisRecords, ct);
     }
 }

@@ -25,6 +25,6 @@ public class AddKafka : Endpoint<AddKafkaRecordRequest, int>
     public override async Task HandleAsync(AddKafkaRecordRequest req, CancellationToken ct)
     {
         var inserted = await kafkaRepository.Add(req.ToRecord());
-        await SendOkAsync(inserted, ct);
+        await Send.OkAsync(inserted, ct);
     }
 }

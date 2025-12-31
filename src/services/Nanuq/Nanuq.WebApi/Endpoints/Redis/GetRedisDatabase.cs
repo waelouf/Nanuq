@@ -28,6 +28,6 @@ public class GetRedisDatabase : EndpointWithoutRequest<DatabaseDetails>
 		var database = Route<int>("database", isRequired: true); 
 
 		var databaseDetails = redisManager.GetDatabase(server, database);
-		await SendOkAsync(databaseDetails, ct);
+		await Send.OkAsync(databaseDetails, ct);
 	}
 }

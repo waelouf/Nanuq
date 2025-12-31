@@ -25,6 +25,6 @@ public class SetRedisCache : Endpoint<SetStringCacheRequest, bool>
 	public override async Task HandleAsync(SetStringCacheRequest req, CancellationToken ct)
 	{
 		var added = await redisManager.SetStringCache(req.ServerUrl, req.Database, req.Key, req.Value, req.TtlMilliseconds);
-		await SendOkAsync(added, ct);
+		await Send.OkAsync(added, ct);
 	}
 }

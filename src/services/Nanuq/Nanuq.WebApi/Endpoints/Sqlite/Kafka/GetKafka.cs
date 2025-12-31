@@ -28,10 +28,10 @@ public class GetKafka : EndpointWithoutRequest<KafkaRecord>
         var kafkaRecord = await kafkaRepository.Get(id);
         if (kafkaRecord is null)
         {
-            await SendNotFoundAsync(ct);
+            await Send.NotFoundAsync(ct);
             return;
         }
 
-        await SendOkAsync(kafkaRecord, ct);
+        await Send.OkAsync(kafkaRecord, ct);
     }
 }
