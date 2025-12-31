@@ -1,6 +1,7 @@
 // CommonJS syntax
 module.exports = {
   transpileDependencies: [],
+  lintOnSave: false, // Disable ESLint during serve
   devServer: {
     proxy: {
       '/': {

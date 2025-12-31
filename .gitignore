@@ -401,3 +401,5 @@ src/services/Nanuq/.idea/.idea.Nanuq/.idea/.gitignore
 .idea/
 src/app/nanuq-app/package-lock.json
 package-lock.json
+.claude/settings.local.json
+CLAUDE.md
