@@ -4,10 +4,12 @@ module.exports = {
   lintOnSave: false, // Disable ESLint during serve
   devServer: {
     proxy: {
-      '/': {
+      // Proxy API requests to backend during development
+      '^/(kafka|redis|rabbitmq|sqlite)': {
         target: process.env.VUE_APP_API_BASE_URL || 'http://localhost:5000',
         changeOrigin: true,
         ws: false, // Disable WebSocket
+        logLevel: 'debug',
       },
     },
   },

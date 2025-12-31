@@ -6,20 +6,22 @@ services:
         - nanuq-network
     environment:
         - ASPNETCORE_HTTP_PORTS=5000
-    ports:
-      - "5000:5000"
+    expose:
+      - "5000"
+    # Only expose backend port for debugging, comment out for production
+    # ports:
+    #   - "5000:5000"
+
   web:
     image: waelouf/nanuq-app:0.2.0
     container_name: web
     networks:
         - nanuq-network
-    environment:
-        - VUE_APP_API_BASE_URL=http://backend:5000/
     ports:
-      - "8080:8080"
+      - "8080:80"
     depends_on:
       - backend
-      
+    restart: unless-stopped
 
 networks:
   nanuq-network:

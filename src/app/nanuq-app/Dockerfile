@@ -1,22 +1,31 @@
-FROM node:lts-alpine
+# Build stage
+FROM node:20-alpine AS build-stage
 
-# install simple http server for serving static content
-RUN npm install -g http-server
-
-# make the 'app' folder the current working directory
 WORKDIR /app
 
-# copy both 'package.json' and 'package-lock.json' (if available)
+# Copy package files
 COPY package*.json ./
 
-# install project dependencies
-RUN npm install
+# Install dependencies
+RUN npm ci
 
-# copy project files and folders to the current working directory (i.e. 'app' folder)
+# Copy project files
 COPY . .
 
-# build app for production with minification
+# Build app for production - API calls will be relative paths
 RUN npm run build
-ENV VUE_APP_API_BASE_URL=http://backend:5000
-EXPOSE 8080
-CMD [ "http-server", "dist" ]
+
+# Production stage with nginx
+FROM nginx:stable-alpine AS production-stage
+
+# Copy custom nginx config
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Copy built app from build stage
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+
+# Expose port 80
+EXPOSE 80
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
