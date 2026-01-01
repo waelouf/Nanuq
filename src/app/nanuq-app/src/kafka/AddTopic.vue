@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="mx-auto" width="300">
+  <v-sheet class="mx-auto" width="75%">
     <v-form fast-fail @submit.prevent>
       <v-text-field
         v-model="bootstrapServer"
