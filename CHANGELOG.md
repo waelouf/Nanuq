@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Docker**: docker-compose.yml updated with proper networking configuration
 - **Frontend**: HomePage lazy-loaded for smaller initial bundle
 - **Frontend**: External CSS/JS resources optimized with preconnect and defer attributes
+- **Frontend**: Bootstrap CSS (styles.css) now bundled locally instead of loaded from CDN
 - **Vuetify**: Replaced deprecated VTabsItems → VTabsWindow and VTabItem → VTabsWindowItem
 
 ### Fixed
