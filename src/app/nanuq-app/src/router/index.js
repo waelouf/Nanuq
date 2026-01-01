@@ -1,13 +1,12 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import HomePage from '@/home/HomePage.vue';
 
-// Lazy load other components to reduce initial bundle size
+// Lazy load all components to reduce initial bundle size
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomePage,
+    component: () => import(/* webpackChunkName: "home" */ '@/home/HomePage.vue'),
   },
   {
     path: '/kafka',

@@ -74,5 +74,11 @@ module.exports = {
       maxEntrypointSize: 512000, // Increase from default 244KiB to 500KiB
       maxAssetSize: 512000, // Increase from default 244KiB to 500KiB
     },
+    optimization: {
+      // Minimize the bundle size
+      usedExports: true,
+      // Better module concatenation
+      concatenateModules: true,
+    },
   },
 };

@@ -4,11 +4,22 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <!-- Preconnect to external domains for faster resource loading -->
+    <link rel="preconnect" href="https://cdn.datatables.net">
+    <link rel="preconnect" href="https://cdn.statically.io">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://use.fontawesome.com">
+
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title>Nanuq - Middleware manager</title>
-    <link href="//cdn.datatables.net/2.1.4/css/dataTables.dataTables.min.css" rel="stylesheet" />
-    <link href="https://cdn.statically.io/gh/waelouf/cdn/main/projects/nanuq/frontend/assets/css/styles.css"
-          rel="stylesheet" />
+
+    <!-- Load non-critical CSS asynchronously -->
+    <link rel="preload" href="//cdn.datatables.net/2.1.4/css/dataTables.dataTables.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="//cdn.datatables.net/2.1.4/css/dataTables.dataTables.min.css" rel="stylesheet" /></noscript>
+
+    <link rel="preload" href="https://cdn.statically.io/gh/waelouf/cdn/main/projects/nanuq/frontend/assets/css/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://cdn.statically.io/gh/waelouf/cdn/main/projects/nanuq/frontend/assets/css/styles.css" rel="stylesheet" /></noscript>
   </head>
   <body>
     <noscript>
@@ -17,8 +28,10 @@
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="./js/scripts.js"></script>
-    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+    <!-- Load scripts with defer for non-blocking execution -->
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script defer src="./js/scripts.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
   </body>
 </html>
