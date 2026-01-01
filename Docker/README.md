@@ -57,13 +57,15 @@ docker-compose down
 ### Frontend Image
 ```bash
 cd src/app/nanuq-app/
-docker build -t waelouf/nanuq-app:0.2.0 .
+docker build -t waelouf/nanuq-app:1.0.0 .
+docker build -t waelouf/nanuq-app:latest .
 ```
 
 ### Backend Image
 ```bash
 cd src/services/Nanuq/
-docker build -t waelouf/nanuq-server:0.2.0 -f Dockerfile .
+docker build -t waelouf/nanuq-server:1.0.0 -f Dockerfile .
+docker build -t waelouf/nanuq-server:latest -f Dockerfile .
 ```
  
 ## Configuration
