@@ -2,6 +2,7 @@
 module.exports = {
   transpileDependencies: [],
   lintOnSave: false, // Disable ESLint during serve
+
   devServer: {
     proxy: {
       // Proxy API requests to backend during development
@@ -13,9 +14,14 @@ module.exports = {
       },
     },
   },
-  
+
   // Configure webpack optimization for production
   chainWebpack: (config) => {
+    // Disable defer for script tags - load synchronously for faster initial render
+    config.plugin('html').tap(args => {
+      args[0].scriptLoading = 'blocking';
+      return args;
+    });
     if (process.env.NODE_ENV === 'production') {
       // Disable performance hints during development
       config.performance.hints(false);
