@@ -1,6 +1,6 @@
 services:
   backend:
-    image: waelouf/nanuq-server:0.2.0
+    image: waelouf/nanuq-api:latest
     container_name: backend
     networks:
         - nanuq-network
@@ -8,12 +8,9 @@ services:
         - ASPNETCORE_HTTP_PORTS=5000
     expose:
       - "5000"
-    # Only expose backend port for debugging, comment out for production
-    # ports:
-    #   - "5000:5000"
 
   web:
-    image: waelouf/nanuq-app:0.2.0
+    image: waelouf/nanuq-app:latest
     container_name: web
     networks:
         - nanuq-network

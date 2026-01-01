@@ -65,7 +65,7 @@ docker build -t waelouf/nanuq-app:0.2.0 .
 cd src/services/Nanuq/
 docker build -t waelouf/nanuq-server:0.2.0 -f Dockerfile .
 ```
-
+ 
 ## Configuration
 
 ### Frontend (nginx)
