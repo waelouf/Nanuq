@@ -43,6 +43,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Docker**: CORS and networking configuration for proper API proxying
 - **UI**: Broken styling in production build (critical CSS now loads synchronously)
 - **Build**: Vuetify component import warnings (VTabsItems, VTabItem)
+- **Performance**: White screen on initial load in production (removed defer from Vue app scripts)
+- **Performance**: CDN redirect delay for styles.css (fixed URL from /main/ to @main/)
 
 ### Performance
 - **Build Time**: Reduced from 116s to 48s (58% faster)
