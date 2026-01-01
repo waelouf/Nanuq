@@ -14,12 +14,12 @@
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title>Nanuq - Middleware manager</title>
 
-    <!-- Load non-critical CSS asynchronously -->
+    <!-- Critical CSS - load synchronously for proper styling -->
+    <link href="https://cdn.statically.io/gh/waelouf/cdn/main/projects/nanuq/frontend/assets/css/styles.css" rel="stylesheet" />
+
+    <!-- Non-critical CSS - load asynchronously -->
     <link rel="preload" href="//cdn.datatables.net/2.1.4/css/dataTables.dataTables.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link href="//cdn.datatables.net/2.1.4/css/dataTables.dataTables.min.css" rel="stylesheet" /></noscript>
-
-    <link rel="preload" href="https://cdn.statically.io/gh/waelouf/cdn/main/projects/nanuq/frontend/assets/css/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link href="https://cdn.statically.io/gh/waelouf/cdn/main/projects/nanuq/frontend/assets/css/styles.css" rel="stylesheet" /></noscript>
   </head>
   <body>
     <noscript>

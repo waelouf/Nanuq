@@ -15,11 +15,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 30 frontend tests and 10 backend tests
 - CLAUDE.md documentation for AI-assisted development
 - Test commands in documentation
+- Docker deployment documentation (Docker/README.md)
+- Frontend performance optimization guide (PERFORMANCE.md)
+- Nginx reverse proxy configuration in frontend Docker container
+- VSheet component to Vuetify imports (was missing)
 
 ### Changed
 - Updated frontend dependencies to resolve security vulnerabilities
 - Fixed ESLint and build configuration issues
 - Disabled ESLint during development to resolve child compilation errors
+- **GitHub Actions**: Updated Node.js version from 18.x to 20.x (LTS)
+- **GitHub Actions**: Fixed package-lock.json sync issues
+- **UI Enhancement**: Text field widths in Add modals changed from 300px to 75% for better usability
+- **Docker**: Frontend container now uses nginx for production serving (replaced http-server)
+- **Docker**: API calls proxied through nginx to backend service
+- **Docker**: docker-compose.yml updated with proper networking configuration
+- **Frontend**: HomePage lazy-loaded for smaller initial bundle
+- **Frontend**: External CSS/JS resources optimized with preconnect and defer attributes
+- **Vuetify**: Replaced deprecated VTabsItems → VTabsWindow and VTabItem → VTabsWindowItem
+
+### Fixed
+- **GitHub Actions**: Frontend workflow failing due to missing package-lock.json
+- **GitHub Actions**: npm ci sync errors with picomatch and yaml versions
+- **Tests**: All 19 failing frontend tests (apiClient, sqlite store, redis store)
+- **Tests**: Fixed Vuetify component mocking issues in test suites
+- **Docker**: Frontend-to-backend communication issues (browser couldn't resolve backend hostname)
+- **Docker**: CORS and networking configuration for proper API proxying
+- **UI**: Broken styling in production build (critical CSS now loads synchronously)
+- **Build**: Vuetify component import warnings (VTabsItems, VTabItem)
+
+### Performance
+- **Build Time**: Reduced from 116s to 48s (58% faster)
+- **Bundle Size**: app.js reduced from 16.67 KiB to 14.94 KiB
+- **Initial Load**: HomePage now lazy-loaded (2.04 KiB on-demand chunk)
+- **Resource Loading**: External resources (Bootstrap, FontAwesome) no longer block rendering
+- **DNS Resolution**: Faster via preconnect hints for external CDNs
+- **Tree-shaking**: Improved with usedExports and concatenateModules webpack optimizations
 
 ## [0.2.0] - 2025-05-12
 
