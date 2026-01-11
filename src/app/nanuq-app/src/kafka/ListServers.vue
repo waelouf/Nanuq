@@ -13,6 +13,7 @@
                 <th>Id</th>
                 <th>alias</th>
                 <th>Server</th>
+                <th>Auth</th>
                 <th />
                 <th />
               </tr>
@@ -24,6 +25,24 @@
                 <td>{{ server.id }}</td>
                 <td>{{ server.alias }}</td>
                 <td>{{ server.bootstrapServer }}</td>
+                <td>
+                  <v-icon
+                    v-if="hasCredentials('Kafka', server.id)"
+                    color="success"
+                    size="small"
+                    title="Credentials configured"
+                  >
+                    mdi-shield-lock
+                  </v-icon>
+                  <v-icon
+                    v-else
+                    color="grey"
+                    size="small"
+                    title="No credentials"
+                  >
+                    mdi-shield-off
+                  </v-icon>
+                </td>
                 <td>
                   <router-link
                     :to="{
@@ -68,8 +87,18 @@ import AddServer from './AddServer.vue';
 export default ({
   name: 'ListServers',
   components: { AddServer },
-  created() {
-    this.$store.dispatch('sqlite/loadKafkaServers');
+  async created() {
+    await this.$store.dispatch('sqlite/loadKafkaServers');
+    // Load credential metadata for all servers
+    const servers = this.$store.state.sqlite.kafkaServers;
+    servers.forEach((server) => {
+      this.$store.dispatch('credentials/fetchCredentialMetadata', {
+        serverType: 'Kafka',
+        serverId: server.id,
+      }).catch(() => {
+        // Ignore 404 errors for servers without credentials
+      });
+    });
   },
   computed: {
     availableServers() {
@@ -82,6 +111,9 @@ export default ({
     };
   },
   methods: {
+    hasCredentials(serverType, serverId) {
+      return this.$store.getters['credentials/hasCredentials'](serverType, serverId);
+    },
     addServer() {
       this.showAddServerDialog = true;
     },

@@ -13,6 +13,7 @@
                 <th>Id</th>
                 <th>alias</th>
                 <th>Server</th>
+                <th>Auth</th>
                 <th />
                 <th />
               </tr>
@@ -27,6 +28,24 @@
                   <a @click="showServerDetails(server.serverUrl)">
                     <i class="fa-solid fa-circle-info" />
                   </a></td>
+                <td>
+                  <v-icon
+                    v-if="hasCredentials('Redis', server.id)"
+                    color="success"
+                    size="small"
+                    title="Credentials configured"
+                  >
+                    mdi-shield-lock
+                  </v-icon>
+                  <v-icon
+                    v-else
+                    color="grey"
+                    size="small"
+                    title="No credentials"
+                  >
+                    mdi-shield-off
+                  </v-icon>
+                </td>
                 <td>
                   <router-link
                     :to="{
@@ -81,8 +100,18 @@ import ViewServerFullDetails from './ViewServerFullDetails.vue';
 export default ({
   name: 'ListServers',
   components: { AddRedisServer, ViewServerFullDetails },
-  created() {
-    this.$store.dispatch('sqlite/loadRedisServers');
+  async created() {
+    await this.$store.dispatch('sqlite/loadRedisServers');
+    // Load credential metadata for all servers
+    const servers = this.$store.state.sqlite.redisServers;
+    servers.forEach((server) => {
+      this.$store.dispatch('credentials/fetchCredentialMetadata', {
+        serverType: 'Redis',
+        serverId: server.id,
+      }).catch(() => {
+        // Ignore 404 errors for servers without credentials
+      });
+    });
   },
   computed: {
     availableServers() {
@@ -97,6 +126,9 @@ export default ({
     };
   },
   methods: {
+    hasCredentials(serverType, serverId) {
+      return this.$store.getters['credentials/hasCredentials'](serverType, serverId);
+    },
     addServer() {
       this.showAddServerDialog = true;
     },
