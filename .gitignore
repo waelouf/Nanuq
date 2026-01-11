@@ -402,3 +402,4 @@ src/services/Nanuq/.idea/.idea.Nanuq/.idea/.gitignore
 .claude/settings.local.json
 CLAUDE.md
 Docker/README.md
+docs/**/*

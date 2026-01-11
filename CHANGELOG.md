@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Authentication & Security Infrastructure (Phase 1)**
+  - Nanuq.Security project with AES-256 credential encryption
+    - DPAPI-based key derivation for Windows
+    - Random IV per encryption for enhanced security
+    - Base64 encoding for database storage
+  - Nanuq.Migrations project with DbUp for SQL-based migrations
+    - Automatic migration execution on application startup
+    - SchemaVersions tracking table
+    - Embedded SQL migration scripts
+  - ServerCredentials table for encrypted credential storage
+    - Unique index on ServerId + ServerType
+    - Automatic timestamp tracking (CreatedAt, UpdatedAt, LastUsedAt)
+    - EncryptionKeyId for key rotation support
+  - Credential management API endpoints (5 endpoints)
+    - POST /credentials - Add encrypted credentials
+    - GET /credentials/{serverId}/{serverType} - Get metadata (no password exposure)
+    - PUT /credentials/{id} - Update credentials
+    - DELETE /credentials/{id} - Delete credentials
+    - POST /credentials/test - Test connection without saving
+  - CredentialRepository with automatic encrypt/decrypt
+  - KafkaConfigBuilder helper for SASL/PLAIN authentication
+  - RedisConfigBuilder helper for password and ACL authentication
+
+### Changed
+- Nanuq.Sqlite project now references Nanuq.Security for credential encryption
+- NanuqContext updated with ServerCredentials DbSet
+- Program.cs updated to run migrations before DbContext initialization
+
+### Security
+- All server credentials now encrypted at rest using AES-256
+- Passwords never exposed in API responses (metadata only)
+- Encryption service uses Windows DPAPI for secure key storage
+
 ## [1.0.0] - 2026-01-01
 
 **Major Release** - Production-ready frontend with comprehensive testing, Docker optimization, and significant performance improvements.

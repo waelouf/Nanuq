@@ -27,6 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Nanuq.Common\Nanuq.Common.csproj" />
     <ProjectReference Include="..\Nanuq.EF\Nanuq.EF.csproj" />
+    <ProjectReference Include="..\Nanuq.Security\Nanuq.Security.csproj" />
   </ItemGroup>
 
 </Project>

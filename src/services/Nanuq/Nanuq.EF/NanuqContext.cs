@@ -15,6 +15,8 @@ namespace Nanuq.EF
 
         public DbSet<RabbitMQRecord> RabbitMQ { get; set; }
 
+        public DbSet<ServerCredential> ServerCredentials { get; set; }
+
         public NanuqContext(DbContextOptions<NanuqContext> options)
             :base(options)
         {

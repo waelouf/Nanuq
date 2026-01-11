@@ -15,11 +15,21 @@ Built with a focus on usability and efficiency, Nanuq aims to reduce the overhea
 
 ## Feature list
 
+### Authentication & Security
+
+- **Encrypted Credential Storage** - AES-256 encryption for all stored credentials
+- **Database Migrations** - DbUp-based SQL migrations for schema management
+- **Credential Management API** - Full CRUD operations for server credentials
+- **Connection Testing** - Test Kafka/Redis connections before saving credentials
+- **Secure Storage** - Passwords never exposed in API responses, only metadata
+
 ### Kafka
 
 - Display server's topics
 - Display how many items in each topic
 - Add topic
+- **Authentication Support** - SASL/PLAIN authentication for secured Kafka clusters
+- **Credential Management** - Store and manage Kafka server credentials securely
 
 ### Redis
 
@@ -28,6 +38,8 @@ Built with a focus on usability and efficiency, Nanuq aims to reduce the overhea
 - Display all string cached keys
 - Add item to cache
 - Invalidate cache
+- **Authentication Support** - Password and ACL (Redis 6+) authentication
+- **Credential Management** - Store and manage Redis server credentials securely
 
 ## Screenshot
 

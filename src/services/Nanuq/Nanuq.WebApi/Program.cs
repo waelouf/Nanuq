@@ -12,8 +12,19 @@ using Nanuq.Redis.Interfaces;
 using Nanuq.Redis.Repository;
 using Nanuq.RabbitMQ.Interfaces;
 using Nanuq.RabbitMQ.Repository;
+using Nanuq.Migrations;
+using Nanuq.Security.Interfaces;
+using Nanuq.Security.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Run database migrations
+var connectionString = builder.Configuration.GetConnectionString("NanuqSqliteConfigurations");
+var migrationRunner = new MigrationRunner(connectionString);
+if (!migrationRunner.Run())
+{
+	throw new Exception("Database migration failed. Application cannot start.");
+}
 
 builder.AddServiceDefaults();
 builder.Services.AddFastEndpoints();
@@ -42,6 +53,10 @@ builder.Services.AddScoped<IRabbitMqRepository, RabbitMqRepository>();
 builder.Services.AddScoped<IRabbitMQManagerRepository, RabbitMQManagerRepository>();
 
 builder.Services.AddScoped<ITopicsRepository, TopicsRepository>();
+
+// Credential encryption and management
+builder.Services.AddSingleton<ICredentialService, AesCredentialService>();
+builder.Services.AddScoped<ICredentialRepository, CredentialRepository>();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

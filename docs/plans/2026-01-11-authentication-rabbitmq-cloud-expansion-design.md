@@ -200,7 +200,7 @@ var factory = new ConnectionFactory
 using var connection = factory.CreateConnection();
 using var channel = connection.CreateModel();
 ```
-
+ 
 ### New Entities
 
 **Location:** `Nanuq.RabbitMQ/Entities/`
