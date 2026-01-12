@@ -117,11 +117,18 @@ export default {
       };
 
       try {
-        // Dispatch action to save server
+        // Save the server
         await this.$store.dispatch('sqlite/addRedisServer', serverDetails);
 
-        // Reload servers to get the ID
+        // Wait a bit for the save to complete, then reload servers
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // Reload servers and find the saved one
         await this.$store.dispatch('sqlite/loadRedisServers');
+
+        // Wait for the state to update
+        await this.$nextTick();
+
         const servers = this.$store.state.sqlite.redisServers;
         const savedServer = servers.find(
           (s) => s.serverUrl === this.serverUrl && s.alias === this.alias
@@ -131,6 +138,8 @@ export default {
           this.savedServerId = savedServer.id;
           // Switch to credentials tab
           this.tab = 'credentials';
+        } else {
+          console.error('Could not find saved server', { serverUrl: this.serverUrl, alias: this.alias, servers });
         }
       } catch (error) {
         console.error('Error saving server:', error);

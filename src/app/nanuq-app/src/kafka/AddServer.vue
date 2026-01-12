@@ -117,12 +117,18 @@ export default {
       };
 
       try {
-        // Dispatch action to save server and get the server ID
-        const result = await this.$store.dispatch('sqlite/addKafkaServer', serverDetails);
+        // Save the server
+        await this.$store.dispatch('sqlite/addKafkaServer', serverDetails);
 
-        // Store the saved server ID (assuming the action returns it)
-        // If it doesn't, we'll need to fetch the servers and find it
+        // Wait a bit for the save to complete, then reload servers
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // Reload servers and find the saved one
         await this.$store.dispatch('sqlite/loadKafkaServers');
+
+        // Wait for the state to update
+        await this.$nextTick();
+
         const servers = this.$store.state.sqlite.kafkaServers;
         const savedServer = servers.find(
           (s) => s.bootstrapServer === this.bootstrapServer && s.alias === this.alias
@@ -132,6 +138,8 @@ export default {
           this.savedServerId = savedServer.id;
           // Switch to credentials tab
           this.tab = 'credentials';
+        } else {
+          console.error('Could not find saved server', { bootstrapServer: this.bootstrapServer, alias: this.alias, servers });
         }
       } catch (error) {
         console.error('Error saving server:', error);
