@@ -1,15 +1,15 @@
-﻿using Nanuq.RabbitMQ.Interfaces;
+﻿using Nanuq.Common.Records;
+using Nanuq.RabbitMQ.Helpers;
+using Nanuq.RabbitMQ.Interfaces;
 using RabbitMQ.Client;
 
 namespace Nanuq.RabbitMQ.Repository;
 
 public class RabbitMQManagerRepository : IRabbitMQManagerRepository
 {
-	public void GetConnection(string serverUrl, string username, string password)
+	public void GetConnection(string serverUrl, ServerCredential? credential = null)
 	{
-		var urlParts = serverUrl.Split(':');
-
-		var factory = new ConnectionFactory() { HostName = urlParts[0], Port = int.Parse(urlParts[1]), UserName = username, Password = password };
+		var factory = RabbitMQConfigBuilder.BuildConnectionFactory(serverUrl, credential);
 		using var connection = factory.CreateConnectionAsync();
 
 		// Not implemented yet
