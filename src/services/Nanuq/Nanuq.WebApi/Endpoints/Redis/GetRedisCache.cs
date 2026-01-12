@@ -1,4 +1,7 @@
 ﻿using FastEndpoints;
+using Nanuq.Common.Enums;
+using Nanuq.Common.Interfaces;
+using Nanuq.Common.Records;
 using Nanuq.Redis.Interfaces;
 
 namespace Nanuq.WebApi.Endpoints.Redis
@@ -6,10 +9,14 @@ namespace Nanuq.WebApi.Endpoints.Redis
 	public class GetRedisCache : EndpointWithoutRequest<string?>
 	{
 		private IRedisManagerRepository redisManager;
+		private IRedisRepository redisRepository;
+		private ICredentialRepository credentialRepository;
 
-		public GetRedisCache(IRedisManagerRepository redisManager)
+		public GetRedisCache(IRedisManagerRepository redisManager, IRedisRepository redisRepository, ICredentialRepository credentialRepository)
 		{
 			this.redisManager = redisManager;
+			this.redisRepository = redisRepository;
+			this.credentialRepository = credentialRepository;
 		}
 
 		public override void Configure()
@@ -27,8 +34,23 @@ namespace Nanuq.WebApi.Endpoints.Redis
 			var database = Route<int>("database", isRequired: true);
 			var key = Route<string>("key", isRequired: true);
 
-			var val = await redisManager.GetStringCache(server!, database, key!);
-			
+			// Try to get credentials for this server
+			ServerCredential? credential = null;
+			var redisServers = await redisRepository.GetAll();
+			var redisServer = redisServers.FirstOrDefault(s => s.ServerUrl == server);
+
+			if (redisServer != null)
+			{
+				credential = await credentialRepository.GetByServerAsync(redisServer.Id, ServerType.Redis);
+
+				if (credential != null)
+				{
+					await credentialRepository.UpdateLastUsedAsync(credential.Id);
+				}
+			}
+
+			var val = await redisManager.GetStringCache(server!, database, key!, credential);
+
 			if(val == null)
 			{
 				await Send.NotFoundAsync(ct);
@@ -37,7 +59,7 @@ namespace Nanuq.WebApi.Endpoints.Redis
 			{
 				await Send.OkAsync(val, ct);
 			}
-			
+
 		}
 	}
 }

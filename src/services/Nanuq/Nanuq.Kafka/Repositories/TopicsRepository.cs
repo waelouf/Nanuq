@@ -3,7 +3,9 @@ using Confluent.Kafka.Admin;
 using Microsoft.Extensions.Logging;
 using Nanuq.Common.Enums;
 using Nanuq.Common.Interfaces;
+using Nanuq.Common.Records;
 using Nanuq.Kafka.Entities;
+using Nanuq.Kafka.Helpers;
 using Nanuq.Kafka.Interfaces;
 using Nanuq.Kafka.Requests;
 
@@ -21,12 +23,9 @@ public class TopicsRepository : ITopicsRepository
 		this.activityLog = activityLog;
 	}
 
-	public async Task<IEnumerable<Topic>> GetTopicsAsync(string bootstrapServers)
+	public async Task<IEnumerable<Topic>> GetTopicsAsync(string bootstrapServers, ServerCredential? credential = null)
     {
-		var config = new AdminClientConfig
-        {
-            BootstrapServers = bootstrapServers
-        };
+		var config = KafkaConfigBuilder.BuildAdminConfig(bootstrapServers, credential);
 
         using var adminClient = new AdminClientBuilder(config).Build();
         try
@@ -42,24 +41,15 @@ public class TopicsRepository : ITopicsRepository
         }
     }
 
-	public async Task<TopicDetails> GetTopicDetailsAsync(string bootstrapServers, string topicName)
+	public async Task<TopicDetails> GetTopicDetailsAsync(string bootstrapServers, string topicName, ServerCredential? credential = null)
 	{
 		long messagesCount = 0;
 
-		var config = new AdminClientConfig
-		{
-			BootstrapServers = bootstrapServers
-		};
+		var adminConfig = KafkaConfigBuilder.BuildAdminConfig(bootstrapServers, credential);
+		var consumerConfig = KafkaConfigBuilder.BuildConsumerConfig(bootstrapServers, new Guid().ToString(), credential);
 
-
-		using var adminClient = new AdminClientBuilder(config).Build();
-
-		using var consumer = new ConsumerBuilder<Ignore, Ignore>(new ConsumerConfig
-		{
-			BootstrapServers = bootstrapServers,
-			GroupId = new Guid().ToString(),
-			EnableAutoCommit = false
-		}).Build();
+		using var adminClient = new AdminClientBuilder(adminConfig).Build();
+		using var consumer = new ConsumerBuilder<Ignore, Ignore>(consumerConfig).Build();
 
 		try
 		{
@@ -86,13 +76,10 @@ public class TopicsRepository : ITopicsRepository
 		return await Task.FromResult(topicDetails);
 	}
 
-	public async Task<bool> DeleteTopicAsync(DeleteKafkaTopicRequest request)
+	public async Task<bool> DeleteTopicAsync(DeleteKafkaTopicRequest request, ServerCredential? credential = null)
 	{
 		bool deleted = false;
-		var config = new AdminClientConfig
-		{
-			BootstrapServers = request.BootstrapServer
-		};
+		var config = KafkaConfigBuilder.BuildAdminConfig(request.BootstrapServer, credential);
 
 		using var adminClient = new AdminClientBuilder(config).Build();
 		try
@@ -121,14 +108,11 @@ public class TopicsRepository : ITopicsRepository
 		return await Task.FromResult(deleted);
 	}
 
-	public async Task<bool> AddTopicAsync(AddKafkaTopicRequest topicRequest)
+	public async Task<bool> AddTopicAsync(AddKafkaTopicRequest topicRequest, ServerCredential? credential = null)
 	{
 		var created = false;
 
-		var config = new AdminClientConfig
-		{
-			BootstrapServers = topicRequest.BootstrapServers
-		};
+		var config = KafkaConfigBuilder.BuildAdminConfig(topicRequest.BootstrapServers, credential);
 
 		using var adminClient = new AdminClientBuilder(config).Build();
 

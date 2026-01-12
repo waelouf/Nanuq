@@ -4,18 +4,23 @@ using FluentAssertions;
 using Nanuq.WebApi.Endpoints.Kafka;
 using Nanuq.Kafka.Interfaces;
 using Nanuq.Kafka.Entities;
+using Nanuq.Common.Interfaces;
 
 namespace Nanuq.Tests.Endpoints;
 
 public class GetTopicsTests
 {
     private readonly Mock<ITopicsRepository> _mockTopicsRepository;
+    private readonly Mock<IKafkaRepository> _mockKafkaRepository;
+    private readonly Mock<ICredentialRepository> _mockCredentialRepository;
     private readonly GetTopics _endpoint;
 
     public GetTopicsTests()
     {
         _mockTopicsRepository = new Mock<ITopicsRepository>();
-        _endpoint = new GetTopics(_mockTopicsRepository.Object);
+        _mockKafkaRepository = new Mock<IKafkaRepository>();
+        _mockCredentialRepository = new Mock<ICredentialRepository>();
+        _endpoint = new GetTopics(_mockTopicsRepository.Object, _mockKafkaRepository.Object, _mockCredentialRepository.Object);
     }
 
     [Fact]

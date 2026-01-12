@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Nanuq.Common.Interfaces;
+using Nanuq.Common.Records;
 using Nanuq.Redis.Entities;
+using Nanuq.Redis.Helpers;
 using Nanuq.Redis.Interfaces;
 using StackExchange.Redis;
 
@@ -18,13 +20,9 @@ public class RedisManagerRepository : IRedisManagerRepository
 		this.activityLog = activityLog;
 	}
 
-	public ServerDetails GetDatabases(string serverUrl)
+	public ServerDetails GetDatabases(string serverUrl, ServerCredential? credential = null)
 	{
-		var configOptions = new ConfigurationOptions
-		{
-			EndPoints = { serverUrl },
-			AllowAdmin = true
-		};
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
 
 		using var redis = ConnectionMultiplexer.Connect(configOptions);
 
@@ -218,15 +216,11 @@ public class RedisManagerRepository : IRedisManagerRepository
 		return serverDetails;
 	}
 
-	public DatabaseDetails GetDatabase(string serverUrl, int database)
+	public DatabaseDetails GetDatabase(string serverUrl, int database, ServerCredential? credential = null)
 	{
 		var databaseDetails = new DatabaseDetails();
 
-		var configOptions = new ConfigurationOptions
-		{
-			EndPoints = { serverUrl },
-			AllowAdmin = true
-		};
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
 
 		using var redis = ConnectionMultiplexer.Connect(configOptions);
 
@@ -265,12 +259,9 @@ public class RedisManagerRepository : IRedisManagerRepository
 		return databaseDetails;
 	}
 
-	public async Task<bool> SetStringCache(string serverUrl, int database, string key, string value, double? ttlMilliseconds)
+	public async Task<bool> SetStringCache(string serverUrl, int database, string key, string value, double? ttlMilliseconds, ServerCredential? credential = null)
 	{
-		var configOptions = new ConfigurationOptions
-		{
-			EndPoints = { serverUrl }
-		};
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
 
 		using var redis = ConnectionMultiplexer.Connect(configOptions);
 
@@ -289,12 +280,9 @@ public class RedisManagerRepository : IRedisManagerRepository
 		return added;
 	}
 
-	public async Task<string?> GetStringCache(string serverUrl, int database, string key)
+	public async Task<string?> GetStringCache(string serverUrl, int database, string key, ServerCredential? credential = null)
 	{
-		var configOptions = new ConfigurationOptions
-		{
-			EndPoints = { serverUrl }
-		};
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
 
 		using var redis = ConnectionMultiplexer.Connect(configOptions);
 
@@ -305,12 +293,9 @@ public class RedisManagerRepository : IRedisManagerRepository
 		return string.IsNullOrEmpty(value) ? null : (string?)value;
 	}
 
-	public async Task<bool> CheckKeyExists(string serverUrl, int database, string key)
+	public async Task<bool> CheckKeyExists(string serverUrl, int database, string key, ServerCredential? credential = null)
 	{
-		var configOptions = new ConfigurationOptions
-		{
-			EndPoints = { serverUrl }
-		};
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
 
 		using var redis = ConnectionMultiplexer.Connect(configOptions);
 
@@ -318,12 +303,9 @@ public class RedisManagerRepository : IRedisManagerRepository
 		return await db.KeyExistsAsync(key);
 	}
 
-	public async Task<bool> InvalidateCache(string serverUrl, int database, string key)
+	public async Task<bool> InvalidateCache(string serverUrl, int database, string key, ServerCredential? credential = null)
 	{
-		var configOptions = new ConfigurationOptions
-		{
-			EndPoints = { serverUrl }
-		};
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
 
 		using var redis = ConnectionMultiplexer.Connect(configOptions);
 
@@ -331,14 +313,11 @@ public class RedisManagerRepository : IRedisManagerRepository
 		return await db.KeyDeleteAsync(key);
 	}
 
-	public async Task<Dictionary<string, string>> GetAllDatabaseStringKeys(string serverUrl, int database)
+	public async Task<Dictionary<string, string>> GetAllDatabaseStringKeys(string serverUrl, int database, ServerCredential? credential = null)
 	{
 		var dbKeys = new List<string>();
 		var cacheDictionary = new Dictionary<string, string>();
-		var configOptions = new ConfigurationOptions
-		{
-			EndPoints = { serverUrl }
-		};
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
 
 		using var redis = ConnectionMultiplexer.Connect(configOptions);
 		var server = redis.GetServer(serverUrl);

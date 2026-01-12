@@ -1,4 +1,7 @@
 ﻿using FastEndpoints;
+using Nanuq.Common.Enums;
+using Nanuq.Common.Interfaces;
+using Nanuq.Common.Records;
 using Nanuq.Redis.Entities;
 using Nanuq.Redis.Interfaces;
 
@@ -7,10 +10,14 @@ namespace Nanuq.WebApi.Endpoints.Redis;
 public class GetRedisDatabase : EndpointWithoutRequest<DatabaseDetails>
 {
 	private IRedisManagerRepository redisManager;
+	private IRedisRepository redisRepository;
+	private ICredentialRepository credentialRepository;
 
-	public GetRedisDatabase(IRedisManagerRepository redisManager)
+	public GetRedisDatabase(IRedisManagerRepository redisManager, IRedisRepository redisRepository, ICredentialRepository credentialRepository)
 	{
 		this.redisManager = redisManager;
+		this.redisRepository = redisRepository;
+		this.credentialRepository = credentialRepository;
 	}
 
 	public override void Configure()
@@ -25,9 +32,24 @@ public class GetRedisDatabase : EndpointWithoutRequest<DatabaseDetails>
 	public override async Task HandleAsync(CancellationToken ct)
 	{
 		var server = Route<string>("server", isRequired: true);
-		var database = Route<int>("database", isRequired: true); 
+		var database = Route<int>("database", isRequired: true);
 
-		var databaseDetails = redisManager.GetDatabase(server, database);
+		// Try to get credentials for this server
+		ServerCredential? credential = null;
+		var redisServers = await redisRepository.GetAll();
+		var redisServer = redisServers.FirstOrDefault(s => s.ServerUrl == server);
+
+		if (redisServer != null)
+		{
+			credential = await credentialRepository.GetByServerAsync(redisServer.Id, ServerType.Redis);
+
+			if (credential != null)
+			{
+				await credentialRepository.UpdateLastUsedAsync(credential.Id);
+			}
+		}
+
+		var databaseDetails = redisManager.GetDatabase(server, database, credential);
 		await Send.OkAsync(databaseDetails, ct);
 	}
 }
