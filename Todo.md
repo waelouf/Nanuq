@@ -5,15 +5,14 @@
   - Activity log
   - Error handling (alerts instead of console)
 - Connect to the following
-  - Kafka
-    - Secured login
+  - Kafka - ✅ Secured login implemented
     - Real time
-  - RabbitMQ - in progress
-    - Topic
-    - Exchange
-    - How many item in each topic
-  - Redis
-    - Secured login
+  - RabbitMQ - ✅ Basic features complete
+    - ✅ Exchanges (list, create, delete)
+    - ✅ Queues (list, create, delete, details)
+    - Message browsing (future enhancement)
+    - Bindings management (future enhancement)
+  - Redis - ✅ Secured login implemented
     - Pubsub Channels
     - Manage different types of objects (List, Set, SortedSet, Hash, Stream)
 - Implement some vault for secured credential
