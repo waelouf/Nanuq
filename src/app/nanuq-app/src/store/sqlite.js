@@ -6,6 +6,7 @@ export default {
   state: {
     kafkaServers: [],
     redisServers: [],
+    rabbitMQServers: [],
   },
   getters: {
   },
@@ -15,6 +16,9 @@ export default {
     },
     loadRedisServers(state, servers) {
       state.redisServers = servers;
+    },
+    loadRabbitMQServers(state, servers) {
+      state.rabbitMQServers = servers;
     },
   },
   actions: {
@@ -53,6 +57,24 @@ export default {
       await apiClient.delete(`/sqlite/redis/${id}`)
         .then(() => {})
         .catch((error) => logger.handleApiError('SQLiteStore', 'deleting Redis server', error));
+    },
+    // RabbitMQ
+    loadRabbitMQServers({ commit }) {
+      apiClient.get('/sqlite/rabbitmq')
+        .then((result) => commit('loadRabbitMQServers', result.data))
+        .catch((error) => logger.handleApiError('SQLiteStore', 'loading RabbitMQ servers', error));
+    },
+    // eslint-disable-next-line no-unused-vars
+    async addRabbitMQServer({ commit }, serverDetails) {
+      await apiClient.post('/sqlite/rabbitmq', serverDetails)
+        .then(() => {})
+        .catch((error) => logger.handleApiError('SQLiteStore', 'adding RabbitMQ server', error));
+    },
+    // eslint-disable-next-line no-unused-vars
+    async deleteRabbitMQServer({ commit }, id) {
+      await apiClient.delete(`/sqlite/rabbitmq/${id}`)
+        .then(() => {})
+        .catch((error) => logger.handleApiError('SQLiteStore', 'deleting RabbitMQ server', error));
     },
   },
   modules: {

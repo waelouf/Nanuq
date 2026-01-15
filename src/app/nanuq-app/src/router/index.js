@@ -41,6 +41,17 @@ const routes = [
     component: () => import(/* webpackChunkName: "redis" */ '@/redis/ManageDatabases.vue'),
     props: true,
   },
+  {
+    path: '/rabbitmq',
+    name: 'RabbitMQ',
+    component: () => import(/* webpackChunkName: "rabbitmq" */ '@/rabbitmq/ListServers.vue'),
+  },
+  {
+    path: '/rabbitmq/manage/:serverUrl',
+    name: 'ManageRabbitMQ',
+    component: () => import(/* webpackChunkName: "rabbitmq" */ '@/rabbitmq/ManageRabbitMQ.vue'),
+    props: true,
+  },
 ];
 
 const router = createRouter({

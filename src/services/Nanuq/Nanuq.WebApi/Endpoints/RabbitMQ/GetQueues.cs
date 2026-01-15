@@ -1,18 +1,21 @@
-﻿using FastEndpoints;
+using FastEndpoints;
 using Nanuq.Common.Enums;
 using Nanuq.Common.Interfaces;
 using Nanuq.Common.Records;
+using Nanuq.RabbitMQ.Entities;
 using Nanuq.RabbitMQ.Interfaces;
 
 namespace Nanuq.WebApi.Endpoints.RabbitMQ;
 
-public class GetRabbitMQExchanges : EndpointWithoutRequest<bool>
+public class GetQueues : EndpointWithoutRequest<IEnumerable<Queue>>
 {
 	private IRabbitMQManagerRepository rabbitMQManager;
 	private IRabbitMqRepository rabbitMqRepository;
 	private ICredentialRepository credentialRepository;
 
-	public GetRabbitMQExchanges(IRabbitMQManagerRepository rabbitMQManager, IRabbitMqRepository rabbitMqRepository, ICredentialRepository credentialRepository)
+	public GetQueues(IRabbitMQManagerRepository rabbitMQManager,
+					 IRabbitMqRepository rabbitMqRepository,
+					 ICredentialRepository credentialRepository)
 	{
 		this.rabbitMQManager = rabbitMQManager;
 		this.rabbitMqRepository = rabbitMqRepository;
@@ -21,7 +24,7 @@ public class GetRabbitMQExchanges : EndpointWithoutRequest<bool>
 
 	public override void Configure()
 	{
-		Get("/rabbitmq/exchanges/{serverUrl}");
+		Get("/rabbitmq/queues/{serverUrl}");
 		AllowAnonymous();
 		Options(b => b.RequireCors(x => x.AllowAnyOrigin()
 			.AllowAnyMethod()
@@ -32,7 +35,7 @@ public class GetRabbitMQExchanges : EndpointWithoutRequest<bool>
 	{
 		var serverUrl = Route<string>("serverUrl", isRequired: true);
 
-		// Try to get credentials for this server
+		// Auto-detect credentials
 		ServerCredential? credential = null;
 		var rabbitMQServers = await rabbitMqRepository.GetAll();
 		var rabbitMQServer = rabbitMQServers.FirstOrDefault(s => s.ServerUrl == serverUrl);
@@ -47,8 +50,7 @@ public class GetRabbitMQExchanges : EndpointWithoutRequest<bool>
 			}
 		}
 
-		rabbitMQManager.GetConnection(serverUrl!, credential);
-		await Send.OkAsync(ct);
+		var queues = await rabbitMQManager.GetQueuesAsync(serverUrl!, credential);
+		await Send.OkAsync(queues, ct);
 	}
-
 }
