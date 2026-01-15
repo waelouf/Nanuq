@@ -8,6 +8,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **RabbitMQ Management Features**
+  - Complete exchange management (list, create, delete)
+  - Complete queue management (list, create, delete, view details)
+  - RabbitMQ Management HTTP API integration for listing operations
+  - AMQP client integration for create/delete operations
+  - Backend entities: Exchange, Queue, QueueDetails, Binding
+  - Backend endpoints: 7 FastEndpoints (GetExchanges, AddExchange, DeleteExchange, GetQueues, GetQueueDetails, AddQueue, DeleteQueue)
+  - Frontend components: ListServers, AddServer, ManageRabbitMQ (tabbed interface), AddExchange, AddQueue, QueueDetails
+  - Vuex store module for RabbitMQ state management
+  - Credential auto-detection for all RabbitMQ operations
+  - RabbitMQ card visible on HomePage
+
+- **Frontend Credential Management (Phase 1b)**
+  - CredentialForm.vue reusable component with test connection
+  - credentials.js Vuex module for state management
+  - Tabbed interface in AddServer dialogs (Server Details / Credentials)
+  - Authentication status indicators in server lists (shield icons)
+  - Metadata preloading for credential status display
+
+- **Auto-detect Credentials in Endpoints (Phase 5)**
+  - All Kafka endpoints auto-detect credentials by serverId
+  - All Redis endpoints auto-detect credentials by serverId
+  - All RabbitMQ endpoints auto-detect credentials by serverId
+  - Automatic LastUsedAt timestamp updates
+  - Backward compatible (works without credentials)
+
 - **Authentication & Security Infrastructure (Phase 1)**
   - Nanuq.Security project with AES-256 credential encryption
     - DPAPI-based key derivation for Windows
@@ -32,9 +58,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - RedisConfigBuilder helper for password and ACL authentication
 
 ### Changed
+- **RabbitMQ Migration (Phase 3)**
+  - Removed plaintext Username and Password from RabbitMQRecord
+  - Database migration to drop plaintext credential columns
+  - RabbitMQ now uses encrypted ServerCredentials table
+  - Created RabbitMQConfigBuilder helper for connection factory
+  - Updated GetRabbitMQExchanges endpoint with credential auto-detection
+
 - Nanuq.Sqlite project now references Nanuq.Security for credential encryption
 - NanuqContext updated with ServerCredentials DbSet
 - Program.cs updated to run migrations before DbContext initialization
+- All Kafka repository methods accept optional ServerCredential parameter
+- All Redis repository methods accept optional ServerCredential parameter
 
 ### Security
 - All server credentials now encrypted at rest using AES-256
