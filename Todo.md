@@ -3,7 +3,7 @@
 - k8s deploy - in progress
 - App
   - Activity log
-  - Error handling (alerts instead of console)
+  - ✅ Error handling (toast notifications instead of console)
 - Connect to the following
   - Kafka - ✅ Secured login implemented
     - Real time
