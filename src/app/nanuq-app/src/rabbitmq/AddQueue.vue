@@ -32,23 +32,6 @@
         persistent-hint
       />
 
-      <v-alert
-        v-if="errorMessage"
-        type="error"
-        variant="tonal"
-        class="mt-3"
-      >
-        {{ errorMessage }}
-      </v-alert>
-
-      <v-alert
-        v-if="successMessage"
-        type="success"
-        variant="tonal"
-        class="mt-3"
-      >
-        {{ successMessage }}
-      </v-alert>
     </v-form>
   </v-card-text>
   <v-card-actions>
@@ -86,8 +69,6 @@ export default {
       durable: true,
       autoDelete: false,
       exclusive: false,
-      errorMessage: '',
-      successMessage: '',
       rules: {
         required: (value) => !!value || 'Required',
       },
@@ -95,9 +76,6 @@ export default {
   },
   methods: {
     async addQueue() {
-      this.errorMessage = '';
-      this.successMessage = '';
-
       const queueDetails = {
         serverUrl: this.serverUrl,
         name: this.queueName,
@@ -108,12 +86,11 @@ export default {
 
       try {
         await this.$store.dispatch('rabbitmq/addQueue', queueDetails);
-        this.successMessage = 'Queue added successfully!';
         setTimeout(() => {
           this.closeDialog();
         }, 1000);
       } catch (error) {
-        this.errorMessage = `Failed to add queue: ${error.message}`;
+        // Error is already handled by the store
       }
     },
     closeDialog() {

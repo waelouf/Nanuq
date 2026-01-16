@@ -46,12 +46,12 @@ export default {
     },
     async addExchange({ commit }, exchangeDetails) {
       await apiClient.post('/rabbitmq/exchange', exchangeDetails)
-        .then(() => {})
+        .then(() => logger.success('Exchange created successfully'))
         .catch((error) => logger.handleApiError('RabbitMQStore', 'adding exchange', error));
     },
     async deleteExchange({ commit }, { serverUrl, name }) {
       await apiClient.delete(`/rabbitmq/exchange/${serverUrl}/${name}`)
-        .then(() => {})
+        .then(() => logger.success('Exchange deleted successfully'))
         .catch((error) => logger.handleApiError('RabbitMQStore', 'deleting exchange', error));
     },
 
@@ -68,12 +68,12 @@ export default {
     },
     async addQueue({ commit }, queueDetails) {
       await apiClient.post('/rabbitmq/queue', queueDetails)
-        .then(() => {})
+        .then(() => logger.success('Queue created successfully'))
         .catch((error) => logger.handleApiError('RabbitMQStore', 'adding queue', error));
     },
     async deleteQueue({ commit }, { serverUrl, name }) {
       await apiClient.delete(`/rabbitmq/queue/${serverUrl}/${name}`)
-        .then(() => {})
+        .then(() => logger.success('Queue deleted successfully'))
         .catch((error) => logger.handleApiError('RabbitMQStore', 'deleting queue', error));
     },
   },

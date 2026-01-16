@@ -43,7 +43,7 @@
             variant="tonal"
             class="mt-3"
           >
-            Server saved successfully! You can now add credentials in the Credentials tab.
+            Server saved successfully! You can now add credentials in the Credentials tab (optional - only needed for SASL authentication).
           </v-alert>
 
           <div class="d-flex justify-end gap-2 mt-4">
@@ -55,6 +55,7 @@
               {{ savedServerId ? 'Close' : 'Cancel' }}
             </v-btn>
             <v-btn
+              v-if="!savedServerId"
               color="primary"
               @click="saveServer"
               type="submit"
@@ -117,41 +118,31 @@ export default {
       };
 
       try {
-        // Save the server
-        await this.$store.dispatch('sqlite/addKafkaServer', serverDetails);
+        // Save the server and get the ID directly
+        const serverId = await this.$store.dispatch('sqlite/addKafkaServer', serverDetails);
 
-        // Wait a bit for the save to complete, then reload servers
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        // Reload servers and find the saved one
-        await this.$store.dispatch('sqlite/loadKafkaServers');
-
-        // Wait for the state to update
-        await this.$nextTick();
-
-        const servers = this.$store.state.sqlite.kafkaServers;
-        const savedServer = servers.find(
-          (s) => s.bootstrapServer === this.bootstrapServer && s.alias === this.alias
-        );
-
-        if (savedServer) {
-          this.savedServerId = savedServer.id;
+        if (serverId) {
+          this.savedServerId = serverId;
           // Switch to credentials tab
           this.tab = 'credentials';
-        } else {
-          console.error('Could not find saved server', { bootstrapServer: this.bootstrapServer, alias: this.alias, servers });
         }
       } catch (error) {
-        console.error('Error saving server:', error);
+        // Error is already handled by the store
       }
     },
     handleCredentialSaved() {
-      // Optionally show a success message or close dialog
-      console.log('Credentials saved successfully');
+      // Credentials saved notification is handled by the store
+      // Auto-close dialog after a short delay to show the success message
+      setTimeout(() => {
+        this.closeDialog();
+      }, 1500);
+    },
+    skipCredentials() {
+      // Allow user to skip credentials and close dialog
+      this.closeDialog();
     },
     handleCredentialDeleted() {
-      // Optionally show a message
-      console.log('Credentials deleted successfully');
+      // Credentials deleted notification is handled by the store
     },
     closeDialog() {
       this.$emit('showModal', false);

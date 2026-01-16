@@ -8,6 +8,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Error Handling UI (Phase 6)**
+  - Centralized notification/toast system using Vuetify v-snackbar
+  - Global notifications store module (notifications.js)
+  - Toast notifications positioned at top-right corner
+  - Success notifications (green, 4s auto-dismiss)
+  - Error notifications (red, 6s auto-dismiss)
+  - Warning notifications (orange, 5s auto-dismiss)
+  - Enhanced logger utility with store integration and notification dispatch
+  - Logger initialization in main.js with store instance
+  - All Vuex store modules updated with success notifications (sqlite, kafka, redis, rabbitmq, credentials)
+  - Removed redundant inline v-alert components from Vue components
+  - Consistent error handling across all CRUD operations
+
+- **Docker Test Environment**
+  - docker-compose.test.yml with Kafka, RabbitMQ, Redis, Zookeeper
+  - Kafka configured on port 9092 (PLAINTEXT, no authentication)
+  - RabbitMQ with Management plugin on ports 5672/15672 (admin/admin123)
+  - Redis with password authentication on port 6379 (redis123)
+  - Kafka UI optional management interface on port 8090
+  - Start scripts: start-test-env.ps1 (Windows) and start-test-env.sh (Linux/Mac)
+  - TEST-CREDENTIALS.md comprehensive testing documentation
+  - Health checks for all services
+  - Persistent volumes for data retention
+### Fixed
+- **Credential Tab Issues**
+  - Fixed credentials tab not enabling after saving Redis/Kafka/RabbitMQ servers
+  - Store actions now return server ID directly from API response
+  - Removed unreliable reload/search/match logic in AddServer components
+  - Immediate tab enabling with proper state management
+
+- **Modal Dialog Behavior**
+  - Fixed modal not closing after saving credentials
+  - Auto-close dialog 1.5 seconds after successful credential save
+  - Hide "Save Server" button after server is saved
+  - Proper server list reload with credential metadata after modal close
+
+- **ManageDatabases.vue Null Reference**
+  - Fixed "Cannot read properties of undefined (reading 'databaseCount')" error
+  - Added null check for serverDetails before accessing properties
+  - Added await this.$nextTick() for proper computed property updates
+
+- **Optional Credentials Support**
+  - Redis: Username optional, password required
+  - Kafka: Both username and password optional (credentials only needed for SASL authentication)
+  - RabbitMQ: Both username and password required
+  - Info alerts in CredentialForm explaining optional credential requirements
+  - Dynamic field labels and validation based on server type
+  - Save button enabled/disabled logic based on server type requirements
+
 - **RabbitMQ Management Features**
   - Complete exchange management (list, create, delete)
   - Complete queue management (list, create, delete, view details)

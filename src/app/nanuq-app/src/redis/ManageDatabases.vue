@@ -74,9 +74,14 @@ export default {
   },
   async mounted() {
     await this.loadServerDetails();
-    // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < Number(this.serverDetails.databaseCount); i++) {
-      this.databases.push(i);
+    // Wait for next tick to ensure computed property is updated
+    await this.$nextTick();
+    // Check if serverDetails exists before accessing databaseCount
+    if (this.serverDetails && this.serverDetails.databaseCount) {
+      // eslint-disable-next-line no-plusplus
+      for (let i = 0; i < Number(this.serverDetails.databaseCount); i++) {
+        this.databases.push(i);
+      }
     }
   },
   methods: {

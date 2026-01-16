@@ -55,6 +55,7 @@
               {{ savedServerId ? 'Close' : 'Cancel' }}
             </v-btn>
             <v-btn
+              v-if="!savedServerId"
               color="primary"
               @click="saveServer"
               type="submit"
@@ -117,41 +118,27 @@ export default {
       };
 
       try {
-        // Save the server
-        await this.$store.dispatch('sqlite/addRabbitMQServer', serverDetails);
+        // Save the server and get the ID directly
+        const serverId = await this.$store.dispatch('sqlite/addRabbitMQServer', serverDetails);
 
-        // Wait a bit for the save to complete, then reload servers
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        // Reload servers and find the saved one
-        await this.$store.dispatch('sqlite/loadRabbitMQServers');
-
-        // Wait for the state to update
-        await this.$nextTick();
-
-        const servers = this.$store.state.sqlite.rabbitMQServers;
-        const savedServer = servers.find(
-          (s) => s.serverUrl === this.serverUrl && s.alias === this.alias
-        );
-
-        if (savedServer) {
-          this.savedServerId = savedServer.id;
+        if (serverId) {
+          this.savedServerId = serverId;
           // Switch to credentials tab
           this.tab = 'credentials';
-        } else {
-          console.error('Could not find saved server', { serverUrl: this.serverUrl, alias: this.alias, servers });
         }
       } catch (error) {
-        console.error('Error saving server:', error);
+        // Error is already handled by the store
       }
     },
     handleCredentialSaved() {
-      // Optionally show a success message or close dialog
-      console.log('Credentials saved successfully');
+      // Credentials saved notification is handled by the store
+      // Auto-close dialog after a short delay to show the success message
+      setTimeout(() => {
+        this.closeDialog();
+      }, 1500);
     },
     handleCredentialDeleted() {
-      // Optionally show a message
-      console.log('Credentials deleted successfully');
+      // Credentials deleted notification is handled by the store
     },
     closeDialog() {
       this.$emit('showModal', false);

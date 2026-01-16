@@ -2,12 +2,23 @@
 /**
  * Logger utility for consistent logging throughout the application
  * Automatically disables logs in production mode
+ * Dispatches user-friendly notifications to the UI
  */
 
 // Only enable logging in development environment
 const isDevMode = process.env.NODE_ENV !== 'production';
 
+// Store instance will be injected
+let store = null;
+
 const logger = {
+  /**
+   * Initialize logger with Vuex store for notifications
+   * @param {Object} storeInstance - Vuex store instance
+   */
+  init(storeInstance) {
+    store = storeInstance;
+  },
   /**
    * Log information messages
    * @param {string} component - Component name for context
@@ -57,7 +68,7 @@ const logger = {
   },
 
   /**
-   * Handle API errors with consistent logging and optional callback
+   * Handle API errors with consistent logging and user notifications
    * @param {string} component - Component name for context
    * @param {string} operation - Description of the operation that failed
    * @param {Error} error - The error object from the catch block
@@ -74,9 +85,38 @@ const logger = {
       console.error(`[${component}] API Error Status: ${status}`);
     }
 
+    // Show user-friendly error notification
+    if (store) {
+      const errorMessage = error.response?.data?.message
+        || error.message
+        || `Failed to ${operation}`;
+
+      store.dispatch('notifications/showError', errorMessage);
+    }
+
     // Execute callback if provided
     if (callback && typeof callback === 'function') {
       callback(error);
+    }
+  },
+
+  /**
+   * Show success notification to user
+   * @param {string} message - Success message
+   */
+  success(message) {
+    if (store) {
+      store.dispatch('notifications/showSuccess', message);
+    }
+  },
+
+  /**
+   * Show warning notification to user
+   * @param {string} message - Warning message
+   */
+  warning(message) {
+    if (store) {
+      store.dispatch('notifications/showWarning', message);
     }
   },
 };

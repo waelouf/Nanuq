@@ -29,15 +29,20 @@ export default {
         .catch((error) => logger.handleApiError('SQLiteStore', 'loading Kafka servers', error));
     },
     // eslint-disable-next-line no-unused-vars
-    addKafkaServer({ commit }, serverDetails) {
-      apiClient.post('/sqlite/kafka', serverDetails)
-        .then(() => {})
-        .catch((error) => logger.handleApiError('SQLiteStore', 'adding Kafka server', error));
+    async addKafkaServer({ commit }, serverDetails) {
+      try {
+        const result = await apiClient.post('/sqlite/kafka', serverDetails);
+        logger.success('Kafka server added successfully');
+        return result.data; // Return the server ID
+      } catch (error) {
+        logger.handleApiError('SQLiteStore', 'adding Kafka server', error);
+        throw error;
+      }
     },
     // eslint-disable-next-line no-unused-vars
     async deleteKafkaServer({ commit }, id) {
       await apiClient.delete(`/sqlite/kafka/${id}`)
-        .then(() => {})
+        .then(() => logger.success('Kafka server deleted successfully'))
         .catch((error) => logger.handleApiError('SQLiteStore', 'deleting Kafka server', error));
     },
     // Redis
@@ -48,14 +53,19 @@ export default {
     },
     // eslint-disable-next-line no-unused-vars
     async addRedisServer({ commit }, serverDetails) {
-      await apiClient.post('/sqlite/redis', serverDetails)
-        .then(() => {})
-        .catch((error) => logger.handleApiError('SQLiteStore', 'adding Redis server', error));
+      try {
+        const result = await apiClient.post('/sqlite/redis', serverDetails);
+        logger.success('Redis server added successfully');
+        return result.data; // Return the server ID
+      } catch (error) {
+        logger.handleApiError('SQLiteStore', 'adding Redis server', error);
+        throw error;
+      }
     },
     // eslint-disable-next-line no-unused-vars
     async deleteRedisServer({ commit }, id) {
       await apiClient.delete(`/sqlite/redis/${id}`)
-        .then(() => {})
+        .then(() => logger.success('Redis server deleted successfully'))
         .catch((error) => logger.handleApiError('SQLiteStore', 'deleting Redis server', error));
     },
     // RabbitMQ
@@ -66,14 +76,19 @@ export default {
     },
     // eslint-disable-next-line no-unused-vars
     async addRabbitMQServer({ commit }, serverDetails) {
-      await apiClient.post('/sqlite/rabbitmq', serverDetails)
-        .then(() => {})
-        .catch((error) => logger.handleApiError('SQLiteStore', 'adding RabbitMQ server', error));
+      try {
+        const result = await apiClient.post('/sqlite/rabbitmq', serverDetails);
+        logger.success('RabbitMQ server added successfully');
+        return result.data; // Return the server ID
+      } catch (error) {
+        logger.handleApiError('SQLiteStore', 'adding RabbitMQ server', error);
+        throw error;
+      }
     },
     // eslint-disable-next-line no-unused-vars
     async deleteRabbitMQServer({ commit }, id) {
       await apiClient.delete(`/sqlite/rabbitmq/${id}`)
-        .then(() => {})
+        .then(() => logger.success('RabbitMQ server deleted successfully'))
         .catch((error) => logger.handleApiError('SQLiteStore', 'deleting RabbitMQ server', error));
     },
   },

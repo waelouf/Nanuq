@@ -33,23 +33,6 @@
         persistent-hint
       />
 
-      <v-alert
-        v-if="errorMessage"
-        type="error"
-        variant="tonal"
-        class="mt-3"
-      >
-        {{ errorMessage }}
-      </v-alert>
-
-      <v-alert
-        v-if="successMessage"
-        type="success"
-        variant="tonal"
-        class="mt-3"
-      >
-        {{ successMessage }}
-      </v-alert>
     </v-form>
   </v-card-text>
   <v-card-actions>
@@ -87,8 +70,6 @@ export default {
       exchangeType: 'direct',
       durable: true,
       autoDelete: false,
-      errorMessage: '',
-      successMessage: '',
       exchangeTypes: ['direct', 'fanout', 'topic', 'headers'],
       rules: {
         required: (value) => !!value || 'Required',
@@ -97,9 +78,6 @@ export default {
   },
   methods: {
     async addExchange() {
-      this.errorMessage = '';
-      this.successMessage = '';
-
       const exchangeDetails = {
         serverUrl: this.serverUrl,
         name: this.exchangeName,
@@ -110,12 +88,11 @@ export default {
 
       try {
         await this.$store.dispatch('rabbitmq/addExchange', exchangeDetails);
-        this.successMessage = 'Exchange added successfully!';
         setTimeout(() => {
           this.closeDialog();
         }, 1000);
       } catch (error) {
-        this.errorMessage = `Failed to add exchange: ${error.message}`;
+        // Error is already handled by the store
       }
     },
     closeDialog() {

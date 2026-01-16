@@ -26,23 +26,37 @@
         {{ testResult.message }}
       </v-alert>
 
+      <!-- Info Alert for Optional Credentials -->
+      <v-alert
+        v-if="serverType === 'Kafka' && !hasExistingCredentials"
+        type="info"
+        variant="tonal"
+        density="compact"
+        class="mb-3"
+      >
+        <template v-slot:prepend>
+          <v-icon>mdi-information</v-icon>
+        </template>
+        Credentials are optional for Kafka. If your broker doesn't require authentication, leave these fields empty and close this dialog.
+      </v-alert>
+
       <!-- Username Field -->
       <v-text-field
         v-model="username"
-        label="Username"
+        :label="serverType === 'Redis' ? 'Username (optional for Redis)' : serverType === 'Kafka' ? 'Username (optional)' : 'Username'"
         prepend-icon="mdi-account"
-        :rules="[rules.required]"
+        :rules="(serverType === 'Redis' || serverType === 'Kafka') ? [] : [rules.required]"
         clearable
       />
 
       <!-- Password Field -->
       <v-text-field
         v-model="password"
-        :label="hasExistingCredentials ? 'Password (leave blank to keep current)' : 'Password'"
+        :label="getPasswordLabel()"
         prepend-icon="mdi-key"
         :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
         :type="showPassword ? 'text' : 'password'"
-        :rules="hasExistingCredentials ? [] : [rules.required]"
+        :rules="getPasswordRules()"
         @click:append="showPassword = !showPassword"
         clearable
       />
@@ -140,6 +154,14 @@ export default {
       );
     },
     isTestable() {
+      // Redis doesn't require username, Kafka can be optional
+      if (this.serverType === 'Redis') {
+        return !!this.password;
+      }
+      if (this.serverType === 'Kafka') {
+        // For Kafka, allow testing if both are provided
+        return !!this.username && !!this.password;
+      }
       return !!this.username && !!this.password;
     },
     isSaveable() {
@@ -147,7 +169,17 @@ export default {
         // For update, allow if either field is filled
         return !!this.username || !!this.password;
       }
-      // For new credentials, both required
+      // For new credentials
+      if (this.serverType === 'Redis') {
+        // Redis only requires password
+        return !!this.password;
+      }
+      if (this.serverType === 'Kafka') {
+        // Kafka credentials are optional, but if adding, need both username and password
+        // Don't allow saving empty credentials
+        return !!this.username && !!this.password;
+      }
+      // RabbitMQ requires both username and password
       return !!this.username && !!this.password;
     },
   },
@@ -158,6 +190,25 @@ export default {
     }
   },
   methods: {
+    getPasswordLabel() {
+      if (this.hasExistingCredentials) {
+        return 'Password (leave blank to keep current)';
+      }
+      if (this.serverType === 'Kafka') {
+        return 'Password (optional)';
+      }
+      return 'Password';
+    },
+    getPasswordRules() {
+      if (this.hasExistingCredentials) {
+        return [];
+      }
+      // For Kafka and Redis, password is optional
+      if (this.serverType === 'Kafka' || this.serverType === 'Redis') {
+        return [];
+      }
+      return [this.rules.required];
+    },
     async loadCredentialMetadata() {
       try {
         await this.$store.dispatch('credentials/fetchCredentialMetadata', {
@@ -165,10 +216,7 @@ export default {
           serverId: this.serverId,
         });
       } catch (error) {
-        // 404 is expected when no credentials exist
-        if (error.response?.status !== 404) {
-          console.error('Error loading credential metadata:', error);
-        }
+        // 404 is expected when no credentials exist - no action needed
       }
     },
     async handleTestConnection() {
@@ -223,15 +271,9 @@ export default {
 
         // Clear password field after successful save
         this.password = '';
-        this.testResult = {
-          success: true,
-          message: 'Credentials saved successfully!',
-        };
+        this.testResult = null;
       } catch (error) {
-        this.testResult = {
-          success: false,
-          message: `Failed to save credentials: ${error.message}`,
-        };
+        // Error is already handled by the store
       } finally {
         this.saving = false;
       }
@@ -250,16 +292,10 @@ export default {
 
         this.username = '';
         this.password = '';
-        this.testResult = {
-          success: true,
-          message: 'Credentials removed successfully!',
-        };
+        this.testResult = null;
         this.$emit('deleted');
       } catch (error) {
-        this.testResult = {
-          success: false,
-          message: `Failed to delete credentials: ${error.message}`,
-        };
+        // Error is already handled by the store
       } finally {
         this.deleting = false;
       }

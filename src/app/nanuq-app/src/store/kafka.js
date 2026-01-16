@@ -35,12 +35,12 @@ export default {
     },
     async addKafkaTopic({ commit }, topicDetails) {
       await apiClient.post('kafka/topic', topicDetails)
-        .then(() => {})
+        .then(() => logger.success('Kafka topic created successfully'))
         .catch((error) => logger.handleApiError('KafkaStore', 'adding Kafka topic', error));
     },
     async deleteKafkaTopic({ commit }, { bootstrapServer, topicName }) {
       await apiClient.delete(`kafka/topic/${bootstrapServer}/${topicName}`)
-        .then(() => {})
+        .then(() => logger.success('Kafka topic deleted successfully'))
         .catch((error) => logger.handleApiError('KafkaStore', 'deleting Kafka topic', error));
     },
   },

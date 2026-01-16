@@ -86,12 +86,41 @@
         </footer>
       </div>
     </div>
+
+    <!-- Global Notification Snackbar -->
+    <v-snackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      :timeout="snackbar.timeout"
+      location="top right"
+      multi-line
+    >
+      {{ snackbar.message }}
+      <template v-slot:actions>
+        <v-btn
+          variant="text"
+          @click="hideNotification"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </body>
 </template>
 <script>
 
 export default {
   name: 'App',
+  computed: {
+    snackbar() {
+      return this.$store.state.notifications.snackbar;
+    },
+  },
+  methods: {
+    hideNotification() {
+      this.$store.dispatch('notifications/hide');
+    },
+  },
 };
 </script>
 

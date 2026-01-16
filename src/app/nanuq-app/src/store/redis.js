@@ -56,7 +56,7 @@ export default {
     },
     async cacheString({ commit }, cacheObject) {
       await apiClient.post('/redis/string', cacheObject)
-        .then(() => {})
+        .then(() => logger.success('String cached successfully'))
         .catch((error) => logger.handleApiError('RedisStore', 'caching string', error));
     },
     getCachedString({ commit }, { serverUrl, database, key }) {
@@ -68,9 +68,12 @@ export default {
     },
     async invalidateCachedString({ commit }, { serverUrl, database, key }) {
       await apiClient.delete(`/redis/string/${serverUrl}/${database}/${key}`)
-        .then(() => commit('invalidateStringCache', {
-          serverUrl, database, key,
-        }))
+        .then(() => {
+          commit('invalidateStringCache', {
+            serverUrl, database, key,
+          });
+          logger.success('Cached string invalidated successfully');
+        })
         .catch((error) => logger.handleApiError('RedisStore', 'invalidating cached string', error));
     },
     async getAllStringKeys({ commit }, { serverUrl, database }) {

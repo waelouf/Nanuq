@@ -70,6 +70,7 @@ export default {
           serverId,
           metadata: metadata.data,
         });
+        logger.success('Credentials saved successfully');
         return result.data; // Returns credential ID
       } catch (error) {
         logger.handleApiError('CredentialsStore', 'saving credentials', error);
@@ -84,6 +85,11 @@ export default {
           username,
           password,
         });
+        if (result.data.success) {
+          logger.success('Connection test successful');
+        } else {
+          logger.warning(result.data.message || 'Connection test failed');
+        }
         return result.data; // { success: bool, message: string }
       } catch (error) {
         logger.handleApiError('CredentialsStore', 'testing connection', error);
@@ -104,6 +110,7 @@ export default {
           serverId,
           metadata: metadata.data,
         });
+        logger.success('Credentials updated successfully');
         return result.data;
       } catch (error) {
         logger.handleApiError('CredentialsStore', 'updating credentials', error);
@@ -114,6 +121,7 @@ export default {
       try {
         const result = await apiClient.delete(`/credentials/${credentialId}`);
         commit('removeCredentialMetadata', { serverType, serverId });
+        logger.success('Credentials deleted successfully');
         return result.data;
       } catch (error) {
         logger.handleApiError('CredentialsStore', 'deleting credentials', error);

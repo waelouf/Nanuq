@@ -134,6 +134,16 @@ export default ({
     },
     async reloadServers() {
       await this.$store.dispatch('sqlite/loadRedisServers');
+      // Load credential metadata for all servers
+      const servers = this.$store.state.sqlite.redisServers;
+      servers.forEach((server) => {
+        this.$store.dispatch('credentials/fetchCredentialMetadata', {
+          serverType: 'Redis',
+          serverId: server.id,
+        }).catch(() => {
+          // Ignore 404 errors for servers without credentials
+        });
+      });
     },
     async deleteServer(id) {
       await this.$store.dispatch('sqlite/deleteRedisServer', id);

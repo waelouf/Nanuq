@@ -4,6 +4,7 @@ import kafka from './kafka';
 import redis from './redis';
 import credentials from './credentials';
 import rabbitmq from './rabbitmq';
+import notifications from './notifications';
 
 export default createStore({
   modules: {
@@ -12,5 +13,6 @@ export default createStore({
     redis,
     credentials,
     rabbitmq,
+    notifications,
   },
 });
