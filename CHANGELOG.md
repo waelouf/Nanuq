@@ -32,7 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Loading states with progress spinner during metric fetching
   - Error handling with retry functionality
   - Responsive grid layout using Vuetify components
-  - Added Dashboard route (/dashboard) with sidebar navigation link
+  - **Dashboard is now the landing page** - loads immediately when app starts
+  - Backward compatible redirect from /dashboard to /
   - Added missing RabbitMQ section to sidebar navigation
 
 - **Production Readiness Improvements**
