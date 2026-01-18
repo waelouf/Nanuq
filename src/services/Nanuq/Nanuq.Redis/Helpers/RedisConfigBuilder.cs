@@ -20,25 +20,17 @@ public static class RedisConfigBuilder
 
         if (credential != null)
         {
-            Console.WriteLine($"[DEBUG] RedisConfigBuilder: Building config for '{serverUrl}' - Username: {(string.IsNullOrEmpty(credential.Username) ? "EMPTY" : "SET")}, Password: {(string.IsNullOrEmpty(credential.Password) ? "EMPTY" : "SET")}");
-
             // Redis 6+ ACL username support
             if (!string.IsNullOrEmpty(credential.Username))
             {
                 config.User = credential.Username;
-                Console.WriteLine($"[DEBUG] RedisConfigBuilder: Set config.User = '{credential.Username}'");
             }
 
             // Password authentication
             if (!string.IsNullOrEmpty(credential.Password))
             {
                 config.Password = credential.Password;
-                Console.WriteLine($"[DEBUG] RedisConfigBuilder: Set config.Password (length: {credential.Password.Length})");
             }
-        }
-        else
-        {
-            Console.WriteLine($"[DEBUG] RedisConfigBuilder: Building config for '{serverUrl}' - NO CREDENTIAL PROVIDED");
         }
 
         return config;

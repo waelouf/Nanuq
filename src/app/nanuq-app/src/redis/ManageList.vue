@@ -41,6 +41,11 @@
       </v-card-text>
     </v-card>
 
+    <!-- Pagination Info -->
+    <v-alert v-if="elements.length >= 100" type="info" variant="tonal" class="mb-4">
+      Showing first 100 elements. Total length can be viewed in the element count badge above.
+    </v-alert>
+
     <!-- List Elements Table -->
     <v-card variant="outlined">
       <v-card-title class="text-subtitle-1">Elements</v-card-title>

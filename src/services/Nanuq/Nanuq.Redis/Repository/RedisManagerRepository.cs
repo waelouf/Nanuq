@@ -366,7 +366,7 @@ public class RedisManagerRepository : IRedisManagerRepository
 		return string.IsNullOrEmpty(value) ? null : (string?)value;
 	}
 
-	public async Task<List<string>> GetListElementsAsync(string serverUrl, int database, string key, ServerCredential? credential = null)
+	public async Task<List<string>> GetListElementsAsync(string serverUrl, int database, string key, ServerCredential? credential = null, int limit = 100)
 	{
 		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
 
@@ -374,7 +374,8 @@ public class RedisManagerRepository : IRedisManagerRepository
 
 		var db = redis.GetDatabase(database);
 
-		var values = await db.ListRangeAsync(key, 0, -1);
+		// Limit to prevent fetching massive datasets
+		var values = await db.ListRangeAsync(key, 0, limit - 1);
 
 		return values.Select(v => (string?)v).Where(v => v != null).Select(v => v!).ToList();
 	}
@@ -521,7 +522,7 @@ public class RedisManagerRepository : IRedisManagerRepository
 		return await db.SetAddAsync(key, member);
 	}
 
-	public async Task<List<string>> GetSetMembersAsync(string serverUrl, int database, string key, ServerCredential? credential = null)
+	public async Task<List<string>> GetSetMembersAsync(string serverUrl, int database, string key, ServerCredential? credential = null, int limit = 100)
 	{
 		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
 
@@ -529,9 +530,17 @@ public class RedisManagerRepository : IRedisManagerRepository
 
 		var db = redis.GetDatabase(database);
 
-		var members = await db.SetMembersAsync(key);
+		// Use SetScan for pagination support
+		var members = new List<string>();
+		await foreach (var member in db.SetScanAsync(key, pageSize: limit))
+		{
+			if (members.Count >= limit) break;
+			var memberStr = (string?)member;
+			if (memberStr != null)
+				members.Add(memberStr);
+		}
 
-		return members.Select(m => (string?)m).Where(m => m != null).Select(m => m!).ToList();
+		return members;
 	}
 
 	public async Task<bool> RemoveSetMemberAsync(string serverUrl, int database, string key, string member, ServerCredential? credential = null)
@@ -608,13 +617,18 @@ public class RedisManagerRepository : IRedisManagerRepository
 		return await db.SortedSetAddAsync(key, member, score);
 	}
 
-	public async Task<List<(string member, double score)>> GetSortedSetMembersAsync(string serverUrl, int database, string key, bool ascending = true, ServerCredential? credential = null)
+	public async Task<List<(string member, double score)>> GetSortedSetMembersAsync(string serverUrl, int database, string key, bool ascending = true, ServerCredential? credential = null, int limit = 100)
 	{
 		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
 		using var redis = ConnectionMultiplexer.Connect(configOptions);
 		var db = redis.GetDatabase(database);
 
-		var members = await db.SortedSetRangeByScoreWithScoresAsync(key, order: ascending ? Order.Ascending : Order.Descending);
+		// Use SortedSetRangeByRankWithScoresAsync to support pagination
+		var members = await db.SortedSetRangeByRankWithScoresAsync(
+			key,
+			0,
+			limit - 1,
+			order: ascending ? Order.Ascending : Order.Descending);
 
 		var result = new List<(string member, double score)>();
 		foreach (var entry in members)
@@ -682,13 +696,13 @@ public class RedisManagerRepository : IRedisManagerRepository
 		return entryId.ToString();
 	}
 
-	public async Task<List<Dictionary<string, object>>> GetStreamEntriesAsync(string serverUrl, int database, string key, int count = 100, ServerCredential? credential = null)
+	public async Task<List<Dictionary<string, object>>> GetStreamEntriesAsync(string serverUrl, int database, string key, ServerCredential? credential = null, int limit = 100)
 	{
 		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
 		using var redis = ConnectionMultiplexer.Connect(configOptions);
 		var db = redis.GetDatabase(database);
 
-		var entries = await db.StreamReadAsync(key, "0-0", count);
+		var entries = await db.StreamReadAsync(key, "0-0", limit);
 
 		var result = new List<Dictionary<string, object>>();
 		foreach (var entry in entries)

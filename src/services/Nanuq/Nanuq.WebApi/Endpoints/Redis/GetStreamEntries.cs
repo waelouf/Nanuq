@@ -50,7 +50,7 @@ public class GetStreamEntries : EndpointWithoutRequest<List<Dictionary<string, o
 			}
 		}
 
-		var entries = await redisManager.GetStreamEntriesAsync(server!, database, key!, count > 0 ? count : 100, credential);
+		var entries = await redisManager.GetStreamEntriesAsync(server!, database, key!, credential, count > 0 ? count : 100);
 		await Send.OkAsync(entries, ct);
 	}
 }
