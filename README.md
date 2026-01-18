@@ -35,9 +35,13 @@ Built with a focus on usability and efficiency, Nanuq aims to reduce the overhea
 
 - Display Server's details
 - Display databases
-- Display all string cached keys
-- Add item to cache
-- Invalidate cache
+- **Advanced Data Types Support**
+  - **Strings** - View, add, and invalidate cached keys
+  - **Lists** - Push/pop elements, view all elements, manage list keys
+  - **Hashes** - Set/get fields, view all fields, manage hash keys
+  - **Sets** - Add/remove members, view set members, manage set keys
+  - **Sorted Sets** - Add members with scores, view sorted members, manage sorted set keys
+  - **Streams** - Add entries with multiple fields, view stream entries, manage stream keys
 - **Authentication Support** - Password and ACL (Redis 6+) authentication
 - **Credential Management** - Store and manage Redis server credentials securely
 

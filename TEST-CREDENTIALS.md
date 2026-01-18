@@ -23,14 +23,14 @@ docker-compose -f docker-compose.test.yml down
 **Note**: Kafka runs without authentication for simplified testing. You can test connection without credentials.
 
 ### RabbitMQ
-- **Server URL**: `192.168.50.94:5672`
+- **Server URL**: `localhost:5672`
 - **Username**: `admin`
 - **Password**: `admin123`
 - **Management UI**: http://192.168.50.94:15672
 - **Virtual Host**: `/`
 
 ### Redis
-- **Server URL**: `192.168.50.94:6379`
+- **Server URL**: `localhost:6379`
 - **Username**: *(leave empty)*
 - **Password**: `redis123`
 

@@ -334,4 +334,417 @@ public class RedisManagerRepository : IRedisManagerRepository
 
 		return cacheDictionary;
 	}
+
+	// List operations
+	public async Task<long> PushListElementAsync(string serverUrl, int database, string key, string value, bool pushLeft, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+
+		var db = redis.GetDatabase(database);
+
+		long length = pushLeft
+			? await db.ListLeftPushAsync(key, value)
+			: await db.ListRightPushAsync(key, value);
+
+		return length;
+	}
+
+	public async Task<string?> PopListElementAsync(string serverUrl, int database, string key, bool popLeft, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+
+		var db = redis.GetDatabase(database);
+
+		var value = popLeft
+			? await db.ListLeftPopAsync(key)
+			: await db.ListRightPopAsync(key);
+
+		return string.IsNullOrEmpty(value) ? null : (string?)value;
+	}
+
+	public async Task<List<string>> GetListElementsAsync(string serverUrl, int database, string key, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+
+		var db = redis.GetDatabase(database);
+
+		var values = await db.ListRangeAsync(key, 0, -1);
+
+		return values.Select(v => (string?)v).Where(v => v != null).Select(v => v!).ToList();
+	}
+
+	public async Task<long> GetListLengthAsync(string serverUrl, int database, string key, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+
+		var db = redis.GetDatabase(database);
+
+		return await db.ListLengthAsync(key);
+	}
+
+	public async Task<bool> DeleteListAsync(string serverUrl, int database, string key, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+
+		var db = redis.GetDatabase(database);
+
+		return await db.KeyDeleteAsync(key);
+	}
+
+	public async Task<Dictionary<string, long>> GetAllDatabaseListKeys(string serverUrl, int database, ServerCredential? credential = null)
+	{
+		var listDictionary = new Dictionary<string, long>();
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+		var server = redis.GetServer(serverUrl);
+		var db = redis.GetDatabase(database);
+
+		var keys = server.Keys(database)
+			.Where(k => db.KeyType(k) == RedisType.List).ToList();
+
+		foreach (var key in keys)
+		{
+			var length = await db.ListLengthAsync(key);
+			listDictionary.Add(key, length);
+		}
+
+		return listDictionary;
+	}
+
+	// Hash operations
+	public async Task<bool> SetHashFieldAsync(string serverUrl, int database, string key, string field, string value, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+
+		var db = redis.GetDatabase(database);
+
+		return await db.HashSetAsync(key, field, value);
+	}
+
+	public async Task<string?> GetHashFieldAsync(string serverUrl, int database, string key, string field, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+
+		var db = redis.GetDatabase(database);
+
+		var value = await db.HashGetAsync(key, field);
+
+		return string.IsNullOrEmpty(value) ? null : (string?)value;
+	}
+
+	public async Task<Dictionary<string, string>> GetHashAllFieldsAsync(string serverUrl, int database, string key, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+
+		var db = redis.GetDatabase(database);
+
+		var entries = await db.HashGetAllAsync(key);
+
+		var hashDictionary = new Dictionary<string, string>();
+		foreach (var entry in entries)
+		{
+			hashDictionary.Add(entry.Name, entry.Value);
+		}
+
+		return hashDictionary;
+	}
+
+	public async Task<bool> DeleteHashFieldAsync(string serverUrl, int database, string key, string field, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+
+		var db = redis.GetDatabase(database);
+
+		return await db.HashDeleteAsync(key, field);
+	}
+
+	public async Task<bool> DeleteHashAsync(string serverUrl, int database, string key, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+
+		var db = redis.GetDatabase(database);
+
+		return await db.KeyDeleteAsync(key);
+	}
+
+	public async Task<Dictionary<string, long>> GetAllDatabaseHashKeys(string serverUrl, int database, ServerCredential? credential = null)
+	{
+		var hashDictionary = new Dictionary<string, long>();
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+		var server = redis.GetServer(serverUrl);
+		var db = redis.GetDatabase(database);
+
+		var keys = server.Keys(database)
+			.Where(k => db.KeyType(k) == RedisType.Hash).ToList();
+
+		foreach (var key in keys)
+		{
+			var fieldCount = await db.HashLengthAsync(key);
+			hashDictionary.Add(key, fieldCount);
+		}
+
+		return hashDictionary;
+	}
+
+	// Set operations
+	public async Task<bool> AddSetMemberAsync(string serverUrl, int database, string key, string member, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+
+		var db = redis.GetDatabase(database);
+
+		return await db.SetAddAsync(key, member);
+	}
+
+	public async Task<List<string>> GetSetMembersAsync(string serverUrl, int database, string key, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+
+		var db = redis.GetDatabase(database);
+
+		var members = await db.SetMembersAsync(key);
+
+		return members.Select(m => (string?)m).Where(m => m != null).Select(m => m!).ToList();
+	}
+
+	public async Task<bool> RemoveSetMemberAsync(string serverUrl, int database, string key, string member, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+
+		var db = redis.GetDatabase(database);
+
+		return await db.SetRemoveAsync(key, member);
+	}
+
+	public async Task<bool> IsSetMemberAsync(string serverUrl, int database, string key, string member, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+
+		var db = redis.GetDatabase(database);
+
+		return await db.SetContainsAsync(key, member);
+	}
+
+	public async Task<long> GetSetCountAsync(string serverUrl, int database, string key, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+
+		var db = redis.GetDatabase(database);
+
+		return await db.SetLengthAsync(key);
+	}
+
+	public async Task<bool> DeleteSetAsync(string serverUrl, int database, string key, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+
+		var db = redis.GetDatabase(database);
+
+		return await db.KeyDeleteAsync(key);
+	}
+
+	public async Task<Dictionary<string, long>> GetAllDatabaseSetKeys(string serverUrl, int database, ServerCredential? credential = null)
+	{
+		var setDictionary = new Dictionary<string, long>();
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+		var server = redis.GetServer(serverUrl);
+		var db = redis.GetDatabase(database);
+
+		var keys = server.Keys(database)
+			.Where(k => db.KeyType(k) == RedisType.Set).ToList();
+
+		foreach (var key in keys)
+		{
+			var memberCount = await db.SetLengthAsync(key);
+			setDictionary.Add(key, memberCount);
+		}
+
+		return setDictionary;
+	}
+
+	// Sorted Set operations
+	public async Task<bool> AddSortedSetMemberAsync(string serverUrl, int database, string key, string member, double score, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+		var db = redis.GetDatabase(database);
+		return await db.SortedSetAddAsync(key, member, score);
+	}
+
+	public async Task<List<(string member, double score)>> GetSortedSetMembersAsync(string serverUrl, int database, string key, bool ascending = true, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+		var db = redis.GetDatabase(database);
+
+		var members = await db.SortedSetRangeByScoreWithScoresAsync(key, order: ascending ? Order.Ascending : Order.Descending);
+
+		var result = new List<(string member, double score)>();
+		foreach (var entry in members)
+		{
+			result.Add(((string?)entry.Element ?? string.Empty, entry.Score));
+		}
+
+		return result;
+	}
+
+	public async Task<bool> RemoveSortedSetMemberAsync(string serverUrl, int database, string key, string member, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+		var db = redis.GetDatabase(database);
+		return await db.SortedSetRemoveAsync(key, member);
+	}
+
+	public async Task<long> GetSortedSetCountAsync(string serverUrl, int database, string key, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+		var db = redis.GetDatabase(database);
+		return await db.SortedSetLengthAsync(key);
+	}
+
+	public async Task<bool> DeleteSortedSetAsync(string serverUrl, int database, string key, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+		var db = redis.GetDatabase(database);
+		return await db.KeyDeleteAsync(key);
+	}
+
+	public async Task<Dictionary<string, long>> GetAllDatabaseSortedSetKeys(string serverUrl, int database, ServerCredential? credential = null)
+	{
+		var sortedSetDictionary = new Dictionary<string, long>();
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+		var server = redis.GetServer(serverUrl);
+		var db = redis.GetDatabase(database);
+
+		var keys = server.Keys(database)
+			.Where(k => db.KeyType(k) == RedisType.SortedSet).ToList();
+
+		foreach (var key in keys)
+		{
+			var memberCount = await db.SortedSetLengthAsync(key);
+			sortedSetDictionary.Add(key, memberCount);
+		}
+
+		return sortedSetDictionary;
+	}
+
+	// Stream operations
+	public async Task<string> AddStreamEntryAsync(string serverUrl, int database, string key, Dictionary<string, string> fields, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+		var db = redis.GetDatabase(database);
+
+		var nameValueEntries = fields.Select(kvp => new NameValueEntry(kvp.Key, kvp.Value)).ToArray();
+		var entryId = await db.StreamAddAsync(key, nameValueEntries);
+		return entryId.ToString();
+	}
+
+	public async Task<List<Dictionary<string, object>>> GetStreamEntriesAsync(string serverUrl, int database, string key, int count = 100, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+		var db = redis.GetDatabase(database);
+
+		var entries = await db.StreamReadAsync(key, "0-0", count);
+
+		var result = new List<Dictionary<string, object>>();
+		foreach (var entry in entries)
+		{
+			var entryDict = new Dictionary<string, object>
+			{
+				{ "id", entry.Id.ToString() }
+			};
+
+			var fieldsDict = new Dictionary<string, string>();
+			foreach (var field in entry.Values)
+			{
+				fieldsDict.Add(field.Name!, field.Value!);
+			}
+			entryDict.Add("fields", fieldsDict);
+
+			result.Add(entryDict);
+		}
+
+		return result;
+	}
+
+	public async Task<long> GetStreamLengthAsync(string serverUrl, int database, string key, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+		var db = redis.GetDatabase(database);
+		return await db.StreamLengthAsync(key);
+	}
+
+	public async Task<bool> DeleteStreamAsync(string serverUrl, int database, string key, ServerCredential? credential = null)
+	{
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+		var db = redis.GetDatabase(database);
+		return await db.KeyDeleteAsync(key);
+	}
+
+	public async Task<Dictionary<string, long>> GetAllDatabaseStreamKeys(string serverUrl, int database, ServerCredential? credential = null)
+	{
+		var streamDictionary = new Dictionary<string, long>();
+		var configOptions = RedisConfigBuilder.BuildConfig(serverUrl, credential);
+
+		using var redis = ConnectionMultiplexer.Connect(configOptions);
+		var server = redis.GetServer(serverUrl);
+		var db = redis.GetDatabase(database);
+
+		var keys = server.Keys(database)
+			.Where(k => db.KeyType(k) == RedisType.Stream).ToList();
+
+		foreach (var key in keys)
+		{
+			var entryCount = await db.StreamLengthAsync(key);
+			streamDictionary.Add(key, entryCount);
+		}
+
+		return streamDictionary;
+	}
 }

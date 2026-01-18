@@ -29,15 +29,36 @@ public class CredentialRepository : ICredentialRepository, IDisposable
     {
         try
         {
+            logger.LogInformation("[CREDENTIAL-DEBUG] GetByServerAsync called for ServerId={ServerId}, ServerType={ServerType}", serverId, serverType);
+
             var credential = await dbContext.ServerCredentials
                 .FirstOrDefaultAsync(c => c.ServerId == serverId && c.ServerType == serverType.ToString());
 
             if (credential != null)
             {
-                // Decrypt sensitive fields
-                credential.Username = DecryptIfNotNull(credential.Username);
-                credential.Password = DecryptIfNotNull(credential.Password);
-                credential.AdditionalConfig = DecryptIfNotNull(credential.AdditionalConfig);
+                logger.LogInformation("[CREDENTIAL-DEBUG] Credential found, decrypting fields...");
+
+                try
+                {
+                    // Decrypt sensitive fields
+                    credential.Username = DecryptIfNotNull(credential.Username);
+                    credential.Password = DecryptIfNotNull(credential.Password);
+                    credential.AdditionalConfig = DecryptIfNotNull(credential.AdditionalConfig);
+
+                    logger.LogInformation("[CREDENTIAL-DEBUG] Credential fields decrypted - Username: {HasUsername}, Password: {HasPassword}",
+                        !string.IsNullOrEmpty(credential.Username) ? "SET" : "EMPTY",
+                        !string.IsNullOrEmpty(credential.Password) ? "SET" : "EMPTY");
+                }
+                catch (Exception decryptEx)
+                {
+                    logger.LogError(decryptEx, "Failed to decrypt credential for ServerId={ServerId}. The encryption key may have changed. Please re-add this credential.", serverId);
+                    logger.LogWarning("Credential decryption failed - returning null. User must re-add the credential via the UI.");
+                    return null;
+                }
+            }
+            else
+            {
+                logger.LogWarning("[CREDENTIAL-DEBUG] No credential found for ServerId={ServerId}, ServerType={ServerType}", serverId, serverType);
             }
 
             return credential;
@@ -179,7 +200,23 @@ public class CredentialRepository : ICredentialRepository, IDisposable
 
     private string? DecryptIfNotNull(string? value)
     {
-        return string.IsNullOrEmpty(value) ? value : credentialService.Decrypt(value);
+        if (string.IsNullOrEmpty(value))
+        {
+            logger.LogInformation("[CREDENTIAL-DEBUG] DecryptIfNotNull: value is null or empty");
+            return value;
+        }
+
+        try
+        {
+            var decrypted = credentialService.Decrypt(value);
+            logger.LogInformation("[CREDENTIAL-DEBUG] DecryptIfNotNull: Decryption successful, decrypted length={Length}", decrypted?.Length ?? 0);
+            return decrypted;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "[CREDENTIAL-DEBUG] DecryptIfNotNull: Decryption FAILED");
+            throw;
+        }
     }
 
     protected virtual void Dispose(bool disposing)

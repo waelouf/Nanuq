@@ -8,6 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Redis Advanced Data Types Support (Phases 1-5)**
+  - **Lists** - Push/pop operations, view elements, manage list keys
+  - **Hashes** - Set/get fields, view all fields, manage hash keys
+  - **Sets** - Add/remove members, view set members, manage set keys
+  - **Sorted Sets** - Add members with scores, view sorted members, manage sorted set keys
+  - **Streams** - Add entries with multiple fields, view stream entries, manage stream keys
+  - Backend: 25 new repository methods across all data types
+  - Backend: 25 new FastEndpoints for full CRUD operations
+  - Backend: 5 new request DTOs (PushListElementRequest, PopListElementRequest, SetHashFieldRequest, AddSetMemberRequest, AddSortedSetMemberRequest, AddStreamEntryRequest)
+  - Frontend: ManageList.vue, ManageHash.vue, ManageSet.vue, ManageSortedSet.vue, ManageStream.vue components
+  - Frontend: 25 new Vuex store actions for all data types
+  - Frontend: Tabbed interface in ManageDatabases.vue with dedicated tabs for each data type
+  - All operations support credential auto-detection for authenticated Redis servers
+
 - **Error Handling UI (Phase 6)**
   - Centralized notification/toast system using Vuetify v-snackbar
   - Global notifications store module (notifications.js)
@@ -32,6 +46,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Health checks for all services
   - Persistent volumes for data retention
 ### Fixed
+- **Credential Decryption Error Handling**
+  - Improved error handling for credential decryption failures
+  - Graceful fallback when encryption key has changed (DPAPI key mismatch)
+  - Clear error messages indicating when credentials need to be re-added
+  - System continues to work without credentials when decryption fails
+  - Enhanced logging for credential retrieval and decryption process
+
 - **Credential Tab Issues**
   - Fixed credentials tab not enabling after saving Redis/Kafka/RabbitMQ servers
   - Store actions now return server ID directly from API response
