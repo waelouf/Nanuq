@@ -46,6 +46,14 @@
       </v-card-text>
     </v-card>
 
+    <!-- Error Alert -->
+    <v-alert v-if="error" type="error" variant="tonal" class="mb-4" closable @click:close="error = null">
+      {{ error }}
+      <template #append>
+        <v-btn color="error" variant="text" @click="loadElements">Retry</v-btn>
+      </template>
+    </v-alert>
+
     <!-- Pagination Info -->
     <v-alert v-if="elements.length >= 100" type="info" variant="tonal" class="mb-4">
       Showing first 100 elements. Total length can be viewed in the element count badge above.
@@ -144,6 +152,7 @@ export default {
       newElement: '',
       confirmDelete: false,
       loading: false,
+      error: null,
     };
   },
   async mounted() {
@@ -153,13 +162,15 @@ export default {
     async loadElements() {
       try {
         this.loading = true;
+        this.error = null;
         this.elements = await this.$store.dispatch('redis/getListElements', {
           serverUrl: this.serverUrl,
           database: this.database,
           key: this.listKey,
         });
       } catch (error) {
-        // Error is already handled by the store
+        this.error = 'Failed to load list elements. Please try again.';
+        console.error('Error loading list elements:', error);
       } finally {
         this.loading = false;
       }

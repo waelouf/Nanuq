@@ -66,6 +66,14 @@
       </v-card-text>
     </v-card>
 
+    <!-- Error Alert -->
+    <v-alert v-if="error" type="error" variant="tonal" class="mb-4" closable @click:close="error = null">
+      {{ error }}
+      <template #append>
+        <v-btn color="error" variant="text" @click="loadEntries">Retry</v-btn>
+      </template>
+    </v-alert>
+
     <!-- Stream Entries Table -->
     <v-card variant="outlined">
       <v-card-title class="text-subtitle-1">Entries (newest first)</v-card-title>
@@ -147,6 +155,7 @@ export default {
       ],
       confirmDeleteStream: false,
       loading: false,
+      error: null,
     };
   },
   computed: {
@@ -161,6 +170,7 @@ export default {
     async loadEntries() {
       try {
         this.loading = true;
+        this.error = null;
         this.entries = await this.$store.dispatch('redis/getStreamEntries', {
           serverUrl: this.serverUrl,
           database: this.database,
@@ -168,7 +178,8 @@ export default {
           count: 100,
         });
       } catch (error) {
-        // Error is already handled by the store
+        this.error = 'Failed to load stream entries. Please try again.';
+        console.error('Error loading stream entries:', error);
       } finally {
         this.loading = false;
       }

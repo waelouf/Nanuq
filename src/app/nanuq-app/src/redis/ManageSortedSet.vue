@@ -45,6 +45,14 @@
       </v-card-text>
     </v-card>
 
+    <!-- Error Alert -->
+    <v-alert v-if="error" type="error" variant="tonal" class="mb-4" closable @click:close="error = null">
+      {{ error }}
+      <template #append>
+        <v-btn color="error" variant="text" @click="loadMembers">Retry</v-btn>
+      </template>
+    </v-alert>
+
     <!-- Sorted Set Members Table -->
     <v-card variant="outlined">
       <v-card-title class="text-subtitle-1">Members (sorted by score)</v-card-title>
@@ -150,6 +158,7 @@ export default {
       confirmDeleteSortedSet: false,
       memberToRemove: '',
       loading: false,
+      error: null,
     };
   },
   async mounted() {
@@ -159,6 +168,7 @@ export default {
     async loadMembers() {
       try {
         this.loading = true;
+        this.error = null;
         const rawMembers = await this.$store.dispatch('redis/getSortedSetMembers', {
           serverUrl: this.serverUrl,
           database: this.database,
@@ -170,7 +180,8 @@ export default {
           score: item.item2,
         }));
       } catch (error) {
-        // Error is already handled by the store
+        this.error = 'Failed to load sorted set members. Please try again.';
+        console.error('Error loading sorted set members:', error);
       } finally {
         this.loading = false;
       }

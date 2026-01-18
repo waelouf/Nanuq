@@ -38,6 +38,14 @@
       </v-card-text>
     </v-card>
 
+    <!-- Error Alert -->
+    <v-alert v-if="error" type="error" variant="tonal" class="mb-4" closable @click:close="error = null">
+      {{ error }}
+      <template #append>
+        <v-btn color="error" variant="text" @click="loadMembers">Retry</v-btn>
+      </template>
+    </v-alert>
+
     <!-- Set Members Table -->
     <v-card variant="outlined">
       <v-card-title class="text-subtitle-1">Members</v-card-title>
@@ -140,6 +148,7 @@ export default {
       confirmDeleteSet: false,
       memberToRemove: '',
       loading: false,
+      error: null,
     };
   },
   async mounted() {
@@ -149,13 +158,15 @@ export default {
     async loadMembers() {
       try {
         this.loading = true;
+        this.error = null;
         this.members = await this.$store.dispatch('redis/getSetMembers', {
           serverUrl: this.serverUrl,
           database: this.database,
           key: this.setKey,
         });
       } catch (error) {
-        // Error is already handled by the store
+        this.error = 'Failed to load set members. Please try again.';
+        console.error('Error loading set members:', error);
       } finally {
         this.loading = false;
       }

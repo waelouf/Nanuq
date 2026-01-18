@@ -53,6 +53,14 @@
       </v-card-text>
     </v-card>
 
+    <!-- Error Alert -->
+    <v-alert v-if="error" type="error" variant="tonal" class="mb-4" closable @click:close="error = null">
+      {{ error }}
+      <template #append>
+        <v-btn color="error" variant="text" @click="loadFields">Retry</v-btn>
+      </template>
+    </v-alert>
+
     <!-- Hash Fields Table -->
     <v-card variant="outlined">
       <v-card-title class="text-subtitle-1">Fields</v-card-title>
@@ -168,6 +176,7 @@ export default {
       confirmDeleteHash: false,
       fieldToDelete: '',
       loading: false,
+      error: null,
     };
   },
   async mounted() {
@@ -177,13 +186,15 @@ export default {
     async loadFields() {
       try {
         this.loading = true;
+        this.error = null;
         this.fields = await this.$store.dispatch('redis/getHashAllFields', {
           serverUrl: this.serverUrl,
           database: this.database,
           key: this.hashKey,
         });
       } catch (error) {
-        // Error is already handled by the store
+        this.error = 'Failed to load hash fields. Please try again.';
+        console.error('Error loading hash fields:', error);
       } finally {
         this.loading = false;
       }
