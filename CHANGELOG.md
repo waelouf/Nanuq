@@ -8,6 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Dashboard with Server Metrics**
+  - Centralized overview dashboard for all platforms (Kafka, Redis, RabbitMQ)
+  - Real-time metrics display: server count, topic count, database count, queue count
+  - Platform-specific cards with color-coded themes (Kafka: blue, Redis: red, RabbitMQ: orange)
+  - Health status indicators showing Active/No Servers state
+  - Quick actions section with shortcuts to add servers for each platform
+  - Individual refresh buttons per platform for selective metric updates
+  - Loading states with progress spinner during metric fetching
+  - Error handling with retry functionality
+  - Responsive grid layout using Vuetify components
+  - Added Dashboard route (/dashboard) with sidebar navigation link
+  - Added missing RabbitMQ section to sidebar navigation
+
 - **Production Readiness Improvements**
   - Pagination support with 100-item limit for Lists, Sets, Sorted Sets, and Streams
   - Loading states with progress spinners for all Redis management components
