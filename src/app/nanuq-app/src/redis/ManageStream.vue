@@ -1,5 +1,10 @@
 <template>
-  <v-sheet class="mx-auto pa-4" width="100%">
+  <v-sheet class="mx-auto pa-4" width="100%" style="position: relative;">
+    <!-- Loading Overlay -->
+    <v-overlay :model-value="loading" contained class="align-center justify-center">
+      <v-progress-circular indeterminate size="64" color="primary" />
+    </v-overlay>
+
     <v-card-title class="d-flex align-center">
       <v-icon class="mr-2">mdi-waves</v-icon>
       Manage Stream: {{ streamKey }}
@@ -141,6 +146,7 @@ export default {
         { key: '', value: '' },
       ],
       confirmDeleteStream: false,
+      loading: false,
     };
   },
   computed: {
@@ -154,6 +160,7 @@ export default {
   methods: {
     async loadEntries() {
       try {
+        this.loading = true;
         this.entries = await this.$store.dispatch('redis/getStreamEntries', {
           serverUrl: this.serverUrl,
           database: this.database,
@@ -162,6 +169,8 @@ export default {
         });
       } catch (error) {
         // Error is already handled by the store
+      } finally {
+        this.loading = false;
       }
     },
     addField() {
@@ -172,6 +181,7 @@ export default {
     },
     async addEntry() {
       try {
+        this.loading = true;
         const fields = {};
         this.newEntryFields.forEach((field) => {
           if (field.key && field.value) {
@@ -194,10 +204,13 @@ export default {
         await this.loadEntries();
       } catch (error) {
         // Error is already handled by the store
+      } finally {
+        this.loading = false;
       }
     },
     async deleteStream() {
       try {
+        this.loading = true;
         await this.$store.dispatch('redis/deleteStream', {
           serverUrl: this.serverUrl,
           database: this.database,
@@ -207,6 +220,8 @@ export default {
         this.closeDialog();
       } catch (error) {
         // Error is already handled by the store
+      } finally {
+        this.loading = false;
       }
     },
     closeDialog() {

@@ -1,5 +1,10 @@
 <template>
-  <v-sheet class="mx-auto pa-4" width="100%">
+  <v-sheet class="mx-auto pa-4" width="100%" style="position: relative;">
+    <!-- Loading Overlay -->
+    <v-overlay :model-value="loading" contained class="align-center justify-center">
+      <v-progress-circular indeterminate size="64" color="primary" />
+    </v-overlay>
+
     <v-card-title class="d-flex align-center">
       <v-icon class="mr-2">mdi-format-list-numbered</v-icon>
       Manage List: {{ listKey }}
@@ -138,6 +143,7 @@ export default {
       elements: [],
       newElement: '',
       confirmDelete: false,
+      loading: false,
     };
   },
   async mounted() {
@@ -146,6 +152,7 @@ export default {
   methods: {
     async loadElements() {
       try {
+        this.loading = true;
         this.elements = await this.$store.dispatch('redis/getListElements', {
           serverUrl: this.serverUrl,
           database: this.database,
@@ -153,10 +160,13 @@ export default {
         });
       } catch (error) {
         // Error is already handled by the store
+      } finally {
+        this.loading = false;
       }
     },
     async pushElement(pushLeft) {
       try {
+        this.loading = true;
         await this.$store.dispatch('redis/pushListElement', {
           serverUrl: this.serverUrl,
           database: this.database,
@@ -168,10 +178,13 @@ export default {
         await this.loadElements();
       } catch (error) {
         // Error is already handled by the store
+      } finally {
+        this.loading = false;
       }
     },
     async popElement(popLeft) {
       try {
+        this.loading = true;
         await this.$store.dispatch('redis/popListElement', {
           serverUrl: this.serverUrl,
           database: this.database,
@@ -181,10 +194,13 @@ export default {
         await this.loadElements();
       } catch (error) {
         // Error is already handled by the store
+      } finally {
+        this.loading = false;
       }
     },
     async deleteList() {
       try {
+        this.loading = true;
         await this.$store.dispatch('redis/deleteList', {
           serverUrl: this.serverUrl,
           database: this.database,
@@ -194,6 +210,8 @@ export default {
         this.closeDialog();
       } catch (error) {
         // Error is already handled by the store
+      } finally {
+        this.loading = false;
       }
     },
     closeDialog() {

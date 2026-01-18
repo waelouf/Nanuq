@@ -1,5 +1,10 @@
 <template>
-  <v-sheet class="mx-auto pa-4" width="100%">
+  <v-sheet class="mx-auto pa-4" width="100%" style="position: relative;">
+    <!-- Loading Overlay -->
+    <v-overlay :model-value="loading" contained class="align-center justify-center">
+      <v-progress-circular indeterminate size="64" color="primary" />
+    </v-overlay>
+
     <v-card-title class="d-flex align-center">
       <v-icon class="mr-2">mdi-code-braces</v-icon>
       Manage Hash: {{ hashKey }}
@@ -162,6 +167,7 @@ export default {
       confirmDeleteFieldDialog: false,
       confirmDeleteHash: false,
       fieldToDelete: '',
+      loading: false,
     };
   },
   async mounted() {
@@ -170,6 +176,7 @@ export default {
   methods: {
     async loadFields() {
       try {
+        this.loading = true;
         this.fields = await this.$store.dispatch('redis/getHashAllFields', {
           serverUrl: this.serverUrl,
           database: this.database,
@@ -177,10 +184,13 @@ export default {
         });
       } catch (error) {
         // Error is already handled by the store
+      } finally {
+        this.loading = false;
       }
     },
     async saveField() {
       try {
+        this.loading = true;
         await this.$store.dispatch('redis/setHashField', {
           serverUrl: this.serverUrl,
           database: this.database,
@@ -194,6 +204,8 @@ export default {
         await this.loadFields();
       } catch (error) {
         // Error is already handled by the store
+      } finally {
+        this.loading = false;
       }
     },
     editField(field, value) {
@@ -212,6 +224,7 @@ export default {
     },
     async deleteField() {
       try {
+        this.loading = true;
         await this.$store.dispatch('redis/deleteHashField', {
           serverUrl: this.serverUrl,
           database: this.database,
@@ -223,10 +236,13 @@ export default {
         await this.loadFields();
       } catch (error) {
         // Error is already handled by the store
+      } finally {
+        this.loading = false;
       }
     },
     async deleteHash() {
       try {
+        this.loading = true;
         await this.$store.dispatch('redis/deleteHash', {
           serverUrl: this.serverUrl,
           database: this.database,
@@ -236,6 +252,8 @@ export default {
         this.closeDialog();
       } catch (error) {
         // Error is already handled by the store
+      } finally {
+        this.loading = false;
       }
     },
     closeDialog() {

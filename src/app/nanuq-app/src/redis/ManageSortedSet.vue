@@ -1,5 +1,10 @@
 <template>
-  <v-sheet class="mx-auto pa-4" width="100%">
+  <v-sheet class="mx-auto pa-4" width="100%" style="position: relative;">
+    <!-- Loading Overlay -->
+    <v-overlay :model-value="loading" contained class="align-center justify-center">
+      <v-progress-circular indeterminate size="64" color="primary" />
+    </v-overlay>
+
     <v-card-title class="d-flex align-center">
       <v-icon class="mr-2">mdi-sort-numeric-variant</v-icon>
       Manage Sorted Set: {{ sortedSetKey }}
@@ -144,6 +149,7 @@ export default {
       confirmRemoveMemberDialog: false,
       confirmDeleteSortedSet: false,
       memberToRemove: '',
+      loading: false,
     };
   },
   async mounted() {
@@ -152,6 +158,7 @@ export default {
   methods: {
     async loadMembers() {
       try {
+        this.loading = true;
         const rawMembers = await this.$store.dispatch('redis/getSortedSetMembers', {
           serverUrl: this.serverUrl,
           database: this.database,
@@ -164,10 +171,13 @@ export default {
         }));
       } catch (error) {
         // Error is already handled by the store
+      } finally {
+        this.loading = false;
       }
     },
     async addMember() {
       try {
+        this.loading = true;
         await this.$store.dispatch('redis/addSortedSetMember', {
           serverUrl: this.serverUrl,
           database: this.database,
@@ -180,6 +190,8 @@ export default {
         await this.loadMembers();
       } catch (error) {
         // Error is already handled by the store
+      } finally {
+        this.loading = false;
       }
     },
     confirmRemoveMember(member) {
@@ -188,6 +200,7 @@ export default {
     },
     async removeMember() {
       try {
+        this.loading = true;
         await this.$store.dispatch('redis/removeSortedSetMember', {
           serverUrl: this.serverUrl,
           database: this.database,
@@ -199,10 +212,13 @@ export default {
         await this.loadMembers();
       } catch (error) {
         // Error is already handled by the store
+      } finally {
+        this.loading = false;
       }
     },
     async deleteSortedSet() {
       try {
+        this.loading = true;
         await this.$store.dispatch('redis/deleteSortedSet', {
           serverUrl: this.serverUrl,
           database: this.database,
@@ -212,6 +228,8 @@ export default {
         this.closeDialog();
       } catch (error) {
         // Error is already handled by the store
+      } finally {
+        this.loading = false;
       }
     },
     closeDialog() {
