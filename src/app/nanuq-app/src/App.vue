@@ -42,7 +42,7 @@
           <div class="sb-sidenav-menu">
             <div class="nav">
               <div class="sb-sidenav-menu-heading" />
-              <router-link to="/dashboard" class="nav-link">
+              <router-link to="/" class="nav-link">
                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt" /></div>
                 Dashboard
               </router-link>
