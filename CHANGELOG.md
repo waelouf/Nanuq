@@ -8,6 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Multi-Environment Support**
+  - Environment tagging for all servers (Kafka, Redis, RabbitMQ)
+  - Three environment types: Development, Staging, Production
+  - Environment selector in all Add/Edit server forms
+  - Environment filter dropdown in all server list views (All, Development, Staging, Production)
+  - Color-coded environment badges: Development (blue), Staging (orange), Production (red)
+  - Environment breakdown in Dashboard cards showing server distribution
+  - Backend: Database migration (003_AddEnvironmentColumn.sql) adds Environment column to all server tables
+  - Backend: Updated entities (KafkaRecord, RedisRecord, RabbitMQRecord) with Environment property
+  - Backend: Updated request DTOs with Environment parameter (defaults to Development)
+  - Frontend: v-select components with environment dropdown in Add forms
+  - Frontend: v-chip badges with color coding in list views and Dashboard
+  - Backward compatibility: Default environment is 'Development' for existing servers
+
 - **Dashboard with Server Metrics**
   - Centralized overview dashboard for all platforms (Kafka, Redis, RabbitMQ)
   - Real-time metrics display: server count, topic count, database count, queue count
