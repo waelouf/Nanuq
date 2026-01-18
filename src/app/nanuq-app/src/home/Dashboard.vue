@@ -61,6 +61,37 @@
               </div>
             </div>
 
+            <!-- Environment Breakdown -->
+            <div v-if="kafkaMetrics.serverCount > 0" class="mb-4">
+              <div class="text-caption text-medium-emphasis mb-2">Environments</div>
+              <div class="d-flex gap-2 flex-wrap">
+                <v-chip
+                  v-if="kafkaMetrics.environments.Development > 0"
+                  color="blue"
+                  size="x-small"
+                  variant="flat"
+                >
+                  Dev: {{ kafkaMetrics.environments.Development }}
+                </v-chip>
+                <v-chip
+                  v-if="kafkaMetrics.environments.Staging > 0"
+                  color="orange"
+                  size="x-small"
+                  variant="flat"
+                >
+                  Staging: {{ kafkaMetrics.environments.Staging }}
+                </v-chip>
+                <v-chip
+                  v-if="kafkaMetrics.environments.Production > 0"
+                  color="red"
+                  size="x-small"
+                  variant="flat"
+                >
+                  Prod: {{ kafkaMetrics.environments.Production }}
+                </v-chip>
+              </div>
+            </div>
+
             <!-- Status Indicator -->
             <div class="d-flex align-center">
               <v-chip
@@ -126,6 +157,37 @@
               </div>
             </div>
 
+            <!-- Environment Breakdown -->
+            <div v-if="redisMetrics.serverCount > 0" class="mb-4">
+              <div class="text-caption text-medium-emphasis mb-2">Environments</div>
+              <div class="d-flex gap-2 flex-wrap">
+                <v-chip
+                  v-if="redisMetrics.environments.Development > 0"
+                  color="blue"
+                  size="x-small"
+                  variant="flat"
+                >
+                  Dev: {{ redisMetrics.environments.Development }}
+                </v-chip>
+                <v-chip
+                  v-if="redisMetrics.environments.Staging > 0"
+                  color="orange"
+                  size="x-small"
+                  variant="flat"
+                >
+                  Staging: {{ redisMetrics.environments.Staging }}
+                </v-chip>
+                <v-chip
+                  v-if="redisMetrics.environments.Production > 0"
+                  color="red"
+                  size="x-small"
+                  variant="flat"
+                >
+                  Prod: {{ redisMetrics.environments.Production }}
+                </v-chip>
+              </div>
+            </div>
+
             <!-- Status Indicator -->
             <div class="d-flex align-center">
               <v-chip
@@ -188,6 +250,37 @@
               <div>
                 <div class="text-h5">{{ rabbitMQMetrics.queueCount }}</div>
                 <div class="text-caption text-medium-emphasis">Total Queues</div>
+              </div>
+            </div>
+
+            <!-- Environment Breakdown -->
+            <div v-if="rabbitMQMetrics.serverCount > 0" class="mb-4">
+              <div class="text-caption text-medium-emphasis mb-2">Environments</div>
+              <div class="d-flex gap-2 flex-wrap">
+                <v-chip
+                  v-if="rabbitMQMetrics.environments.Development > 0"
+                  color="blue"
+                  size="x-small"
+                  variant="flat"
+                >
+                  Dev: {{ rabbitMQMetrics.environments.Development }}
+                </v-chip>
+                <v-chip
+                  v-if="rabbitMQMetrics.environments.Staging > 0"
+                  color="orange"
+                  size="x-small"
+                  variant="flat"
+                >
+                  Staging: {{ rabbitMQMetrics.environments.Staging }}
+                </v-chip>
+                <v-chip
+                  v-if="rabbitMQMetrics.environments.Production > 0"
+                  color="red"
+                  size="x-small"
+                  variant="flat"
+                >
+                  Prod: {{ rabbitMQMetrics.environments.Production }}
+                </v-chip>
               </div>
             </div>
 
@@ -302,14 +395,29 @@ export default {
       kafkaMetrics: {
         serverCount: 0,
         topicCount: 0,
+        environments: {
+          Development: 0,
+          Staging: 0,
+          Production: 0,
+        },
       },
       redisMetrics: {
         serverCount: 0,
         databaseCount: 0,
+        environments: {
+          Development: 0,
+          Staging: 0,
+          Production: 0,
+        },
       },
       rabbitMQMetrics: {
         serverCount: 0,
         queueCount: 0,
+        environments: {
+          Development: 0,
+          Staging: 0,
+          Production: 0,
+        },
       },
     };
   },
@@ -348,12 +456,31 @@ export default {
       this.redisMetrics.serverCount = redisServers.length;
       this.rabbitMQMetrics.serverCount = rabbitMQServers.length;
 
+      // Calculate environment counts
+      this.kafkaMetrics.environments = this.countEnvironments(kafkaServers);
+      this.redisMetrics.environments = this.countEnvironments(redisServers);
+      this.rabbitMQMetrics.environments = this.countEnvironments(rabbitMQServers);
+
       // Fetch detailed metrics in parallel
       await Promise.all([
         this.fetchKafkaTopicCount(kafkaServers),
         this.fetchRedisDatabaseCount(redisServers),
         this.fetchRabbitMQQueueCount(rabbitMQServers),
       ]);
+    },
+    countEnvironments(servers) {
+      const counts = {
+        Development: 0,
+        Staging: 0,
+        Production: 0,
+      };
+      servers.forEach((server) => {
+        const env = server.environment || 'Development';
+        if (counts.hasOwnProperty(env)) {
+          counts[env]++;
+        }
+      });
+      return counts;
     },
     async fetchKafkaTopicCount(kafkaServers) {
       try {

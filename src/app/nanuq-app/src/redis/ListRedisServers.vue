@@ -4,6 +4,20 @@
     <ol class="breadcrumb mb-4">
       <li class="breadcrumb-item active" />
     </ol>
+
+    <!-- Environment Filter -->
+    <div class="mb-3">
+      <v-select
+        v-model="selectedEnvironment"
+        label="Filter by Environment"
+        :items="environmentOptions"
+        prepend-icon="mdi-filter"
+        variant="outlined"
+        density="compact"
+        style="max-width: 300px;"
+      />
+    </div>
+
     <div class="card mb-4">
       <div class="datatable-wrapper datatable-loading no-footer">
         <div class="datatable-container">
@@ -13,6 +27,7 @@
                 <th>Id</th>
                 <th>alias</th>
                 <th>Server</th>
+                <th>Environment</th>
                 <th>Auth</th>
                 <th />
                 <th />
@@ -28,6 +43,15 @@
                   <a @click="showServerDetails(server.serverUrl)">
                     <i class="fa-solid fa-circle-info" />
                   </a></td>
+                <td>
+                  <v-chip
+                    :color="getEnvironmentColor(server.environment)"
+                    size="small"
+                    variant="flat"
+                  >
+                    {{ server.environment || 'Development' }}
+                  </v-chip>
+                </td>
                 <td>
                   <v-icon
                     v-if="hasCredentials('Redis', server.id)"
@@ -115,7 +139,14 @@ export default ({
   },
   computed: {
     availableServers() {
-      return this.$store.state.sqlite.redisServers;
+      const servers = this.$store.state.sqlite.redisServers || [];
+      if (this.selectedEnvironment === 'All') {
+        return servers;
+      }
+      return servers.filter((server) => server.environment === this.selectedEnvironment);
+    },
+    environmentOptions() {
+      return ['All', 'Development', 'Staging', 'Production'];
     },
   },
   data() {
@@ -123,11 +154,20 @@ export default ({
       showAddServerDialog: false,
       showServerDetailsDialog: false,
       selectedServerUrl: '',
+      selectedEnvironment: 'All',
     };
   },
   methods: {
     hasCredentials(serverType, serverId) {
       return this.$store.getters['credentials/hasCredentials'](serverType, serverId);
+    },
+    getEnvironmentColor(environment) {
+      const colors = {
+        Development: 'blue',
+        Staging: 'orange',
+        Production: 'red',
+      };
+      return colors[environment] || 'blue';
     },
     addServer() {
       this.showAddServerDialog = true;

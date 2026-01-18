@@ -57,6 +57,7 @@ public class KafkaRepository : IKafkaRepository, IDisposable
 
 		recordToUpdate.BootstrapServer = record.BootstrapServer;
 		recordToUpdate.Alias = record.Alias;
+		recordToUpdate.Environment = record.Environment;
 
 		dbContext.Kafka.Update(recordToUpdate);
 		var affectedRows = await dbContext.SaveChangesAsync();

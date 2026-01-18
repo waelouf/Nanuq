@@ -37,6 +37,14 @@
             :rules="[rules.required]"
           />
 
+          <v-select
+            v-model="environment"
+            label="Environment"
+            prepend-icon="mdi-earth"
+            :items="environments"
+            :rules="[rules.required]"
+          />
+
           <v-alert
             v-if="savedServerId"
             type="success"
@@ -59,7 +67,7 @@
               color="primary"
               @click="saveServer"
               type="submit"
-              :disabled="!bootstrapServer || !alias"
+              :disabled="!bootstrapServer || !alias || !environment"
             >
               <v-icon start>mdi-content-save</v-icon>
               Save Server
@@ -94,6 +102,8 @@ export default {
     return {
       bootstrapServer: '',
       alias: '',
+      environment: 'Development',
+      environments: ['Development', 'Staging', 'Production'],
       tab: 'server',
       savedServerId: null,
       rules: {
@@ -115,6 +125,7 @@ export default {
       const serverDetails = {
         bootstrapServer: this.bootstrapServer,
         alias: this.alias,
+        environment: this.environment,
       };
 
       try {

@@ -14,15 +14,24 @@ public class KafkaRecord
 	[Column("alias")]
 	public string Alias { get; set; }
 
-	public KafkaRecord(string bootstrapServer, string alias) : 
-        this(0, bootstrapServer, alias)
+	[Column("Environment")]
+	public string Environment { get; set; }
+
+	public KafkaRecord(string bootstrapServer, string alias) :
+        this(0, bootstrapServer, alias, "Development")
 	{
 	}
 
-	public KafkaRecord(int id, string bootstrapServer, string alias)
+	public KafkaRecord(string bootstrapServer, string alias, string environment) :
+        this(0, bootstrapServer, alias, environment)
+	{
+	}
+
+	public KafkaRecord(int id, string bootstrapServer, string alias, string environment)
 	{
 		Id = id;
 		BootstrapServer = bootstrapServer;
 		Alias = alias;
+		Environment = environment;
 	}
 }

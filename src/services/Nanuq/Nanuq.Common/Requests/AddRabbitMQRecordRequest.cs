@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Nanuq.Common.Requests;
 
-public record AddRabbitMQRecordRequest(string ServerUrl, string Alias);
+public record AddRabbitMQRecordRequest(string ServerUrl, string Alias, string Environment = "Development");
 
 public static partial class Extension
 {
 	public static RabbitMQRecord ToRecord(this AddRabbitMQRecordRequest request)
 	{
-		return new RabbitMQRecord(request.ServerUrl, request.Alias);
+		return new RabbitMQRecord(request.ServerUrl, request.Alias, request.Environment);
 	}
 }
