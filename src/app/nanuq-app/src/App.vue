@@ -42,6 +42,10 @@
           <div class="sb-sidenav-menu">
             <div class="nav">
               <div class="sb-sidenav-menu-heading" />
+              <router-link to="/dashboard" class="nav-link">
+                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt" /></div>
+                Dashboard
+              </router-link>
               <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                 <div class="sb-nav-link-icon"><i class="fas fa-columns" /></div>
                 Kafka
@@ -63,6 +67,19 @@
               <div class="collapse" id="collapseLayoutsRedis" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                 <nav class="sb-sidenav-menu-nested nav">
                   <router-link to="/redis" class="nav-link">List Servers</router-link>
+                </nav>
+              </div>
+            </div>
+            <div class="nav">
+              <div class="sb-sidenav-menu-heading" />
+              <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutsRabbitMQ" aria-expanded="false" aria-controls="collapseLayouts">
+                <div class="sb-nav-link-icon"><i class="fas fa-columns" /></div>
+                RabbitMQ
+                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down" /></div>
+              </a>
+              <div class="collapse" id="collapseLayoutsRabbitMQ" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                <nav class="sb-sidenav-menu-nested nav">
+                  <router-link to="/rabbitmq" class="nav-link">List Servers</router-link>
                 </nav>
               </div>
             </div>

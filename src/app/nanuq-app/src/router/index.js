@@ -9,6 +9,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "home" */ '@/home/HomePage.vue'),
   },
   {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import(/* webpackChunkName: "dashboard" */ '@/home/Dashboard.vue'),
+  },
+  {
     path: '/kafka',
     name: 'Kafka',
     component: () => import(/* webpackChunkName: "kafka" */ '@/kafka/ListServers.vue'),
