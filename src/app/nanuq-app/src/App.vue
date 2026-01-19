@@ -43,8 +43,12 @@
                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt" /></div>
                 Dashboard
               </router-link>
+              <router-link to="/activitylog" class="nav-link">
+                <div class="sb-nav-link-icon"><i class="fas fa-history" /></div>
+                Activity Log
+              </router-link>
               <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-                <div class="sb-nav-link-icon"><i class="fas fa-columns" /></div>
+                <div class="sb-nav-link-icon"><i class="mdi mdi-apache-kafka" /></div>
                 Kafka
                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down" /></div>
               </a>
@@ -57,7 +61,7 @@
             <div class="nav">
               <div class="sb-sidenav-menu-heading" />
               <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutsRedis" aria-expanded="false" aria-controls="collapseLayouts">
-                <div class="sb-nav-link-icon"><i class="fas fa-columns" /></div>
+                <div class="sb-nav-link-icon"><i class="fas fa-database" /></div>
                 Redis
                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down" /></div>
               </a>
@@ -70,7 +74,7 @@
             <div class="nav">
               <div class="sb-sidenav-menu-heading" />
               <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutsRabbitMQ" aria-expanded="false" aria-controls="collapseLayouts">
-                <div class="sb-nav-link-icon"><i class="fas fa-columns" /></div>
+                <div class="sb-nav-link-icon"><i class="mdi mdi-rabbit" /></div>
                 RabbitMQ
                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down" /></div>
               </a>
@@ -96,7 +100,7 @@
             <div class="nav">
               <div class="sb-sidenav-menu-heading" />
               <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutsAzure" aria-expanded="false" aria-controls="collapseLayouts">
-                <div class="sb-nav-link-icon"><i class="fab fa-microsoft" /></div>
+                <div class="sb-nav-link-icon"><i class="mdi mdi-microsoft-azure" /></div>
                 Azure
                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down" /></div>
               </a>
