@@ -40,16 +40,18 @@
         Credentials are optional for Kafka. If your broker doesn't require authentication, leave these fields empty and close this dialog.
       </v-alert>
 
-      <!-- Username Field -->
+      <!-- Username/Access Key Field -->
       <v-text-field
         v-model="username"
-        :label="serverType === 'Redis' ? 'Username (optional for Redis)' : serverType === 'Kafka' ? 'Username (optional)' : 'Username'"
+        :label="getUsernameLabel()"
         prepend-icon="mdi-account"
         :rules="(serverType === 'Redis' || serverType === 'Kafka') ? [] : [rules.required]"
         clearable
+        :hint="serverType === 'AWS' ? 'Your AWS Access Key ID' : ''"
+        :persistent-hint="serverType === 'AWS'"
       />
 
-      <!-- Password Field -->
+      <!-- Password/Secret Key Field -->
       <v-text-field
         v-model="password"
         :label="getPasswordLabel()"
@@ -59,6 +61,8 @@
         :rules="getPasswordRules()"
         @click:append="showPassword = !showPassword"
         clearable
+        :hint="serverType === 'AWS' ? 'Your AWS Secret Access Key' : ''"
+        :persistent-hint="serverType === 'AWS'"
       />
 
       <!-- Session Token Field (AWS Only - for MFA/Temporary Credentials) -->
@@ -206,7 +210,25 @@ export default {
     }
   },
   methods: {
+    getUsernameLabel() {
+      if (this.serverType === 'AWS') {
+        return 'Access Key ID';
+      }
+      if (this.serverType === 'Redis') {
+        return 'Username (optional for Redis)';
+      }
+      if (this.serverType === 'Kafka') {
+        return 'Username (optional)';
+      }
+      return 'Username';
+    },
     getPasswordLabel() {
+      if (this.serverType === 'AWS') {
+        if (this.hasExistingCredentials) {
+          return 'Secret Access Key (leave blank to keep current)';
+        }
+        return 'Secret Access Key';
+      }
       if (this.hasExistingCredentials) {
         return 'Password (leave blank to keep current)';
       }
