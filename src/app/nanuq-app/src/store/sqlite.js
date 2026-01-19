@@ -8,6 +8,7 @@ export default {
     redisServers: [],
     rabbitMQServers: [],
     awsServers: [],
+    azureServers: [],
   },
   getters: {
   },
@@ -23,6 +24,9 @@ export default {
     },
     loadAwsServers(state, servers) {
       state.awsServers = servers;
+    },
+    loadAzureServers(state, servers) {
+      state.azureServers = servers;
     },
   },
   actions: {
@@ -117,6 +121,29 @@ export default {
       await apiClient.delete(`/sqlite/aws/${id}`)
         .then(() => logger.success('AWS server deleted successfully'))
         .catch((error) => logger.handleApiError('SQLiteStore', 'deleting AWS server', error));
+    },
+    // Azure
+    loadAzureServers({ commit }) {
+      apiClient.get('/sqlite/azure')
+        .then((result) => commit('loadAzureServers', result.data))
+        .catch((error) => logger.handleApiError('SQLiteStore', 'loading Azure servers', error));
+    },
+    // eslint-disable-next-line no-unused-vars
+    async addAzureServer({ commit }, serverDetails) {
+      try {
+        const result = await apiClient.post('/sqlite/azure', serverDetails);
+        logger.success('Azure server added successfully');
+        return result.data; // Return the server ID
+      } catch (error) {
+        logger.handleApiError('SQLiteStore', 'adding Azure server', error);
+        throw error;
+      }
+    },
+    // eslint-disable-next-line no-unused-vars
+    async deleteAzureServer({ commit }, id) {
+      await apiClient.delete(`/sqlite/azure/${id}`)
+        .then(() => logger.success('Azure server deleted successfully'))
+        .catch((error) => logger.handleApiError('SQLiteStore', 'deleting Azure server', error));
     },
   },
   modules: {

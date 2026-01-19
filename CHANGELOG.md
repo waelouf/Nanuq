@@ -8,6 +8,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Dashboard Enhancements**
+  - AWS metrics card displaying server count and resource count (SQS + SNS)
+  - AWS environment breakdown in dashboard card (Development, Staging, Production)
+  - AWS Quick Action button for adding new AWS servers
+  - Azure metrics card displaying server count and resource count (Queues + Topics)
+  - Azure environment breakdown in dashboard card
+  - Azure Quick Action button for adding new Azure servers
+  - Dashboard grid updated to support 5 platforms (Kafka, Redis, RabbitMQ, AWS, Azure)
+  - Activity Log widget now displays actual activity descriptions (fixed log.message → log.log)
+  - Recent Activity widget properly shows relative timestamps
+  - AWS resource counting across all configured servers
+  - Azure resource counting across all configured servers
+  - Refresh functionality for AWS and Azure metrics
+
+- **Azure Service Bus Support (Complete Implementation)**
+  - Full integration with Azure Service Bus for queues, topics, and subscriptions
+  - Backend: New Nanuq.Azure class library project with modular structure
+    - Nanuq.Azure/ServiceBus/ - Complete Service Bus implementation
+    - Azure.Messaging.ServiceBus SDK v7.18.1
+  - Backend: ServiceBusRepository with 14 methods (GetQueuesAsync, CreateQueueAsync, DeleteQueueAsync, SendMessageAsync, ReceiveMessagesAsync, GetTopicsAsync, CreateTopicAsync, DeleteTopicAsync, PublishMessageAsync, GetSubscriptionsAsync, CreateSubscriptionAsync, DeleteSubscriptionAsync, GetQueueDetailsAsync, GetTopicDetailsAsync)
+  - Backend: 17 Azure operation endpoints (5 queue + 7 topic/subscription + 5 server config) with credential auto-detection
+  - Backend: Database migration (008_CreateAzureTables.sql) creates azure_servers table
+  - Backend: Database migration (009_AddAzureActivityTypes.sql) adds 10 Azure activity types
+  - Backend: Extended ActivityTypeEnum with 10 new Azure activity types (32-41)
+  - Backend: Extended ServerType enum with Azure value
+  - Backend: AzureRepository with audit logging for add/remove server operations
+  - Backend: AzureRecord entity for server configuration storage
+  - Backend: Type-safe request DTOs (CreateQueueRequest, CreateTopicRequest, CreateSubscriptionRequest, SendMessageRequest, PublishMessageRequest)
+  - Backend: ServerCredentials integration for secure Azure connection string storage
+  - Frontend: Complete Azure management UI with 10 Vue components
+  - Frontend: ListServers.vue with namespace, region, environment display and add/delete functionality
+  - Frontend: AddServer.vue with two-tab interface (Server Details | Credentials) and 30+ Azure region dropdown
+  - Frontend: ManageAzure.vue tabbed interface (Queues | Topics) for service selection
+  - Frontend: Queue components (ManageQueues, CreateQueue, QueueDetails) with FIFO support and send/receive messages
+  - Frontend: Topic components (ManageTopics, CreateTopic, TopicDetails, CreateSubscription) with publish messages and subscription management
+  - Frontend: azure.js Vuex module with 13 actions for all Azure Service Bus operations
+  - Frontend: Router integration with 2 lazy-loaded routes
+  - Frontend: Azure navigation in sidebar with Microsoft Azure icon
+  - Queue Features: Create/delete queues, send/receive messages, configurable properties (max size, delivery count, TTL, duplicate detection, sessions, dead-lettering)
+  - Topic Features: Create/delete topics, publish messages, manage subscriptions, configurable properties (max size, TTL, duplicate detection, ordering)
+  - Subscription Features: Create/delete subscriptions, configurable properties (max delivery count, lock duration, sessions, dead-lettering)
+  - Activity tracking: Add/remove Azure servers, add/remove Service Bus queues, send queue messages, add/remove Service Bus topics, publish topic messages, add/remove subscriptions
+  - Credential support: AES-256 encrypted Azure connection strings stored in ServerCredentials table
+  - Region support: 30+ major Azure regions (East US, West US, West Europe, Southeast Asia, etc.)
+  - Environment tagging: Development, Staging, Production support for Azure servers
+  - Service type tracking: Differentiates between ServiceBus and future Azure services (Storage, EventHubs, etc.)
+
 - **Multi-Environment Support**
   - Environment tagging for all servers (Kafka, Redis, RabbitMQ)
   - Three environment types: Development, Staging, Production

@@ -7,6 +7,7 @@ import rabbitmq from './rabbitmq';
 import notifications from './notifications';
 import activityLog from './activityLog';
 import aws from './aws';
+import azure from './azure';
 
 export default createStore({
   modules: {
@@ -18,5 +19,6 @@ export default createStore({
     notifications,
     activityLog,
     aws,
+    azure,
   },
 });

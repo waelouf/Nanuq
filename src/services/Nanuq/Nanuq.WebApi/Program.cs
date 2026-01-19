@@ -19,6 +19,7 @@ using Nanuq.AWS.SQS.Interfaces;
 using Nanuq.AWS.SQS.Repository;
 using Nanuq.AWS.SNS.Interfaces;
 using Nanuq.AWS.SNS.Repository;
+using Nanuq.Azure.ServiceBus.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,6 +63,10 @@ builder.Services.AddScoped<ITopicsRepository, TopicsRepository>();
 builder.Services.AddScoped<IAwsRepository, AwsRepository>();
 builder.Services.AddScoped<ISqsManagerRepository, SqsManagerRepository>();
 builder.Services.AddScoped<ISnsManagerRepository, SnsManagerRepository>();
+
+// Azure Service Bus
+builder.Services.AddScoped<IServiceBusRepository, ServiceBusRepository>();
+builder.Services.AddScoped<IAzureRepository, AzureRepository>();
 
 // Credential encryption and management
 builder.Services.AddSingleton<ICredentialService, AesCredentialService>();

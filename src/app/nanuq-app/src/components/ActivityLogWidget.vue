@@ -22,7 +22,7 @@
               <v-icon size="18" color="white">{{ getTypeIcon(log) }}</v-icon>
             </v-avatar>
           </template>
-          <v-list-item-title>{{ log.message }}</v-list-item-title>
+          <v-list-item-title>{{ log.log }}</v-list-item-title>
           <v-list-item-subtitle class="text-caption">
             {{ formatTimestamp(log.timestamp) }}
           </v-list-item-subtitle>

@@ -141,7 +141,7 @@ export default {
     serverType: {
       type: String,
       required: true,
-      validator: (value) => ['Kafka', 'Redis', 'RabbitMQ', 'AWS'].includes(value),
+      validator: (value) => ['Kafka', 'Redis', 'RabbitMQ', 'AWS', 'Azure'].includes(value),
     },
   },
   data() {
@@ -214,6 +214,9 @@ export default {
       if (this.serverType === 'AWS') {
         return 'Access Key ID';
       }
+      if (this.serverType === 'Azure') {
+        return 'Connection String Name (optional)';
+      }
       if (this.serverType === 'Redis') {
         return 'Username (optional for Redis)';
       }
@@ -228,6 +231,12 @@ export default {
           return 'Secret Access Key (leave blank to keep current)';
         }
         return 'Secret Access Key';
+      }
+      if (this.serverType === 'Azure') {
+        if (this.hasExistingCredentials) {
+          return 'Connection String (leave blank to keep current)';
+        }
+        return 'Connection String';
       }
       if (this.hasExistingCredentials) {
         return 'Password (leave blank to keep current)';

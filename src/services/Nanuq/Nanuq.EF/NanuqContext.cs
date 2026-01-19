@@ -19,6 +19,8 @@ namespace Nanuq.EF
 
         public DbSet<AwsRecord> AWS { get; set; }
 
+        public DbSet<AzureRecord> AzureServers { get; set; }
+
         public NanuqContext(DbContextOptions<NanuqContext> options)
             :base(options)
         {

@@ -5,5 +5,6 @@ public enum ServerType
     Kafka,
     Redis,
     RabbitMQ,
-    AWS
+    AWS,
+    Azure
 }

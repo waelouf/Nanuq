@@ -94,6 +94,17 @@ const routes = [
     component: () => import(/* webpackChunkName: "aws" */ '@/aws/sns/TopicDetails.vue'),
     props: true,
   },
+  {
+    path: '/azure',
+    name: 'Azure',
+    component: () => import(/* webpackChunkName: "azure" */ '@/azure/ListServers.vue'),
+  },
+  {
+    path: '/azure/:serverId/manage',
+    name: 'ManageAzure',
+    component: () => import(/* webpackChunkName: "azure" */ '@/azure/ManageAzure.vue'),
+    props: (route) => ({ serverId: route.params.serverId }),
+  },
 ];
 
 const router = createRouter({
