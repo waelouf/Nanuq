@@ -117,6 +117,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Auto-refreshes when Dashboard loads
   - Relative time formatting (Just now, X min ago, X hour(s) ago, X day(s) ago)
 
+- **Activity Log Enhancements**
+  - Filter by activity type dropdown with "All Types" option
+  - Date range picker with From/To date fields and clear button
+  - Search functionality for filtering log messages (case-insensitive)
+  - Export to CSV with proper escaping and headers
+  - Export to JSON with pretty-printed formatting
+  - Filter summary bar showing active filters with individual clear buttons
+  - Results counter showing "Showing X of Y activities"
+  - Clear all filters button
+  - "No results found" state when filters return empty results
+  - Real-time reactive filtering across all filter types
+  - Responsive layout with filters stacking on mobile
+  - Export filename includes current date (activity-log-YYYY-MM-DD)
+
 ### Changed
 - **Redis Data Fetching Performance**
   - Backend methods now use efficient Redis commands for pagination
