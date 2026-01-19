@@ -105,7 +105,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Tracking: Add/remove RabbitMQ servers
   - Tracking: Add/remove Kafka topics (existing functionality preserved)
   - Tracking: Add/remove Redis cache entries (existing functionality preserved)
+  - Tracking: Add/remove RabbitMQ exchanges
+  - Tracking: Add/remove RabbitMQ queues
   - Performance: Database indexes on timestamp (DESC) and activity_type_id for efficient queries
+
+- **Dashboard Activity Widget**
+  - Recent Activity widget displaying 5 most recent activity logs
+  - Clickable card that navigates to full Activity Log page
+  - Activity items with colored avatars, icons, and relative timestamps
+  - Empty state when no activity exists
+  - Auto-refreshes when Dashboard loads
+  - Relative time formatting (Just now, X min ago, X hour(s) ago, X day(s) ago)
 
 ### Changed
 - **Redis Data Fetching Performance**

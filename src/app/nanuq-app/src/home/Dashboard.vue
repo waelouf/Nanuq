@@ -375,14 +375,25 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <!-- Recent Activity Widget -->
+    <v-row v-if="!loading" class="mt-4">
+      <v-col cols="12">
+        <ActivityLogWidget />
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import apiClient from '@/services/apiClient';
+import ActivityLogWidget from '@/components/ActivityLogWidget.vue';
 
 export default {
   name: 'Dashboard',
+  components: {
+    ActivityLogWidget,
+  },
   data() {
     return {
       loading: false,

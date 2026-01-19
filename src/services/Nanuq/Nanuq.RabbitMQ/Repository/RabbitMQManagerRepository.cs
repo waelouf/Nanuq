@@ -1,6 +1,8 @@
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using Nanuq.Common.Enums;
+using Nanuq.Common.Interfaces;
 using Nanuq.Common.Records;
 using Nanuq.RabbitMQ.Entities;
 using Nanuq.RabbitMQ.Helpers;
@@ -12,6 +14,13 @@ namespace Nanuq.RabbitMQ.Repository;
 
 public class RabbitMQManagerRepository : IRabbitMQManagerRepository
 {
+	private readonly IAuditLogRepository _auditLog;
+
+	public RabbitMQManagerRepository(IAuditLogRepository auditLog)
+	{
+		_auditLog = auditLog;
+	}
+
 	// Internal DTOs for Management API responses
 	private class ManagementExchange
 	{
@@ -107,6 +116,20 @@ public class RabbitMQManagerRepository : IRabbitMQManagerRepository
 				durable: request.Durable,
 				autoDelete: request.AutoDelete);
 
+			// Audit log after successful creation
+			var details = JsonSerializer.Serialize(new
+			{
+				exchangeName = request.Name,
+				exchangeType = request.Type,
+				durable = request.Durable,
+				autoDelete = request.AutoDelete,
+				serverUrl = request.ServerUrl
+			});
+			await _auditLog.Audit(
+				ActivityTypeEnum.AddRabbitMQExchange,
+				$"RabbitMQ exchange '{request.Name}' created on server '{request.ServerUrl}'",
+				details);
+
 			return true;
 		}
 		catch (Exception ex)
@@ -119,6 +142,17 @@ public class RabbitMQManagerRepository : IRabbitMQManagerRepository
 	{
 		try
 		{
+			// Audit log before deletion
+			var details = JsonSerializer.Serialize(new
+			{
+				exchangeName = request.Name,
+				serverUrl = request.ServerUrl
+			});
+			await _auditLog.Audit(
+				ActivityTypeEnum.RemoveRabbitMQExchange,
+				$"RabbitMQ exchange '{request.Name}' deleted from server '{request.ServerUrl}'",
+				details);
+
 			var factory = RabbitMQConfigBuilder.BuildConnectionFactory(request.ServerUrl, credential);
 			await using var connection = await factory.CreateConnectionAsync();
 			await using var channel = await connection.CreateChannelAsync();
@@ -211,6 +245,19 @@ public class RabbitMQManagerRepository : IRabbitMQManagerRepository
 				exclusive: request.Exclusive,
 				autoDelete: request.AutoDelete);
 
+			// Audit log after successful creation
+			var details = JsonSerializer.Serialize(new
+			{
+				queueName = request.Name,
+				durable = request.Durable,
+				autoDelete = request.AutoDelete,
+				serverUrl = request.ServerUrl
+			});
+			await _auditLog.Audit(
+				ActivityTypeEnum.AddRabbitMQQueue,
+				$"RabbitMQ queue '{request.Name}' created on server '{request.ServerUrl}'",
+				details);
+
 			return true;
 		}
 		catch (Exception ex)
@@ -223,6 +270,17 @@ public class RabbitMQManagerRepository : IRabbitMQManagerRepository
 	{
 		try
 		{
+			// Audit log before deletion
+			var details = JsonSerializer.Serialize(new
+			{
+				queueName = request.Name,
+				serverUrl = request.ServerUrl
+			});
+			await _auditLog.Audit(
+				ActivityTypeEnum.RemoveRabbitMQQueue,
+				$"RabbitMQ queue '{request.Name}' deleted from server '{request.ServerUrl}'",
+				details);
+
 			var factory = RabbitMQConfigBuilder.BuildConnectionFactory(request.ServerUrl, credential);
 			await using var connection = await factory.CreateConnectionAsync();
 			await using var channel = await connection.CreateChannelAsync();
