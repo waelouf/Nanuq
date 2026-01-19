@@ -131,7 +131,7 @@ export default {
       secretAccessKey: '',
       sessionToken: '',
       showSecret: false,
-      showToken: false,
+      showToken: true,
       testing: false,
       saving: false,
       testResult: null,
