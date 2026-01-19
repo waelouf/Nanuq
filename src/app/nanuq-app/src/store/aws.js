@@ -1,6 +1,24 @@
 import apiClient from '@/services/apiClient';
 import logger from '@/utils/logger';
 
+// Helper function to check if error is AWS auth error
+function isAwsAuthError(error) {
+  // Get error message from various possible locations
+  let errorMessage = '';
+  if (typeof error.response?.data === 'string') {
+    errorMessage = error.response.data;
+  } else if (error.response?.data?.message) {
+    errorMessage = error.response.data.message;
+  } else if (error.message) {
+    errorMessage = error.message;
+  }
+
+  const lowerMessage = errorMessage.toLowerCase();
+  return lowerMessage.includes('security token') ||
+         lowerMessage.includes('invalid') && lowerMessage.includes('credentials') ||
+         lowerMessage.includes('unauthorized');
+}
+
 export default {
   namespaced: true,
   state: {
@@ -87,9 +105,7 @@ export default {
         commit('setError', 'Failed to load SQS queues');
         logger.handleApiError('AWSStore', 'loading SQS queues', error);
         // Check if this is an authentication error
-        const errorMessage = error.response?.data?.message || error.message || '';
-        if (errorMessage.toLowerCase().includes('security token') ||
-            errorMessage.toLowerCase().includes('invalid') && errorMessage.toLowerCase().includes('credentials')) {
+        if (isAwsAuthError(error)) {
           const authError = new Error('AWS_AUTH_ERROR');
           authError.originalError = error;
           throw authError;
@@ -109,9 +125,7 @@ export default {
       } catch (error) {
         logger.handleApiError('AWSStore', 'loading queue details', error);
         // Check if this is an authentication error
-        const errorMessage = error.response?.data?.message || error.message || '';
-        if (errorMessage.toLowerCase().includes('security token') ||
-            errorMessage.toLowerCase().includes('invalid') && errorMessage.toLowerCase().includes('credentials')) {
+        if (isAwsAuthError(error)) {
           const authError = new Error('AWS_AUTH_ERROR');
           authError.originalError = error;
           throw authError;
@@ -192,9 +206,7 @@ export default {
         commit('setError', 'Failed to load SNS topics');
         logger.handleApiError('AWSStore', 'loading SNS topics', error);
         // Check if this is an authentication error
-        const errorMessage = error.response?.data?.message || error.message || '';
-        if (errorMessage.toLowerCase().includes('security token') ||
-            errorMessage.toLowerCase().includes('invalid') && errorMessage.toLowerCase().includes('credentials')) {
+        if (isAwsAuthError(error)) {
           const authError = new Error('AWS_AUTH_ERROR');
           authError.originalError = error;
           throw authError;
@@ -214,9 +226,7 @@ export default {
       } catch (error) {
         logger.handleApiError('AWSStore', 'loading topic details', error);
         // Check if this is an authentication error
-        const errorMessage = error.response?.data?.message || error.message || '';
-        if (errorMessage.toLowerCase().includes('security token') ||
-            errorMessage.toLowerCase().includes('invalid') && errorMessage.toLowerCase().includes('credentials')) {
+        if (isAwsAuthError(error)) {
           const authError = new Error('AWS_AUTH_ERROR');
           authError.originalError = error;
           throw authError;
@@ -268,9 +278,7 @@ export default {
       } catch (error) {
         logger.handleApiError('AWSStore', 'loading subscriptions', error);
         // Check if this is an authentication error
-        const errorMessage = error.response?.data?.message || error.message || '';
-        if (errorMessage.toLowerCase().includes('security token') ||
-            errorMessage.toLowerCase().includes('invalid') && errorMessage.toLowerCase().includes('credentials')) {
+        if (isAwsAuthError(error)) {
           const authError = new Error('AWS_AUTH_ERROR');
           authError.originalError = error;
           throw authError;
