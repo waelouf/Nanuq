@@ -83,6 +83,19 @@
                 </nav>
               </div>
             </div>
+            <div class="nav">
+              <div class="sb-sidenav-menu-heading" />
+              <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutsAWS" aria-expanded="false" aria-controls="collapseLayouts">
+                <div class="sb-nav-link-icon"><i class="fab fa-aws" /></div>
+                AWS (SQS/SNS)
+                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down" /></div>
+              </a>
+              <div class="collapse" id="collapseLayoutsAWS" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                <nav class="sb-sidenav-menu-nested nav">
+                  <router-link to="/aws" class="nav-link">List Servers</router-link>
+                </nav>
+              </div>
+            </div>
           </div>
           <div class="sb-sidenav-footer" />
         </nav>

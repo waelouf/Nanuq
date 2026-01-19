@@ -16,4 +16,13 @@ public enum ActivityTypeEnum
 	RemoveRabbitMQExchange = 12,
 	AddRabbitMQQueue = 13,
 	RemoveRabbitMQQueue = 14,
+	AddAWSServer = 23,
+	RemoveAWSServer = 24,
+	AddSQSQueue = 25,
+	RemoveSQSQueue = 26,
+	SendSQSMessage = 27,
+	AddSNSTopic = 28,
+	RemoveSNSTopic = 29,
+	PublishSNSMessage = 30,
+	AddSNSSubscription = 31,
 }

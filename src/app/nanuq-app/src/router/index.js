@@ -66,6 +66,34 @@ const routes = [
     name: 'ActivityLog',
     component: () => import(/* webpackChunkName: "activitylog" */ '@/views/ActivityLog.vue'),
   },
+  {
+    path: '/aws',
+    name: 'AWS',
+    component: () => import(/* webpackChunkName: "aws" */ '@/aws/ListServers.vue'),
+  },
+  {
+    path: '/aws/add',
+    name: 'AWSAdd',
+    component: () => import(/* webpackChunkName: "aws" */ '@/aws/AddServer.vue'),
+  },
+  {
+    path: '/aws/manage/:serverId',
+    name: 'ManageAWS',
+    component: () => import(/* webpackChunkName: "aws" */ '@/aws/ManageAWS.vue'),
+    props: true,
+  },
+  {
+    path: '/aws/sqs/queue/:serverId',
+    name: 'SQSQueueDetails',
+    component: () => import(/* webpackChunkName: "aws" */ '@/aws/sqs/QueueDetails.vue'),
+    props: true,
+  },
+  {
+    path: '/aws/sns/topic/:serverId',
+    name: 'SNSTopicDetails',
+    component: () => import(/* webpackChunkName: "aws" */ '@/aws/sns/TopicDetails.vue'),
+    props: true,
+  },
 ];
 
 const router = createRouter({

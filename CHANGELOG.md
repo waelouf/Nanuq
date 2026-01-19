@@ -131,6 +131,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Responsive layout with filters stacking on mobile
   - Export filename includes current date (activity-log-YYYY-MM-DD)
 
+- **AWS SNS/SQS Support (Complete Implementation)**
+  - Full integration with AWS Simple Notification Service (SNS) and Simple Queue Service (SQS)
+  - Backend: New Nanuq.AWS class library project with modular structure
+    - Nanuq.AWS/SQS/ - Complete SQS implementation
+    - Nanuq.AWS/SNS/ - Complete SNS implementation
+    - Nanuq.AWS/Common/ - Shared AWS credential helpers
+  - Backend: AWS SDK v3.7.* packages (AWSSDK.SQS, AWSSDK.SimpleNotificationService, AWSSDK.Core)
+  - Backend: SQS repository with 9 methods (GetQueuesAsync, GetQueueDetailsAsync, CreateQueueAsync, DeleteQueueAsync, SendMessageAsync, ReceiveMessagesAsync, DeleteMessageAsync, TestConnectionAsync)
+  - Backend: SNS repository with 8 methods (GetTopicsAsync, GetTopicDetailsAsync, CreateTopicAsync, DeleteTopicAsync, PublishMessageAsync, GetSubscriptionsAsync, SubscribeAsync, UnsubscribeAsync)
+  - Backend: 15 AWS operation endpoints (7 SQS + 8 SNS) with credential auto-detection
+  - Backend: 5 SQLite CRUD endpoints for AWS server configurations (Add, Get, GetAll, Update, Delete)
+  - Backend: Database migration (007_CreateAWSTables.sql) creates aws_servers table
+  - Backend: Extended ActivityTypeEnum with 9 new AWS activity types (23-31)
+  - Backend: AwsRepository with audit logging for add/remove server operations
+  - Backend: Type aliases to resolve AWS SDK naming conflicts (SqsCreateQueueRequest, SnsPublishMessageRequest, etc.)
+  - Backend: ServerCredentials integration for secure AWS access key storage
+  - Frontend: Complete AWS management UI with 8 Vue components
+  - Frontend: ListServers.vue with region, alias, environment display and add/delete functionality
+  - Frontend: AddServer.vue with two-tab interface (Server Details | Credentials) and 15 AWS region dropdown
+  - Frontend: ManageAWS.vue tabbed interface (SQS Queues | SNS Topics) for service selection
+  - Frontend: SQS components (CreateQueue, QueueDetails) with FIFO support and dead-letter queue configuration
+  - Frontend: SNS components (CreateTopic, TopicDetails, Subscribe) with subscription protocol validation
+  - Frontend: aws.js Vuex module with 13 actions for all AWS operations
+  - Frontend: Router integration with 5 lazy-loaded routes
+  - Frontend: AWS navigation in sidebar with Material Design icon
+  - SQS Features: Create/delete queues, send/receive messages, FIFO queue support, dead-letter queue configuration
+  - SNS Features: Create/delete topics, publish messages, manage subscriptions, multiple protocol support (HTTP, HTTPS, Email, SMS, SQS, Lambda)
+  - Activity tracking: Add/remove AWS servers, add/remove SQS queues, send SQS messages, add/remove SNS topics, publish SNS messages, add SNS subscriptions
+  - Credential support: AES-256 encrypted AWS access keys stored in ServerCredentials table
+  - Region support: All 15 major AWS regions (us-east-1, us-west-2, eu-west-1, ap-southeast-1, etc.)
+  - Environment tagging: Development, Staging, Production support for AWS servers
+  - Service type tracking: Differentiates between SQS, SNS, and future AWS services (S3, DynamoDB, etc.)
+
 ### Changed
 - **Redis Data Fetching Performance**
   - Backend methods now use efficient Redis commands for pagination

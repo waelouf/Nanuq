@@ -15,6 +15,10 @@ using Nanuq.RabbitMQ.Repository;
 using Nanuq.Migrations;
 using Nanuq.Security.Interfaces;
 using Nanuq.Security.Services;
+using Nanuq.AWS.SQS.Interfaces;
+using Nanuq.AWS.SQS.Repository;
+using Nanuq.AWS.SNS.Interfaces;
+using Nanuq.AWS.SNS.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +57,11 @@ builder.Services.AddScoped<IRabbitMqRepository, RabbitMqRepository>();
 builder.Services.AddScoped<IRabbitMQManagerRepository, RabbitMQManagerRepository>();
 
 builder.Services.AddScoped<ITopicsRepository, TopicsRepository>();
+
+// AWS repositories
+builder.Services.AddScoped<IAwsRepository, AwsRepository>();
+builder.Services.AddScoped<ISqsManagerRepository, SqsManagerRepository>();
+builder.Services.AddScoped<ISnsManagerRepository, SnsManagerRepository>();
 
 // Credential encryption and management
 builder.Services.AddSingleton<ICredentialService, AesCredentialService>();

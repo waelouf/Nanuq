@@ -17,6 +17,8 @@ namespace Nanuq.EF
 
         public DbSet<ServerCredential> ServerCredentials { get; set; }
 
+        public DbSet<AwsRecord> AWS { get; set; }
+
         public NanuqContext(DbContextOptions<NanuqContext> options)
             :base(options)
         {

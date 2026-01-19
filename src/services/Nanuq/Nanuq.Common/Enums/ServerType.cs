@@ -4,5 +4,6 @@ public enum ServerType
 {
     Kafka,
     Redis,
-    RabbitMQ
+    RabbitMQ,
+    AWS
 }

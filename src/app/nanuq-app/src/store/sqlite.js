@@ -7,6 +7,7 @@ export default {
     kafkaServers: [],
     redisServers: [],
     rabbitMQServers: [],
+    awsServers: [],
   },
   getters: {
   },
@@ -19,6 +20,9 @@ export default {
     },
     loadRabbitMQServers(state, servers) {
       state.rabbitMQServers = servers;
+    },
+    loadAwsServers(state, servers) {
+      state.awsServers = servers;
     },
   },
   actions: {
@@ -90,6 +94,29 @@ export default {
       await apiClient.delete(`/sqlite/rabbitmq/${id}`)
         .then(() => logger.success('RabbitMQ server deleted successfully'))
         .catch((error) => logger.handleApiError('SQLiteStore', 'deleting RabbitMQ server', error));
+    },
+    // AWS
+    loadAwsServers({ commit }) {
+      apiClient.get('/sqlite/aws')
+        .then((result) => commit('loadAwsServers', result.data))
+        .catch((error) => logger.handleApiError('SQLiteStore', 'loading AWS servers', error));
+    },
+    // eslint-disable-next-line no-unused-vars
+    async addAwsServer({ commit }, serverDetails) {
+      try {
+        const result = await apiClient.post('/sqlite/aws', serverDetails);
+        logger.success('AWS server added successfully');
+        return result.data; // Return the server ID
+      } catch (error) {
+        logger.handleApiError('SQLiteStore', 'adding AWS server', error);
+        throw error;
+      }
+    },
+    // eslint-disable-next-line no-unused-vars
+    async deleteAwsServer({ commit }, id) {
+      await apiClient.delete(`/sqlite/aws/${id}`)
+        .then(() => logger.success('AWS server deleted successfully'))
+        .catch((error) => logger.handleApiError('SQLiteStore', 'deleting AWS server', error));
     },
   },
   modules: {

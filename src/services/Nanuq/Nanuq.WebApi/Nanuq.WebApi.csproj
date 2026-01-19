@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Nanuq.AWS\Nanuq.AWS.csproj" />
     <ProjectReference Include="..\Nanuq.Common\Nanuq.Common.csproj" />
     <ProjectReference Include="..\Nanuq.EF\Nanuq.EF.csproj" />
     <ProjectReference Include="..\Nanuq.Kafka\Nanuq.Kafka.csproj" />
