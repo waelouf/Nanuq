@@ -105,12 +105,12 @@
             </v-btn>
             <v-spacer />
             <v-btn
-              icon
               variant="text"
               color="error"
               @click.stop="confirmDelete(server)"
+              prepend-icon="mdi-delete"
             >
-              <v-icon>mdi-delete</v-icon>
+              Delete
             </v-btn>
           </v-card-actions>
         </v-card>
