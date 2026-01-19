@@ -85,6 +85,15 @@ export default {
       },
     };
   },
+  computed: {
+    serverInfo() {
+      const servers = this.$store.state.sqlite.awsServers || [];
+      return servers.find((s) => s.id === parseInt(this.serverId, 10));
+    },
+    region() {
+      return this.serverInfo?.region || '';
+    },
+  },
   methods: {
     getEndpointLabel() {
       const labels = {
@@ -141,6 +150,7 @@ export default {
       try {
         const subscriptionDetails = {
           serverId: this.serverId,
+          region: this.region,
           topicArn: this.topicArn,
           protocol: this.protocol,
           endpoint: this.endpoint,

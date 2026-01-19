@@ -69,6 +69,15 @@ export default {
       },
     };
   },
+  computed: {
+    serverInfo() {
+      const servers = this.$store.state.sqlite.awsServers || [];
+      return servers.find((s) => s.id === parseInt(this.serverId, 10));
+    },
+    region() {
+      return this.serverInfo?.region || '';
+    },
+  },
   methods: {
     async createTopic() {
       this.loading = true;
@@ -77,6 +86,7 @@ export default {
       try {
         const topicDetails = {
           serverId: this.serverId,
+          region: this.region,
           topicName: this.topicName,
           displayName: this.displayName || this.topicName,
         };
