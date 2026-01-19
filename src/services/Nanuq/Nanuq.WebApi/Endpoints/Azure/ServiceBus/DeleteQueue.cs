@@ -45,6 +45,11 @@ public class DeleteQueue : Endpoint<DeleteQueueRequest>
             return;
         }
 
+        if (string.IsNullOrWhiteSpace(credential.Password))
+        {
+            ThrowError("Azure Service Bus connection string is not configured. Please add credentials for this server.");
+        }
+
         var connectionString = credential.Password!;
         await serviceBusRepository.DeleteQueueAsync(connectionString, req.QueueName);
 
@@ -61,6 +66,6 @@ public class DeleteQueue : Endpoint<DeleteQueueRequest>
             details
         );
 
-        await Send.OkAsync(ct);
+        await Send.OkAsync(cancellation: ct);
     }
 }

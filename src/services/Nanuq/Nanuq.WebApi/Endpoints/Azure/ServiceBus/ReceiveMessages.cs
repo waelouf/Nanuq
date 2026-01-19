@@ -40,6 +40,11 @@ public class ReceiveMessages : EndpointWithoutRequest<IEnumerable<ReceivedMessag
             return;
         }
 
+        if (string.IsNullOrWhiteSpace(credential.Password))
+        {
+            ThrowError("Azure Service Bus connection string is not configured. Please add credentials for this server.");
+        }
+
         var connectionString = credential.Password!;
         var messages = await serviceBusRepository.ReceiveMessagesAsync(connectionString, queueName, 10);
 

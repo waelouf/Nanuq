@@ -46,6 +46,11 @@ public class DeleteSubscription : Endpoint<DeleteSubscriptionRequest>
             return;
         }
 
+        if (string.IsNullOrWhiteSpace(credential.Password))
+        {
+            ThrowError("Azure Service Bus connection string is not configured. Please add credentials for this server.");
+        }
+
         var connectionString = credential.Password!;
         await serviceBusRepository.DeleteSubscriptionAsync(connectionString, req.TopicName, req.SubscriptionName);
 
@@ -63,6 +68,6 @@ public class DeleteSubscription : Endpoint<DeleteSubscriptionRequest>
             details
         );
 
-        await Send.OkAsync(ct);
+        await Send.OkAsync(cancellation: ct);
     }
 }

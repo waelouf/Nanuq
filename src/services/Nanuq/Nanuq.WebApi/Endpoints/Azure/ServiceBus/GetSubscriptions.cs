@@ -40,6 +40,11 @@ public class GetSubscriptions : EndpointWithoutRequest<IEnumerable<ServiceBusSub
             return;
         }
 
+        if (string.IsNullOrWhiteSpace(credential.Password))
+        {
+            ThrowError("Azure Service Bus connection string is not configured. Please add credentials for this server.");
+        }
+
         var connectionString = credential.Password!;
         var subscriptions = await serviceBusRepository.GetSubscriptionsAsync(connectionString, topicName);
 

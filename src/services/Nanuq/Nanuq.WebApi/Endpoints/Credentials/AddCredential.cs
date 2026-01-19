@@ -32,6 +32,18 @@ public class AddCredential : Endpoint<AddCredentialRequest, int>
             ThrowError($"Invalid server type: {req.ServerType}");
         }
 
+        // Validate Azure connection string
+        if (serverType == ServerType.Azure && string.IsNullOrWhiteSpace(req.Password))
+        {
+            ThrowError("Azure Service Bus connection string is required in the Password field.");
+        }
+
+        // Validate AWS credentials
+        if (serverType == ServerType.AWS && (string.IsNullOrWhiteSpace(req.Username) || string.IsNullOrWhiteSpace(req.Password)))
+        {
+            ThrowError("AWS Access Key ID and Secret Access Key are required.");
+        }
+
         var credential = new ServerCredential
         {
             ServerId = req.ServerId,

@@ -39,6 +39,11 @@ public class GetQueues : EndpointWithoutRequest<IEnumerable<ServiceBusQueue>>
             return;
         }
 
+        if (string.IsNullOrWhiteSpace(credential.Password))
+        {
+            ThrowError("Azure Service Bus connection string is not configured. Please add credentials for this server.");
+        }
+
         var connectionString = credential.Password!;
         var queues = await serviceBusRepository.GetQueuesAsync(connectionString);
 

@@ -39,6 +39,11 @@ public class GetTopics : EndpointWithoutRequest<IEnumerable<ServiceBusTopic>>
             return;
         }
 
+        if (string.IsNullOrWhiteSpace(credential.Password))
+        {
+            ThrowError("Azure Service Bus connection string is not configured. Please add credentials for this server.");
+        }
+
         var connectionString = credential.Password!;
         var topics = await serviceBusRepository.GetTopicsAsync(connectionString);
 

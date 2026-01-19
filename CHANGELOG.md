@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **Azure Service Bus Bug Fixes**
+  - Fixed empty connection string validation: Added null/empty checks in all 12 Azure Service Bus endpoints to prevent `FormatException` when connection string is missing
+  - Fixed credential validation in AddCredential endpoint: Added required field validation for Azure connection strings and AWS credentials
+  - Fixed message send serialization error: Changed `Send.OkAsync(ct)` to `Send.OkAsync(cancellation: ct)` in SendMessage and PublishMessage endpoints to prevent CancellationToken serialization error
+  - Added clear error messages: "Azure Service Bus connection string is not configured. Please add credentials for this server."
+
+- **Frontend Component Rendering Issues**
+  - Fixed VTextarea not rendering: Added missing `VTextarea` component registration in Vuetify configuration (src/plugins/vuetify.js)
+  - Fixed VAlert not rendering: Added missing `VAlert` component registration for error and info messages
+  - Fixed VChip not rendering: Added missing `VChip` component registration for status badges
+  - Fixed VTooltip not rendering: Added missing `VTooltip` component registration
+  - Enhanced Application Properties textarea visibility: Added explicit CSS styling with `!important` overrides and `auto-grow` property to force proper rendering
+  - Improved form field visibility: Added outlined variant, proper spacing (mb-4, mb-6), autofocus, and white background to all form fields
+  - Added helpful UI feedback: Info alert displays "Please enter a message body to enable sending" when message body is empty
+
+- **UI/UX Improvements**
+  - Simplified navigation menu labels: Changed "AWS (SQS/SNS)" to "AWS" with submenu "SQS/SNS"
+  - Simplified navigation menu labels: Changed "Azure Service Bus" to "Azure" with submenu "Service Bus"
+  - Updated Azure icon: Changed from Material Design Icons to Font Awesome (fab fa-microsoft) to match AWS style
+  - Enhanced message form layout: Added section dividers, consistent field spacing, and larger Send/Publish buttons
+
 ### Added
 - **Dashboard Enhancements**
   - AWS metrics card displaying server count and resource count (SQS + SNS)

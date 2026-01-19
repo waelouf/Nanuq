@@ -45,6 +45,11 @@ public class DeleteTopic : Endpoint<DeleteTopicRequest>
             return;
         }
 
+        if (string.IsNullOrWhiteSpace(credential.Password))
+        {
+            ThrowError("Azure Service Bus connection string is not configured. Please add credentials for this server.");
+        }
+
         var connectionString = credential.Password!;
         await serviceBusRepository.DeleteTopicAsync(connectionString, req.TopicName);
 
@@ -61,6 +66,6 @@ public class DeleteTopic : Endpoint<DeleteTopicRequest>
             details
         );
 
-        await Send.OkAsync(ct);
+        await Send.OkAsync(cancellation: ct);
     }
 }

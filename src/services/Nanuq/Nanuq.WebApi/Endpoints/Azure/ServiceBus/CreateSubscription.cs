@@ -40,6 +40,11 @@ public class CreateSubscription : Endpoint<CreateSubscriptionRequest>
             return;
         }
 
+        if (string.IsNullOrWhiteSpace(credential.Password))
+        {
+            ThrowError("Azure Service Bus connection string is not configured. Please add credentials for this server.");
+        }
+
         var connectionString = credential.Password!;
         await serviceBusRepository.CreateSubscriptionAsync(connectionString, req);
 
@@ -57,6 +62,6 @@ public class CreateSubscription : Endpoint<CreateSubscriptionRequest>
             details
         );
 
-        await Send.OkAsync(ct);
+        await Send.OkAsync(cancellation: ct);
     }
 }

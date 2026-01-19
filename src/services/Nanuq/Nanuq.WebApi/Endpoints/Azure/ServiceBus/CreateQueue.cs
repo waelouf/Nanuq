@@ -40,6 +40,11 @@ public class CreateQueue : Endpoint<CreateQueueRequest>
             return;
         }
 
+        if (string.IsNullOrWhiteSpace(credential.Password))
+        {
+            ThrowError("Azure Service Bus connection string is not configured. Please add credentials for this server.");
+        }
+
         var connectionString = credential.Password!;
         await serviceBusRepository.CreateQueueAsync(connectionString, req);
 
@@ -58,6 +63,6 @@ public class CreateQueue : Endpoint<CreateQueueRequest>
             details
         );
 
-        await Send.OkAsync(ct);
+        await Send.OkAsync(cancellation: ct);
     }
 }

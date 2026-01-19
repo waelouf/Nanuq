@@ -35,31 +35,56 @@
         <v-card variant="flat">
           <v-card-text>
             <v-form @submit.prevent="publishMessage">
-              <v-textarea
-                v-model="messageBody"
-                label="Message Body"
-                rows="6"
-                :rules="[rules.required]"
-                hint="Enter the message content to publish to the topic"
-                persistent-hint
-              />
+              <!-- Message Body Section -->
+              <div class="mb-6">
+                <v-textarea
+                  v-model="messageBody"
+                  label="Message Body *"
+                  rows="6"
+                  :rules="[rules.required]"
+                  hint="Enter the message content to publish to the topic"
+                  persistent-hint
+                  variant="outlined"
+                  autofocus
+                  color="primary"
+                />
+              </div>
 
-              <v-text-field
-                v-model="contentType"
-                label="Content Type (optional)"
-                prepend-icon="mdi-file-document-outline"
-                hint="e.g., application/json, text/plain"
-              />
+              <!-- Optional Fields Section -->
+              <div class="mb-4">
+                <v-text-field
+                  v-model="contentType"
+                  label="Content Type (optional)"
+                  prepend-icon="mdi-file-document-outline"
+                  hint="e.g., application/json, text/plain"
+                  variant="outlined"
+                  color="primary"
+                />
+              </div>
 
-              <v-textarea
-                v-model="applicationPropertiesJson"
-                label="Application Properties (JSON, optional)"
-                rows="3"
-                hint='e.g., {"key1": "value1", "key2": 123}'
-              />
+              <div class="mb-6 app-properties-wrapper">
+                <v-textarea
+                  v-model="applicationPropertiesJson"
+                  label="Application Properties (JSON, optional)"
+                  rows="3"
+                  auto-grow
+                  hint='e.g., {"key1": "value1", "key2": 123}'
+                  persistent-hint
+                  variant="outlined"
+                  color="primary"
+                  placeholder='{"key": "value"}'
+                  class="app-properties-field"
+                />
+              </div>
 
-              <v-alert v-if="publishError" type="error" variant="tonal" class="mt-3">
+              <v-divider class="mb-4" />
+
+              <v-alert v-if="publishError" type="error" variant="tonal" class="mb-3">
                 {{ publishError }}
+              </v-alert>
+
+              <v-alert v-if="!messageBody && !publishing" type="info" variant="tonal" class="mb-3">
+                Please enter a message body to enable publishing
               </v-alert>
 
               <v-btn
@@ -67,7 +92,7 @@
                 type="submit"
                 :disabled="!messageBody || publishing"
                 :loading="publishing"
-                class="mt-2"
+                size="large"
               >
                 <v-icon start>mdi-publish</v-icon>
                 Publish Message
@@ -314,5 +339,30 @@ export default {
 .delete-icon {
   color: blue;
   cursor: pointer;
+}
+
+/* Ensure Application Properties textarea is visible */
+.app-properties-wrapper {
+  min-height: 120px;
+}
+
+.app-properties-field {
+  display: block !important;
+  visibility: visible !important;
+  min-height: 100px !important;
+}
+
+.app-properties-field :deep(textarea) {
+  min-height: 80px !important;
+  display: block !important;
+  visibility: visible !important;
+}
+
+.app-properties-field :deep(.v-field__field) {
+  min-height: 100px !important;
+}
+
+.app-properties-field :deep(.v-field__input) {
+  min-height: 80px !important;
 }
 </style>

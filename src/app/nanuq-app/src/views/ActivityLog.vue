@@ -6,7 +6,7 @@
         <div>
           <h1 class="text-h4 font-weight-bold">Activity Log</h1>
           <p class="text-subtitle-1 text-medium-emphasis">
-            Track all operations across Kafka, Redis, and RabbitMQ
+            Track all operations across all servers
           </p>
         </div>
       </v-col>

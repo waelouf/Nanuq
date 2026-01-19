@@ -40,6 +40,11 @@ public class PublishMessage : Endpoint<PublishMessageRequest>
             return;
         }
 
+        if (string.IsNullOrWhiteSpace(credential.Password))
+        {
+            ThrowError("Azure Service Bus connection string is not configured. Please add credentials for this server.");
+        }
+
         var connectionString = credential.Password!;
         await serviceBusRepository.PublishMessageAsync(connectionString, req);
 
@@ -57,6 +62,6 @@ public class PublishMessage : Endpoint<PublishMessageRequest>
             details
         );
 
-        await Send.OkAsync(ct);
+        await Send.OkAsync(cancellation: ct);
     }
 }

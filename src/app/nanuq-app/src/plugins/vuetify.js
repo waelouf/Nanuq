@@ -6,6 +6,7 @@ import 'vuetify/styles';
 
 // Import only the components used in the app
 import {
+  VAlert,
   VApp,
   VAppBar,
   VBtn,
@@ -13,6 +14,7 @@ import {
   VCardActions,
   VCardText,
   VCardTitle,
+  VChip,
   VContainer,
   VDialog,
   VDivider,
@@ -35,8 +37,10 @@ import {
   VTabsWindow,
   VTabsWindowItem,
   VTextField,
+  VTextarea,
   VToolbar,
   VToolbarTitle,
+  VTooltip,
 } from 'vuetify/components';
 
 // Import only the directives used in the app
@@ -45,6 +49,7 @@ import { Ripple } from 'vuetify/directives';
 // Create the Vuetify instance with only what's needed
 export default createVuetify({
   components: {
+    VAlert,
     VApp,
     VAppBar,
     VBtn,
@@ -52,6 +57,7 @@ export default createVuetify({
     VCardActions,
     VCardText,
     VCardTitle,
+    VChip,
     VContainer,
     VDialog,
     VDivider,
@@ -74,8 +80,10 @@ export default createVuetify({
     VTabsWindow,
     VTabsWindowItem,
     VTextField,
+    VTextarea,
     VToolbar,
     VToolbarTitle,
+    VTooltip,
   },
   directives: {
     Ripple,

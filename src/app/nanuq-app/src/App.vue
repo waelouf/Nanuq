@@ -87,25 +87,25 @@
               <div class="sb-sidenav-menu-heading" />
               <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutsAWS" aria-expanded="false" aria-controls="collapseLayouts">
                 <div class="sb-nav-link-icon"><i class="fab fa-aws" /></div>
-                AWS (SQS/SNS)
+                AWS
                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down" /></div>
               </a>
               <div class="collapse" id="collapseLayoutsAWS" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                 <nav class="sb-sidenav-menu-nested nav">
-                  <router-link to="/aws" class="nav-link">List Servers</router-link>
+                  <router-link to="/aws" class="nav-link">SQS/SNS</router-link>
                 </nav>
               </div>
             </div>
             <div class="nav">
               <div class="sb-sidenav-menu-heading" />
               <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutsAzure" aria-expanded="false" aria-controls="collapseLayouts">
-                <div class="sb-nav-link-icon"><i class="mdi mdi-microsoft-azure" /></div>
-                Azure Service Bus
+                <div class="sb-nav-link-icon"><i class="fab fa-microsoft" /></div>
+                Azure
                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down" /></div>
               </a>
               <div class="collapse" id="collapseLayoutsAzure" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                 <nav class="sb-sidenav-menu-nested nav">
-                  <router-link to="/azure" class="nav-link">List Servers</router-link>
+                  <router-link to="/azure" class="nav-link">Service Bus</router-link>
                 </nav>
               </div>
             </div>
