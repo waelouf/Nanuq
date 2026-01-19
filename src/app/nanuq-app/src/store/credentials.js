@@ -54,14 +54,20 @@ export default {
         throw error;
       }
     },
-    async saveCredentials({ commit }, { serverId, serverType, username, password, additionalConfig }) {
+    async saveCredentials({ commit }, { serverId, serverType, username, password, sessionToken, additionalConfig }) {
       try {
+        // For AWS, convert sessionToken to additionalConfig JSON
+        let config = additionalConfig;
+        if (serverType === 'AWS' && sessionToken) {
+          config = JSON.stringify({ SessionToken: sessionToken });
+        }
+
         const result = await apiClient.post('/credentials', {
           serverId,
           serverType,
           username,
           password,
-          additionalConfig,
+          additionalConfig: config,
         });
         // Fetch metadata after saving
         const metadata = await apiClient.get(`/credentials/${serverId}/${serverType}`);
@@ -77,13 +83,20 @@ export default {
         throw error;
       }
     },
-    async testConnection({ commit }, { serverId, serverType, username, password }) {
+    async testConnection({ commit }, { serverId, serverType, username, password, sessionToken }) {
       try {
+        // For AWS, convert sessionToken to additionalConfig JSON
+        let additionalConfig = null;
+        if (serverType === 'AWS' && sessionToken) {
+          additionalConfig = JSON.stringify({ SessionToken: sessionToken });
+        }
+
         const result = await apiClient.post('/credentials/test', {
           serverId,
           serverType,
           username,
           password,
+          additionalConfig,
         });
         if (result.data.success) {
           logger.success('Connection test successful');
@@ -96,12 +109,18 @@ export default {
         throw error;
       }
     },
-    async updateCredentials({ commit }, { credentialId, username, password, additionalConfig, serverId, serverType }) {
+    async updateCredentials({ commit }, { credentialId, username, password, sessionToken, additionalConfig, serverId, serverType }) {
       try {
+        // For AWS, convert sessionToken to additionalConfig JSON
+        let config = additionalConfig;
+        if (serverType === 'AWS' && sessionToken) {
+          config = JSON.stringify({ SessionToken: sessionToken });
+        }
+
         const result = await apiClient.put(`/credentials/${credentialId}`, {
           username,
           password,
-          additionalConfig,
+          additionalConfig: config,
         });
         // Fetch updated metadata
         const metadata = await apiClient.get(`/credentials/${serverId}/${serverType}`);

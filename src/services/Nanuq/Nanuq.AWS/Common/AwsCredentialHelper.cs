@@ -1,5 +1,6 @@
 using Amazon.Runtime;
 using Nanuq.Common.Records;
+using System.Text.Json;
 
 namespace Nanuq.AWS.Common;
 
@@ -23,7 +24,44 @@ public static class AwsCredentialHelper
 
         // Username = Access Key ID
         // Password = Secret Access Key (encrypted in DB, decrypted by CredentialRepository)
+
+        // Check if there's a session token in AdditionalConfig (for MFA/temporary credentials)
+        string? sessionToken = null;
+        if (!string.IsNullOrEmpty(credential.AdditionalConfig))
+        {
+            try
+            {
+                var config = JsonSerializer.Deserialize<AwsAdditionalConfig>(credential.AdditionalConfig);
+                sessionToken = config?.SessionToken;
+            }
+            catch
+            {
+                // If parsing fails, ignore and use basic credentials
+            }
+        }
+
+        // Use SessionAWSCredentials if session token is provided (MFA/temporary credentials)
+        // Otherwise use BasicAWSCredentials (permanent credentials)
+        if (!string.IsNullOrEmpty(sessionToken))
+        {
+            return new SessionAWSCredentials(credential.Username, credential.Password, sessionToken);
+        }
+
         return new BasicAWSCredentials(credential.Username, credential.Password);
+    }
+
+    /// <summary>
+    /// Creates AWS additional config JSON with session token
+    /// </summary>
+    public static string? CreateAdditionalConfig(string? sessionToken)
+    {
+        if (string.IsNullOrEmpty(sessionToken))
+        {
+            return null;
+        }
+
+        var config = new AwsAdditionalConfig { SessionToken = sessionToken };
+        return JsonSerializer.Serialize(config);
     }
 
     /// <summary>
@@ -35,4 +73,12 @@ public static class AwsCredentialHelper
     {
         return Amazon.RegionEndpoint.GetBySystemName(region);
     }
+}
+
+/// <summary>
+/// Additional configuration for AWS credentials (stored encrypted in AdditionalConfig field)
+/// </summary>
+public class AwsAdditionalConfig
+{
+    public string? SessionToken { get; set; }
 }

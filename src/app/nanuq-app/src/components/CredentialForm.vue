@@ -61,6 +61,20 @@
         clearable
       />
 
+      <!-- Session Token Field (AWS Only - for MFA/Temporary Credentials) -->
+      <v-text-field
+        v-if="serverType === 'AWS'"
+        v-model="sessionToken"
+        label="Session Token (optional - for MFA/temporary credentials)"
+        prepend-icon="mdi-clock-outline"
+        :append-icon="showSessionToken ? 'mdi-eye' : 'mdi-eye-off'"
+        :type="showSessionToken ? 'text' : 'password'"
+        @click:append="showSessionToken = !showSessionToken"
+        clearable
+        hint="Required for MFA-enabled accounts. Generate from AWS Console > Security Credentials > Create Access Key > CLI."
+        persistent-hint
+      />
+
       <!-- Action Buttons -->
       <div class="d-flex justify-end gap-2 mt-4">
         <v-btn
@@ -123,14 +137,16 @@ export default {
     serverType: {
       type: String,
       required: true,
-      validator: (value) => ['Kafka', 'Redis', 'RabbitMQ'].includes(value),
+      validator: (value) => ['Kafka', 'Redis', 'RabbitMQ', 'AWS'].includes(value),
     },
   },
   data() {
     return {
       username: '',
       password: '',
+      sessionToken: '',
       showPassword: false,
+      showSessionToken: false,
       testing: false,
       saving: false,
       deleting: false,
@@ -179,7 +195,7 @@ export default {
         // Don't allow saving empty credentials
         return !!this.username && !!this.password;
       }
-      // RabbitMQ requires both username and password
+      // RabbitMQ and AWS require both username and password
       return !!this.username && !!this.password;
     },
   },
@@ -231,6 +247,7 @@ export default {
           serverType: this.serverType,
           username: this.username,
           password: this.password,
+          sessionToken: this.sessionToken || undefined,
         });
         this.testResult = result;
       } catch (error) {
@@ -254,6 +271,7 @@ export default {
             credentialId: this.credentialMetadata.id,
             username: this.username || undefined,
             password: this.password || undefined,
+            sessionToken: this.sessionToken || undefined,
             serverId: this.serverId,
             serverType: this.serverType,
           });
@@ -265,12 +283,14 @@ export default {
             serverType: this.serverType,
             username: this.username,
             password: this.password,
+            sessionToken: this.sessionToken || undefined,
           });
           this.$emit('saved', { action: 'created' });
         }
 
-        // Clear password field after successful save
+        // Clear password and session token fields after successful save
         this.password = '';
+        this.sessionToken = '';
         this.testResult = null;
       } catch (error) {
         // Error is already handled by the store
@@ -292,6 +312,7 @@ export default {
 
         this.username = '';
         this.password = '';
+        this.sessionToken = '';
         this.testResult = null;
         this.$emit('deleted');
       } catch (error) {
