@@ -207,12 +207,24 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- Refresh Credentials Dialog -->
+    <v-dialog v-model="showRefreshCredentialsDialog" max-width="700px" persistent>
+      <RefreshAwsCredentials
+        :serverId="serverId"
+        @close="showRefreshCredentialsDialog = false"
+        @saved="handleCredentialsRefreshed"
+      />
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import RefreshAwsCredentials from '@/components/RefreshAwsCredentials.vue';
+
 export default {
   name: 'QueueDetails',
+  components: { RefreshAwsCredentials },
   props: {
     serverId: {
       type: [String, Number],
@@ -232,6 +244,7 @@ export default {
       receiveVisibilityTimeout: 30,
       waitTimeSeconds: 0,
       showDeleteDialog: false,
+      showRefreshCredentialsDialog: false,
       messageToDelete: null,
       rules: {
         required: (value) => !!value || 'Required',
@@ -263,10 +276,19 @@ export default {
           queueUrl: this.queueUrl,
         });
       } catch (error) {
-        // Error handled by store
+        // Check if this is an authentication error
+        if (error.message === 'AWS_AUTH_ERROR') {
+          this.showRefreshCredentialsDialog = true;
+        }
+        // Other errors handled by store
       } finally {
         this.loading = false;
       }
+    },
+    async handleCredentialsRefreshed() {
+      this.showRefreshCredentialsDialog = false;
+      // Retry loading data with new credentials
+      await this.loadQueueDetails();
     },
     async sendMessage() {
       this.sending = true;

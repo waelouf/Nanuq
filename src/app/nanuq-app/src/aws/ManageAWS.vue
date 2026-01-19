@@ -249,16 +249,26 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- Refresh Credentials Dialog -->
+    <v-dialog v-model="showRefreshCredentialsDialog" max-width="700px" persistent>
+      <RefreshAwsCredentials
+        :serverId="serverId"
+        @close="showRefreshCredentialsDialog = false"
+        @saved="handleCredentialsRefreshed"
+      />
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import CreateQueue from './sqs/CreateQueue.vue';
 import CreateTopic from './sns/CreateTopic.vue';
+import RefreshAwsCredentials from '@/components/RefreshAwsCredentials.vue';
 
 export default {
   name: 'ManageAWS',
-  components: { CreateQueue, CreateTopic },
+  components: { CreateQueue, CreateTopic, RefreshAwsCredentials },
   props: {
     serverId: {
       type: [String, Number],
@@ -274,6 +284,7 @@ export default {
       showCreateTopicDialog: false,
       showDeleteQueueDialog: false,
       showDeleteTopicDialog: false,
+      showRefreshCredentialsDialog: false,
       queueToDelete: null,
       topicToDelete: null,
     };
@@ -303,10 +314,20 @@ export default {
           this.$store.dispatch('aws/loadSnsTopics', this.serverId),
         ]);
       } catch (error) {
-        this.error = 'Failed to load AWS resources. Please check your credentials and try again.';
+        // Check if this is an authentication error
+        if (error.message === 'AWS_AUTH_ERROR') {
+          this.showRefreshCredentialsDialog = true;
+        } else {
+          this.error = 'Failed to load AWS resources. Please check your credentials and try again.';
+        }
       } finally {
         this.loading = false;
       }
+    },
+    async handleCredentialsRefreshed() {
+      this.showRefreshCredentialsDialog = false;
+      // Retry loading data with new credentials
+      await this.loadData();
     },
     handleQueueCreated() {
       this.showCreateQueueDialog = false;

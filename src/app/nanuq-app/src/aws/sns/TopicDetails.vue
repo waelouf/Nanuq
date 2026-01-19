@@ -179,15 +179,25 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- Refresh Credentials Dialog -->
+    <v-dialog v-model="showRefreshCredentialsDialog" max-width="700px" persistent>
+      <RefreshAwsCredentials
+        :serverId="serverId"
+        @close="showRefreshCredentialsDialog = false"
+        @saved="handleCredentialsRefreshed"
+      />
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import Subscribe from './Subscribe.vue';
+import RefreshAwsCredentials from '@/components/RefreshAwsCredentials.vue';
 
 export default {
   name: 'TopicDetails',
-  components: { Subscribe },
+  components: { Subscribe, RefreshAwsCredentials },
   props: {
     serverId: {
       type: [String, Number],
@@ -202,6 +212,7 @@ export default {
       messageBody: '',
       showSubscribeDialog: false,
       showUnsubscribeDialog: false,
+      showRefreshCredentialsDialog: false,
       subscriptionToDelete: null,
       rules: {
         required: (value) => !!value || 'Required',
@@ -232,7 +243,11 @@ export default {
           topicArn: this.topicArn,
         });
       } catch (error) {
-        // Error handled by store
+        // Check if this is an authentication error
+        if (error.message === 'AWS_AUTH_ERROR') {
+          this.showRefreshCredentialsDialog = true;
+        }
+        // Other errors handled by store
       } finally {
         this.loading = false;
       }
@@ -244,8 +259,18 @@ export default {
           topicArn: this.topicArn,
         });
       } catch (error) {
-        // Error handled by store
+        // Check if this is an authentication error
+        if (error.message === 'AWS_AUTH_ERROR') {
+          this.showRefreshCredentialsDialog = true;
+        }
+        // Other errors handled by store
       }
+    },
+    async handleCredentialsRefreshed() {
+      this.showRefreshCredentialsDialog = false;
+      // Retry loading data with new credentials
+      await this.loadTopicDetails();
+      await this.loadSubscriptions();
     },
     async publishMessage() {
       this.publishing = true;

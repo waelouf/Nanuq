@@ -86,6 +86,14 @@ export default {
       } catch (error) {
         commit('setError', 'Failed to load SQS queues');
         logger.handleApiError('AWSStore', 'loading SQS queues', error);
+        // Check if this is an authentication error
+        const errorMessage = error.response?.data?.message || error.message || '';
+        if (errorMessage.toLowerCase().includes('security token') ||
+            errorMessage.toLowerCase().includes('invalid') && errorMessage.toLowerCase().includes('credentials')) {
+          const authError = new Error('AWS_AUTH_ERROR');
+          authError.originalError = error;
+          throw authError;
+        }
         throw error;
       } finally {
         commit('setLoading', false);
@@ -100,6 +108,14 @@ export default {
         commit('updateSqsQueueDetails', { serverId, queueUrl, data: response.data });
       } catch (error) {
         logger.handleApiError('AWSStore', 'loading queue details', error);
+        // Check if this is an authentication error
+        const errorMessage = error.response?.data?.message || error.message || '';
+        if (errorMessage.toLowerCase().includes('security token') ||
+            errorMessage.toLowerCase().includes('invalid') && errorMessage.toLowerCase().includes('credentials')) {
+          const authError = new Error('AWS_AUTH_ERROR');
+          authError.originalError = error;
+          throw authError;
+        }
         throw error;
       }
     },
@@ -175,6 +191,14 @@ export default {
       } catch (error) {
         commit('setError', 'Failed to load SNS topics');
         logger.handleApiError('AWSStore', 'loading SNS topics', error);
+        // Check if this is an authentication error
+        const errorMessage = error.response?.data?.message || error.message || '';
+        if (errorMessage.toLowerCase().includes('security token') ||
+            errorMessage.toLowerCase().includes('invalid') && errorMessage.toLowerCase().includes('credentials')) {
+          const authError = new Error('AWS_AUTH_ERROR');
+          authError.originalError = error;
+          throw authError;
+        }
         throw error;
       } finally {
         commit('setLoading', false);
@@ -189,6 +213,14 @@ export default {
         commit('updateSnsTopicDetails', { serverId, topicArn, data: response.data });
       } catch (error) {
         logger.handleApiError('AWSStore', 'loading topic details', error);
+        // Check if this is an authentication error
+        const errorMessage = error.response?.data?.message || error.message || '';
+        if (errorMessage.toLowerCase().includes('security token') ||
+            errorMessage.toLowerCase().includes('invalid') && errorMessage.toLowerCase().includes('credentials')) {
+          const authError = new Error('AWS_AUTH_ERROR');
+          authError.originalError = error;
+          throw authError;
+        }
         throw error;
       }
     },
@@ -235,6 +267,14 @@ export default {
         commit('updateSnsSubscriptions', { serverId, topicArn, data: response.data });
       } catch (error) {
         logger.handleApiError('AWSStore', 'loading subscriptions', error);
+        // Check if this is an authentication error
+        const errorMessage = error.response?.data?.message || error.message || '';
+        if (errorMessage.toLowerCase().includes('security token') ||
+            errorMessage.toLowerCase().includes('invalid') && errorMessage.toLowerCase().includes('credentials')) {
+          const authError = new Error('AWS_AUTH_ERROR');
+          authError.originalError = error;
+          throw authError;
+        }
         throw error;
       }
     },

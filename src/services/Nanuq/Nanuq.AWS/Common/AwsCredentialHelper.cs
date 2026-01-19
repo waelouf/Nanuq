@@ -22,6 +22,11 @@ public static class AwsCredentialHelper
             throw new ArgumentNullException(nameof(credential), "AWS credentials are required");
         }
 
+        if (string.IsNullOrEmpty(credential.Username) || string.IsNullOrEmpty(credential.Password))
+        {
+            throw new ArgumentException("AWS Access Key ID and Secret Access Key are required");
+        }
+
         // Username = Access Key ID
         // Password = Secret Access Key (encrypted in DB, decrypted by CredentialRepository)
 
@@ -33,20 +38,33 @@ public static class AwsCredentialHelper
             {
                 var config = JsonSerializer.Deserialize<AwsAdditionalConfig>(credential.AdditionalConfig);
                 sessionToken = config?.SessionToken;
+
+                // Log credential info (without exposing sensitive data)
+                Console.WriteLine($"[AWS Credentials] Access Key starts with: {credential.Username?.Substring(0, Math.Min(4, credential.Username.Length))}...");
+                Console.WriteLine($"[AWS Credentials] Secret Key length: {credential.Password?.Length}");
+                Console.WriteLine($"[AWS Credentials] Session Token present: {!string.IsNullOrEmpty(sessionToken)}");
+                Console.WriteLine($"[AWS Credentials] Session Token length: {sessionToken?.Length ?? 0}");
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"[AWS Credentials] Error parsing AdditionalConfig: {ex.Message}");
                 // If parsing fails, ignore and use basic credentials
             }
+        }
+        else
+        {
+            Console.WriteLine("[AWS Credentials] No AdditionalConfig found - using basic credentials");
         }
 
         // Use SessionAWSCredentials if session token is provided (MFA/temporary credentials)
         // Otherwise use BasicAWSCredentials (permanent credentials)
         if (!string.IsNullOrEmpty(sessionToken))
         {
+            Console.WriteLine("[AWS Credentials] Using SessionAWSCredentials (temporary/MFA credentials)");
             return new SessionAWSCredentials(credential.Username, credential.Password, sessionToken);
         }
 
+        Console.WriteLine("[AWS Credentials] Using BasicAWSCredentials (permanent credentials)");
         return new BasicAWSCredentials(credential.Username, credential.Password);
     }
 
