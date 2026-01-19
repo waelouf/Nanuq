@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: nanuq-app
-        image: waelouf/nanuq-app:0.1.0
+        image: waelouf/nanuq-app:2.0.0
         ports:
         - containerPort: 8080
         env:

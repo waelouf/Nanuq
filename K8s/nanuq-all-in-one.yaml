@@ -1,0 +1,177 @@
+# Nanuq v2.0.0 - All-in-One Kubernetes Deployment
+# This file contains all resources needed to deploy Nanuq to Kubernetes
+#
+# Quick Deploy:
+#   kubectl apply -f nanuq-all-in-one.yaml
+#
+# Quick Remove:
+#   kubectl delete -f nanuq-all-in-one.yaml
+#
+# Access the app:
+#   kubectl get service nanuq-app
+#   Use the NodePort or LoadBalancer IP to access the application
+
+---
+# Namespace (Optional - uncomment if you want to deploy to a dedicated namespace)
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: nanuq
+---
+# Backend API Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nanuq-backend
+  labels:
+    app: nanuq
+    component: backend
+    version: "2.0.0"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nanuq
+      component: backend
+  template:
+    metadata:
+      labels:
+        app: nanuq
+        component: backend
+        version: "2.0.0"
+    spec:
+      containers:
+      - name: backend
+        image: waelouf/nanuq-api:2.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+          name: http
+          protocol: TCP
+        env:
+        - name: ASPNETCORE_HTTP_PORTS
+          value: "5000"
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Production"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+---
+# Backend API Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nanuq-backend
+  labels:
+    app: nanuq
+    component: backend
+spec:
+  selector:
+    app: nanuq
+    component: backend
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+    name: http
+  type: ClusterIP
+---
+# Frontend App Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nanuq-frontend
+  labels:
+    app: nanuq
+    component: frontend
+    version: "2.0.0"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nanuq
+      component: frontend
+  template:
+    metadata:
+      labels:
+        app: nanuq
+        component: frontend
+        version: "2.0.0"
+    spec:
+      containers:
+      - name: frontend
+        image: waelouf/nanuq-app:2.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        env:
+        - name: VUE_APP_API_BASE_URL
+          value: "http://nanuq-backend:5000"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "250m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+---
+# Frontend App Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nanuq-frontend
+  labels:
+    app: nanuq
+    component: frontend
+spec:
+  selector:
+    app: nanuq
+    component: frontend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+    name: http
+    # Uncomment nodePort if using NodePort type (range: 30000-32767)
+    # nodePort: 30080
+  # Change type to LoadBalancer if you want an external load balancer
+  type: NodePort
+  # type: LoadBalancer

@@ -263,11 +263,29 @@ export default {
     messages() {
       return this.$store.getters['aws/getSqsMessages'](this.serverId, this.queueUrl);
     },
+    region() {
+      // Extract region from queue URL: https://sqs.REGION.amazonaws.com/ACCOUNT_ID/QUEUE_NAME
+      return this.extractRegionFromQueueUrl(this.queueUrl);
+    },
   },
   async created() {
     await this.loadQueueDetails();
   },
   methods: {
+    extractRegionFromQueueUrl(queueUrl) {
+      // Queue URL format: https://sqs.REGION.amazonaws.com/ACCOUNT_ID/QUEUE_NAME
+      try {
+        const url = new URL(queueUrl);
+        const hostname = url.hostname; // sqs.us-east-1.amazonaws.com
+        const parts = hostname.split('.');
+        if (parts.length >= 3 && parts[0] === 'sqs') {
+          return parts[1]; // Extract region (e.g., us-east-1)
+        }
+      } catch (error) {
+        console.error('Error extracting region from queue URL:', error);
+      }
+      return ''; // Return empty string if extraction fails
+    },
     async loadQueueDetails() {
       this.loading = true;
       try {
@@ -295,6 +313,7 @@ export default {
       try {
         await this.$store.dispatch('aws/sendMessage', {
           serverId: this.serverId,
+          region: this.region,
           queueUrl: this.queueUrl,
           messageBody: this.messageBody,
           delaySeconds: this.delaySeconds,
@@ -317,6 +336,7 @@ export default {
       try {
         await this.$store.dispatch('aws/receiveMessages', {
           serverId: this.serverId,
+          region: this.region,
           queueUrl: this.queueUrl,
           maxMessages: this.maxMessages,
           visibilityTimeout: this.receiveVisibilityTimeout,

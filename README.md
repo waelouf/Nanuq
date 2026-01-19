@@ -9,9 +9,21 @@
 
 ## About
 
-Nanuq is an open-source application designed to simplify the management of Kafka, Redis, RabbitMQ, AWS services (SQS/SNS), and Azure Service Bus for developers. Instead of relying on command-line interfaces for each server, Nanuq provides a unified, user-friendly interface that streamlines daily tasks. Whether you're monitoring queues, managing datasets, configuring clusters, or managing cloud messaging services, Nanuq empowers you to handle these critical operations with ease, all from a single UI.
+Nanuq **Version 2.0** is an open-source unified management platform for five critical messaging and caching systems: **Kafka**, **Redis**, **RabbitMQ**, **AWS** (SQS/SNS), and **Azure Service Bus**. Designed for developers working across local, development, staging, and production environments, Nanuq eliminates the complexity of managing multiple command-line interfaces by providing a single, intuitive UI for all platforms.
 
-Built with a focus on usability and efficiency, Nanuq aims to reduce the overhead associated with managing these powerful technologies, allowing developers to focus on building and deploying applications rather than managing infrastructure.
+With **enterprise-grade security** featuring AES-256 encrypted credential storage, real-time monitoring dashboards, comprehensive activity tracking, and advanced data type support, Nanuq empowers developers to manage critical infrastructure operations with confidence—all from one unified interface. Focus on building applications, not managing infrastructure.
+
+## What's New in Version 2.0
+
+Nanuq 2.0 represents a major milestone with enterprise-grade features and expanded cloud platform support:
+
+- **☁️ Cloud Platform Integration** - Complete AWS (SQS/SNS) and Azure Service Bus support with multi-region deployment across 15 AWS and 30+ Azure regions
+- **🔒 Enterprise Security** - AES-256 encrypted credential storage with DPAPI key derivation, secure credential management API, and automatic credential detection
+- **📊 Unified Dashboard** - Real-time metrics and monitoring across all 5 platforms (Kafka, Redis, RabbitMQ, AWS, Azure) with environment breakdown and health indicators
+- **📝 Activity Tracking & Audit** - Complete audit trail with 24+ activity types, advanced filtering, date range selection, and CSV/JSON export capabilities
+- **🏢 Multi-Environment Management** - Built-in support for Development, Staging, and Production environments with color-coded badges and filtering
+- **💾 Advanced Redis Support** - Full CRUD operations for 6 data types: Strings, Lists, Hashes, Sets, Sorted Sets, and Streams with pagination
+- **✨ Production Ready** - Comprehensive error handling, pagination support, retry logic, loading states, and user-friendly error messages
 
 ## Feature list
 
@@ -116,27 +128,57 @@ Built with a focus on usability and efficiency, Nanuq aims to reduce the overhea
 
 ## Screenshot
 
+### Dashboard
+
+![alt text](images/dashboard_1.png)
+![alt text](images/dashboard_2.png)
+
+### Activity Logs
+
+![alt text](images/activity_log_1.png)
+
 ### Kafka
 
+![alt text](images/kafka_3.png)
 ![alt text](images/kafka_1.png)
-
 ![alt text](images/kafka_2.png)
 
-![alt text](images/kafka_3.png)
-
-![alt text](images/kafka_4.png)
 
 ### Redis
 
 ![alt text](images/redis_1.png)
+![alt text](images/redis_2.png)
+![alt text](images/redis_3.png)
+![alt text](images/redis_4.png)
+![alt text](images/redis_5.png)
 
-![alt text](/images/redis_1_1.png)
+### RabbitMQ
 
-![alt text](/images/redis_1_2.png)
+![alt text](images/rabbitmq_1.png)
+![alt text](images/rabbitmq_2.png)
+![alt text](images/rabbitmq_3.png)
+![alt text](images/rabbitmq_4.png)
+![alt text](images/rabbitmq_5.png)
 
-![alt text](/images/redis_2.png)
 
-![alt text](/images/redis_3.png)
+### AWS (SQS/SNS)
+
+![alt text](images/aws_1.png)
+![alt text](images/aws_2.png)
+![alt text](images/aws_3.png)
+![alt text](images/aws_4.png)
+![alt text](images/aws_5.png)
+![alt text](images/aws_6.png)
+![alt text](images/aws_7.png)
+
+### Azure Service Bus
+
+![alt text](images/azure_1.png)
+![alt text](images/azure_2.png)
+![alt text](images/azure_3.png)
+![alt text](images/azure_4.png)
+![alt text](images/azure_5.png)
+![alt text](images/azure_6.png)
 
 ## Installation
 
@@ -175,11 +217,9 @@ kubectl apply -f nanuq-app.yaml
 
 ```
 
-## Disclaimer
+Or using All in one without clone
+```powershell
 
-Nanuq is currently intended for use in local development and DEV environments only. While we strive to provide a reliable tool for managing Kafka, Redis, RabbitMQ, and AWS services, this application is not yet ready for production environments. Users should exercise caution and thoroughly test Nanuq in non-production settings before considering any production use. We are continuously working on improvements and welcome contributions from the community to help make Nanuq production-ready in the future.
+kubectl apply -f nanuq-all-in-one.yaml
 
-
----
-
-
+```

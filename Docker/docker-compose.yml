@@ -1,6 +1,6 @@
 services:
   backend:
-    image: waelouf/nanuq-api:latest
+    image: waelouf/nanuq-api:2.0.0
     container_name: backend
     networks:
         - nanuq-network
@@ -10,7 +10,7 @@ services:
       - "5000"
 
   web:
-    image: waelouf/nanuq-app:latest
+    image: waelouf/nanuq-app:2.0.0
     container_name: web
     networks:
         - nanuq-network

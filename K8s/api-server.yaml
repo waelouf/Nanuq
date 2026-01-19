@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: waelouf/nanuq-server:0.1.0
+        image: waelouf/nanuq-api:2.0.0
         ports:
         - containerPort: 5000
         env:
