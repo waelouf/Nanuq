@@ -8,4 +8,12 @@ public enum ActivityTypeEnum
 	RemoveKafkaTopic = 4,
 	AddRedisCache = 5,
 	RemoveRedisCache = 6,
+	AddRedisServer = 7,
+	RemoveRedisServer = 8,
+	AddRabbitMQServer = 9,
+	RemoveRabbitMQServer = 10,
+	AddRabbitMQExchange = 11,
+	RemoveRabbitMQExchange = 12,
+	AddRabbitMQQueue = 13,
+	RemoveRabbitMQQueue = 14,
 }

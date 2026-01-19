@@ -61,6 +61,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "rabbitmq" */ '@/rabbitmq/ManageRabbitMQ.vue'),
     props: true,
   },
+  {
+    path: '/activitylog',
+    name: 'ActivityLog',
+    component: () => import(/* webpackChunkName: "activitylog" */ '@/views/ActivityLog.vue'),
+  },
 ];
 
 const router = createRouter({

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Nanuq.Common.Enums;
 using Nanuq.Common.Interfaces;
 using Nanuq.Common.Records;
 using Nanuq.EF;
@@ -11,18 +12,33 @@ public class KafkaRepository : IKafkaRepository, IDisposable
 	private ILogger<KafkaRepository> logger;
 
 	private NanuqContext dbContext;
+	private IAuditLogRepository auditLog;
 	private bool disposedValue;
 
-	public KafkaRepository(ILogger<KafkaRepository> logger, NanuqContext dbContext)
+	public KafkaRepository(ILogger<KafkaRepository> logger, NanuqContext dbContext, IAuditLogRepository auditLog)
 	{
 		this.logger = logger;
 		this.dbContext = dbContext;
+		this.auditLog = auditLog;
 	}
 
 	public async Task<int> Add(KafkaRecord record)
 	{
 		dbContext.Kafka.Add(record);
 		await dbContext.SaveChangesAsync();
+
+		// ADD audit logging
+		var details = System.Text.Json.JsonSerializer.Serialize(new
+		{
+			serverId = record.Id,
+			bootstrapServer = record.BootstrapServer,
+			alias = record.Alias,
+			environment = record.Environment
+		});
+		await auditLog.Audit(ActivityTypeEnum.AddKafkaServer,
+			$"Kafka server '{record.Alias}' ({record.BootstrapServer}) added to {record.Environment} environment",
+			details);
+
 		return record.Id;
 	}
 
@@ -31,6 +47,18 @@ public class KafkaRepository : IKafkaRepository, IDisposable
 		var record = await dbContext.Kafka.FindAsync(id);
 		if (record != null)
 		{
+			// ADD audit log BEFORE deletion
+			var details = System.Text.Json.JsonSerializer.Serialize(new
+			{
+				serverId = record.Id,
+				bootstrapServer = record.BootstrapServer,
+				alias = record.Alias,
+				environment = record.Environment
+			});
+			await auditLog.Audit(ActivityTypeEnum.RemoveKafkaServer,
+				$"Kafka server '{record.Alias}' ({record.BootstrapServer}) removed from {record.Environment} environment",
+				details);
+
 			dbContext.Kafka.Remove(record);
 			dbContext.SaveChanges();
 			return true;

@@ -10,4 +10,5 @@ namespace Nanuq.Common.Interfaces;
 public interface IActivityLogRepository
 {
 	Task<IEnumerable<ActivityType>> GetAllActivityTypes();
+	Task<IEnumerable<ActivityLog>> GetAllActivityLogs();
 }

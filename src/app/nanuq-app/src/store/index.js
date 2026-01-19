@@ -5,6 +5,7 @@ import redis from './redis';
 import credentials from './credentials';
 import rabbitmq from './rabbitmq';
 import notifications from './notifications';
+import activityLog from './activityLog';
 
 export default createStore({
   modules: {
@@ -14,5 +15,6 @@ export default createStore({
     credentials,
     rabbitmq,
     notifications,
+    activityLog,
   },
 });

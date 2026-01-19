@@ -80,6 +80,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - TEST-CREDENTIALS.md comprehensive testing documentation
   - Health checks for all services
   - Persistent volumes for data retention
+
+- **Activity Log Feature (Complete Implementation)**
+  - Full activity tracking for all server and data operations
+  - Backend: Database migration (004_CreateActivityLogTables.sql) creates activity_log and activity_type tables
+  - Backend: 14 activity types seeded with Material Design colors and icons
+  - Backend: Extended ActivityTypeEnum with 8 new values (Redis/RabbitMQ server operations, RabbitMQ exchange/queue operations)
+  - Backend: Fixed IActivityLogRepository interface bug (added missing GetAllActivityLogs() method declaration)
+  - Backend: Fixed ActivityType entity table mapping ([Table("activity_type")] attribute added)
+  - Backend: Audit logging in KafkaRepository, RedisRepository, RabbitMqRepository for add/remove server operations
+  - Backend: JSON details serialization (serverId, alias, environment) for all logged activities
+  - Backend: 2 new FastEndpoints (GetActivityLogs, GetActivityTypes) with CORS support
+  - Frontend: activityLog.js Vuex module with state management for logs and types
+  - Frontend: ActivityLog.vue full-featured page component with table, filtering, and tooltips
+  - Frontend: logsWithTypeData getter joins activity logs with type metadata (colors, icons)
+  - Frontend: /activitylog route with lazy loading
+  - Frontend: Functional "Activity Log" dropdown link in user navigation
+  - UI: v-table with Timestamp, Activity Type (color-coded chips with icons), Description, and Details (JSON tooltip) columns
+  - UI: Loading, error, and empty states with retry functionality
+  - UI: Refresh button for manual log updates
+  - UI: Formatted timestamps (date and time on separate lines)
+  - Tracking: Add/remove Kafka servers
+  - Tracking: Add/remove Redis servers
+  - Tracking: Add/remove RabbitMQ servers
+  - Tracking: Add/remove Kafka topics (existing functionality preserved)
+  - Tracking: Add/remove Redis cache entries (existing functionality preserved)
+  - Performance: Database indexes on timestamp (DESC) and activity_type_id for efficient queries
+
 ### Changed
 - **Redis Data Fetching Performance**
   - Backend methods now use efficient Redis commands for pagination
