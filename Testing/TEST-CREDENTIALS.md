@@ -26,7 +26,7 @@ docker-compose -f docker-compose.test.yml down
 - **Server URL**: `localhost:5672`
 - **Username**: `admin`
 - **Password**: `admin123`
-- **Management UI**: http://192.168.50.94:15672
+- **Management UI**: http://localhost:15672
 - **Virtual Host**: `/`
 
 ### Redis
@@ -37,13 +37,13 @@ docker-compose -f docker-compose.test.yml down
 ## Management UIs
 
 ### RabbitMQ Management UI
-- **URL**: http://192.168.50.94:15672
+- **URL**: http://localhost:15672
 - **Username**: `admin`
 - **Password**: `admin123`
 - Features: View exchanges, queues, bindings, publish/consume messages
 
 ### Kafka UI (Optional)
-- **URL**: http://192.168.50.94:8090
+- **URL**: http://localhost:8090
 - Features: View topics, consumer groups, browse messages, create topics
 
 ## Testing Workflow in Nanuq
@@ -61,7 +61,7 @@ docker-compose -f docker-compose.test.yml down
 1. Navigate to RabbitMQ → List Servers
 2. Click "Add Server"
 3. **Server Details Tab**:
-   - Server URL: `192.168.50.94:5672`
+   - Server URL: `localhost:5672`
    - Alias: `Local RabbitMQ`
 4. Click "Save Server"
 5. **Credentials Tab**:
@@ -74,7 +74,7 @@ docker-compose -f docker-compose.test.yml down
 1. Navigate to Redis → List Servers
 2. Click "Add Server"
 3. **Server Details Tab**:
-   - Server URL: `192.168.50.94:6379`
+   - Server URL: `localhost:6379`
    - Alias: `Local Redis`
 4. Click "Save Server"
 5. **Credentials Tab**:
