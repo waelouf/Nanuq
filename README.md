@@ -220,6 +220,6 @@ kubectl apply -f nanuq-app.yaml
 Or using All in one without clone
 ```powershell
 
-kubectl apply -f nanuq-all-in-one.yaml
+kubectl apply -f https://raw.githubusercontent.com/waelouf/Nanuq/refs/heads/main/K8s/nanuq-all-in-one.yaml
 
 ```

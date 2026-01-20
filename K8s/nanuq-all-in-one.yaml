@@ -42,7 +42,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: waelouf/nanuq-api:2.0.0
+        image: waelouf/nanuq-api:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5000
@@ -120,7 +120,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: waelouf/nanuq-app:2.0.0
+        image: waelouf/nanuq-app:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
