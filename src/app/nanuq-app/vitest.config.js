@@ -9,6 +9,7 @@ export default defineConfig({
     exclude: [...configDefaults.exclude, 'e2e/*'],
     root: fileURLToPath(new URL('./', import.meta.url)),
     globals: true,
+    css: true,
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
