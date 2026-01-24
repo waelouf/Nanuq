@@ -50,7 +50,7 @@ export default {
     async createQueue({ dispatch }, queueDetails) {
       try {
         await apiClient.post('/azure/servicebus/queue', queueDetails);
-        logger.showSuccess('Queue created successfully');
+        logger.success('Queue created successfully');
         await dispatch('loadQueues', queueDetails.serverId);
       } catch (error) {
         logger.handleApiError('AzureStore', 'creating queue', error);
@@ -63,7 +63,7 @@ export default {
         await apiClient.delete('/azure/servicebus/queue', {
           data: { serverId, queueName },
         });
-        logger.showSuccess('Queue deleted successfully');
+        logger.success('Queue deleted successfully');
         await dispatch('loadQueues', serverId);
       } catch (error) {
         logger.handleApiError('AzureStore', 'deleting queue', error);
@@ -74,7 +74,7 @@ export default {
     async sendMessage({ dispatch }, messageDetails) {
       try {
         await apiClient.post('/azure/servicebus/queue/message', messageDetails);
-        logger.showSuccess('Message sent successfully');
+        logger.success('Message sent successfully');
       } catch (error) {
         logger.handleApiError('AzureStore', 'sending message', error);
         throw error;
@@ -110,7 +110,7 @@ export default {
     async createTopic({ dispatch }, topicDetails) {
       try {
         await apiClient.post('/azure/servicebus/topic', topicDetails);
-        logger.showSuccess('Topic created successfully');
+        logger.success('Topic created successfully');
         await dispatch('loadTopics', topicDetails.serverId);
       } catch (error) {
         logger.handleApiError('AzureStore', 'creating topic', error);
@@ -123,7 +123,7 @@ export default {
         await apiClient.delete('/azure/servicebus/topic', {
           data: { serverId, topicName },
         });
-        logger.showSuccess('Topic deleted successfully');
+        logger.success('Topic deleted successfully');
         await dispatch('loadTopics', serverId);
       } catch (error) {
         logger.handleApiError('AzureStore', 'deleting topic', error);
@@ -134,7 +134,7 @@ export default {
     async publishMessage({ dispatch }, messageDetails) {
       try {
         await apiClient.post('/azure/servicebus/topic/message', messageDetails);
-        logger.showSuccess('Message published successfully');
+        logger.success('Message published successfully');
       } catch (error) {
         logger.handleApiError('AzureStore', 'publishing message', error);
         throw error;
@@ -155,7 +155,7 @@ export default {
     async createSubscription({ dispatch }, subscriptionDetails) {
       try {
         await apiClient.post('/azure/servicebus/subscription', subscriptionDetails);
-        logger.showSuccess('Subscription created successfully');
+        logger.success('Subscription created successfully');
         await dispatch('loadSubscriptions', {
           serverId: subscriptionDetails.serverId,
           topicName: subscriptionDetails.topicName,
@@ -171,7 +171,7 @@ export default {
         await apiClient.delete('/azure/servicebus/subscription', {
           data: { serverId, topicName, subscriptionName },
         });
-        logger.showSuccess('Subscription deleted successfully');
+        logger.success('Subscription deleted successfully');
         await dispatch('loadSubscriptions', { serverId, topicName });
       } catch (error) {
         logger.handleApiError('AzureStore', 'deleting subscription', error);

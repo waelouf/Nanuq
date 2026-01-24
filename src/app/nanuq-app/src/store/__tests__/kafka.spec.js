@@ -31,12 +31,28 @@ describe('Kafka Store', () => {
   });
 
   describe('Getters', () => {
-    // Note: The getter in kafka.js has incorrect signature - getTopicNumberOfMessages(state, key)
-    // The second parameter should be 'getters', not 'key'. This is a bug in the original code.
-    // The getter doesn't actually work as intended and will always return undefined.
-    it('should have getTopicNumberOfMessages getter defined', () => {
-      // The getter exists but doesn't work properly due to incorrect signature
-      expect(store.getters).toHaveProperty('kafka/getTopicNumberOfMessages');
+    it('should return topic number of messages for valid key', () => {
+      const key = 'test-server-test-topic';
+      store.state.kafka.kafkaTopicDetails[key] = 150;
+
+      const result = store.getters['kafka/getTopicNumberOfMessages'](key);
+
+      expect(result).toBe(150);
+    });
+
+    it('should return undefined for non-existent key', () => {
+      const result = store.getters['kafka/getTopicNumberOfMessages']('nonexistent-key');
+
+      expect(result).toBeUndefined();
+    });
+
+    it('should return zero messages correctly', () => {
+      const key = 'test-server-empty-topic';
+      store.state.kafka.kafkaTopicDetails[key] = 0;
+
+      const result = store.getters['kafka/getTopicNumberOfMessages'](key);
+
+      expect(result).toBe(0);
     });
   });
 
@@ -157,8 +173,15 @@ describe('Kafka Store', () => {
     });
 
     // ==================== Error Handling Tests ====================
-    // Note: loadKafkaTopics and loadKafkaTopicDetails don't have proper error handling
-    // (they don't return promises or catch errors). Error handling tests are omitted for these actions.
+
+    it('should handle error when loading kafka topics fails', async () => {
+      const serverName = 'test-server';
+      const error = createMockError('Network error');
+
+      apiClient.get.mockRejectedValue(error);
+
+      await expect(store.dispatch('kafka/loadKafkaTopics', serverName)).rejects.toThrow('Network error');
+    });
 
     it('should handle error when loading topic details fails', async () => {
       const serverName = 'test-server';

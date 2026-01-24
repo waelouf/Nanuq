@@ -14,7 +14,6 @@ vi.mock('@/services/apiClient');
 vi.mock('@/utils/logger', () => ({
   default: {
     success: vi.fn(),
-    showSuccess: vi.fn(), // Note: Azure store uses showSuccess but logger.js only has success()
     error: vi.fn(),
     warn: vi.fn(),
     info: vi.fn(),
@@ -141,7 +140,7 @@ describe('Azure Store', () => {
 
         expect(apiClient.post).toHaveBeenCalledWith('/azure/servicebus/queue', queueDetails);
         expect(apiClient.get).toHaveBeenCalledWith(`/azure/servicebus/queues/${queueDetails.serverId}`);
-        expect(logger.showSuccess).toHaveBeenCalledWith('Queue created successfully');
+        expect(logger.success).toHaveBeenCalledWith('Queue created successfully');
       });
 
       it('should handle error when creating queue', async () => {
@@ -165,7 +164,7 @@ describe('Azure Store', () => {
           data: { serverId, queueName },
         });
         expect(apiClient.get).toHaveBeenCalledWith(`/azure/servicebus/queues/${serverId}`);
-        expect(logger.showSuccess).toHaveBeenCalledWith('Queue deleted successfully');
+        expect(logger.success).toHaveBeenCalledWith('Queue deleted successfully');
       });
 
       it('should handle error when deleting queue', async () => {
@@ -189,7 +188,7 @@ describe('Azure Store', () => {
         await store.dispatch('azure/sendMessage', messageDetails);
 
         expect(apiClient.post).toHaveBeenCalledWith('/azure/servicebus/queue/message', messageDetails);
-        expect(logger.showSuccess).toHaveBeenCalledWith('Message sent successfully');
+        expect(logger.success).toHaveBeenCalledWith('Message sent successfully');
       });
 
       it('should handle error when sending message', async () => {
@@ -280,7 +279,7 @@ describe('Azure Store', () => {
 
         expect(apiClient.post).toHaveBeenCalledWith('/azure/servicebus/topic', topicDetails);
         expect(apiClient.get).toHaveBeenCalledWith(`/azure/servicebus/topics/${topicDetails.serverId}`);
-        expect(logger.showSuccess).toHaveBeenCalledWith('Topic created successfully');
+        expect(logger.success).toHaveBeenCalledWith('Topic created successfully');
       });
 
       it('should handle error when creating topic', async () => {
@@ -304,7 +303,7 @@ describe('Azure Store', () => {
           data: { serverId, topicName },
         });
         expect(apiClient.get).toHaveBeenCalledWith(`/azure/servicebus/topics/${serverId}`);
-        expect(logger.showSuccess).toHaveBeenCalledWith('Topic deleted successfully');
+        expect(logger.success).toHaveBeenCalledWith('Topic deleted successfully');
       });
 
       it('should handle error when deleting topic', async () => {
@@ -328,7 +327,7 @@ describe('Azure Store', () => {
         await store.dispatch('azure/publishMessage', messageDetails);
 
         expect(apiClient.post).toHaveBeenCalledWith('/azure/servicebus/topic/message', messageDetails);
-        expect(logger.showSuccess).toHaveBeenCalledWith('Message published successfully');
+        expect(logger.success).toHaveBeenCalledWith('Message published successfully');
       });
 
       it('should handle error when publishing message', async () => {
@@ -382,7 +381,7 @@ describe('Azure Store', () => {
         expect(apiClient.get).toHaveBeenCalledWith(
           `/azure/servicebus/topic/${subscriptionDetails.serverId}/${subscriptionDetails.topicName}/subscriptions`
         );
-        expect(logger.showSuccess).toHaveBeenCalledWith('Subscription created successfully');
+        expect(logger.success).toHaveBeenCalledWith('Subscription created successfully');
       });
 
       it('should handle error when creating subscription', async () => {
@@ -413,7 +412,7 @@ describe('Azure Store', () => {
         expect(apiClient.get).toHaveBeenCalledWith(
           `/azure/servicebus/topic/${serverId}/${topicName}/subscriptions`
         );
-        expect(logger.showSuccess).toHaveBeenCalledWith('Subscription deleted successfully');
+        expect(logger.success).toHaveBeenCalledWith('Subscription deleted successfully');
       });
 
       it('should handle error when deleting subscription', async () => {

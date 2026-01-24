@@ -9,7 +9,7 @@ export default {
     kafkaTopicDetails: {},
   },
   getters: {
-    getTopicNumberOfMessages(state, key) {
+    getTopicNumberOfMessages: (state) => (key) => {
       return state.kafkaTopicDetails[key];
     },
   },
@@ -26,7 +26,7 @@ export default {
   },
   actions: {
     loadKafkaTopics({ commit }, serverName) {
-      apiClient.get(`/kafka/topic/${serverName}`)
+      return apiClient.get(`/kafka/topic/${serverName}`)
         .then((result) => commit('updateTopics', { data: result.data, serverName }));
     },
     async loadKafkaTopicDetails({ commit }, { serverName, topicName }) {
