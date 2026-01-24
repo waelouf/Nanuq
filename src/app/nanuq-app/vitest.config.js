@@ -9,7 +9,7 @@ export default defineConfig({
     exclude: [...configDefaults.exclude, 'e2e/*'],
     root: fileURLToPath(new URL('./', import.meta.url)),
     globals: true,
-    css: true,
+    css: false, // Disable CSS processing for component tests
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
@@ -19,6 +19,11 @@ export default defineConfig({
         '*.config.js',
         'dist/',
       ],
+    },
+    server: {
+      deps: {
+        inline: ['vuetify'], // Inline vuetify for proper mocking
+      },
     },
   },
   resolve: {
