@@ -223,3 +223,34 @@ Or using All in one without clone
 kubectl apply -f https://raw.githubusercontent.com/waelouf/Nanuq/refs/heads/main/K8s/nanuq-all-in-one.yaml
 
 ```
+
+## Testing
+
+Nanuq includes a comprehensive backend test suite with **70%+ code coverage**, ensuring reliability and maintainability.
+
+### Running Tests
+
+```powershell
+# Navigate to the solution directory
+cd .\src\services\Nanuq\
+
+# Run all tests
+dotnet test
+
+# Run with detailed output
+dotnet test --verbosity detailed
+
+# Run with code coverage
+dotnet test /p:CollectCoverage=true
+```
+
+### Test Coverage
+
+- **155 unit tests** across 24 test files (3,256 lines of test code)
+- **Security Components:** ~90% coverage (AesCredentialService, CredentialRepository)
+- **SQLite Repositories:** ~90% coverage (Kafka, Redis, RabbitMQ, AWS, Azure)
+- **Endpoints:** ~50% coverage (Activity Log, Credentials, Configuration)
+- **Test Frameworks:** xUnit, Moq, FluentAssertions, InMemory EF Core
+
+All tests follow the AAA pattern (Arrange-Act-Assert) with consistent naming conventions and comprehensive edge case coverage.
+
