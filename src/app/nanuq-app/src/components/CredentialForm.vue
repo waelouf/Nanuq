@@ -37,7 +37,8 @@
         <template v-slot:prepend>
           <v-icon>mdi-information</v-icon>
         </template>
-        Credentials are optional for Kafka. If your broker doesn't require authentication, leave these fields empty and close this dialog.
+        Credentials are optional for Kafka. If your broker doesn't require authentication, you can close this dialog without saving.
+        If authentication is required, provide both username and password to save credentials.
       </v-alert>
 
       <!-- Username/Access Key Field -->

@@ -5,7 +5,22 @@ All notable changes to the Nanuq project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.0.1] - 2026-01-24
+
+### Fixed
+
+- **Credential Test Connection Bug Fixes**
+  - Fixed Kafka test connection: Now uses actual server URL from database instead of hardcoded `localhost:9092`
+  - Fixed Redis test connection: Now uses actual server URL from database instead of hardcoded `localhost:6379`
+  - Implemented RabbitMQ test connection: Replaced placeholder with full implementation using `RabbitMQConfigBuilder`
+  - Added `AdditionalConfig` parameter support in `TestConnectionRequest` to accept frontend configuration
+  - Added repository dependency injection to `TestConnection` endpoint for database access
+  - All three platforms (Kafka, Redis, RabbitMQ) now return proper error messages when server not found
+
+- **Credential Form UX Improvements**
+  - Improved Kafka credential dialog message clarity: Explicitly states that credentials are optional, and both username and password must be provided together if authentication is required
+  - Eliminated user confusion about disabled buttons when credentials are not provided
+
 
 ### Added
 

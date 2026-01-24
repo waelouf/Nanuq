@@ -2,6 +2,9 @@ using Confluent.Kafka;
 using Confluent.Kafka.Admin;
 using FastEndpoints;
 using Nanuq.Common.Enums;
+using Nanuq.Common.Interfaces;
+using Nanuq.Common.Records;
+using Nanuq.RabbitMQ.Helpers;
 using StackExchange.Redis;
 
 namespace Nanuq.WebApi.Endpoints.Credentials;
@@ -10,13 +13,28 @@ public record TestConnectionRequest(
     int ServerId,
     string ServerType,
     string? Username,
-    string? Password
+    string? Password,
+    string? AdditionalConfig
 );
 
 public record TestConnectionResponse(bool Success, string Message);
 
 public class TestConnection : Endpoint<TestConnectionRequest, TestConnectionResponse>
 {
+    private readonly IKafkaRepository _kafkaRepository;
+    private readonly IRedisRepository _redisRepository;
+    private readonly IRabbitMqRepository _rabbitMqRepository;
+
+    public TestConnection(
+        IKafkaRepository kafkaRepository,
+        IRedisRepository redisRepository,
+        IRabbitMqRepository rabbitMqRepository)
+    {
+        _kafkaRepository = kafkaRepository;
+        _redisRepository = redisRepository;
+        _rabbitMqRepository = rabbitMqRepository;
+    }
+
     public override void Configure()
     {
         Post("/credentials/test");
@@ -39,9 +57,9 @@ public class TestConnection : Endpoint<TestConnectionRequest, TestConnectionResp
         {
             var result = serverType switch
             {
-                Nanuq.Common.Enums.ServerType.Kafka => await TestKafkaConnection(req.Username, req.Password),
-                Nanuq.Common.Enums.ServerType.Redis => await TestRedisConnection(req.Username, req.Password),
-                Nanuq.Common.Enums.ServerType.RabbitMQ => await TestRabbitMQConnection(req.Username, req.Password),
+                Nanuq.Common.Enums.ServerType.Kafka => await TestKafkaConnection(req.ServerId, req.Username, req.Password),
+                Nanuq.Common.Enums.ServerType.Redis => await TestRedisConnection(req.ServerId, req.Username, req.Password),
+                Nanuq.Common.Enums.ServerType.RabbitMQ => await TestRabbitMQConnection(req.ServerId, req.Username, req.Password),
                 _ => new TestConnectionResponse(false, "Unsupported server type")
             };
 
@@ -53,28 +71,32 @@ public class TestConnection : Endpoint<TestConnectionRequest, TestConnectionResp
         }
     }
 
-    private async Task<TestConnectionResponse> TestKafkaConnection(string? username, string? password)
+    private async Task<TestConnectionResponse> TestKafkaConnection(int serverId, string? username, string? password)
     {
-        // For test purposes, use a dummy bootstrap server
-        // In a real implementation, this would need the actual server URL from the database
-        var config = new AdminClientConfig
-        {
-            BootstrapServers = "localhost:9092" // This should come from the server record
-        };
-
-        if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
-        {
-            config.SecurityProtocol = SecurityProtocol.SaslPlaintext;
-            config.SaslMechanism = SaslMechanism.Plain;
-            config.SaslUsername = username;
-            config.SaslPassword = password;
-        }
-
-        using var adminClient = new AdminClientBuilder(config).Build();
         try
         {
+            var kafkaServer = await _kafkaRepository.Get(serverId);
+            if (kafkaServer == null)
+            {
+                return new TestConnectionResponse(false, $"Kafka server with ID {serverId} not found");
+            }
+
+            var config = new AdminClientConfig
+            {
+                BootstrapServers = kafkaServer.BootstrapServer
+            };
+
+            if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+            {
+                config.SecurityProtocol = SecurityProtocol.SaslPlaintext;
+                config.SaslMechanism = SaslMechanism.Plain;
+                config.SaslUsername = username;
+                config.SaslPassword = password;
+            }
+
+            using var adminClient = new AdminClientBuilder(config).Build();
             var metadata = adminClient.GetMetadata(TimeSpan.FromSeconds(5));
-            return await Task.FromResult(new TestConnectionResponse(true, "Kafka connection successful"));
+            return new TestConnectionResponse(true, "Kafka connection successful");
         }
         catch (Exception ex)
         {
@@ -82,26 +104,32 @@ public class TestConnection : Endpoint<TestConnectionRequest, TestConnectionResp
         }
     }
 
-    private async Task<TestConnectionResponse> TestRedisConnection(string? username, string? password)
+    private async Task<TestConnectionResponse> TestRedisConnection(int serverId, string? username, string? password)
     {
-        var configOptions = new ConfigurationOptions
-        {
-            EndPoints = { "localhost:6379" }, // This should come from the server record
-            ConnectTimeout = 5000
-        };
-
-        if (!string.IsNullOrEmpty(username))
-        {
-            configOptions.User = username;
-        }
-
-        if (!string.IsNullOrEmpty(password))
-        {
-            configOptions.Password = password;
-        }
-
         try
         {
+            var redisServer = await _redisRepository.Get(serverId);
+            if (redisServer == null)
+            {
+                return new TestConnectionResponse(false, $"Redis server with ID {serverId} not found");
+            }
+
+            var configOptions = new ConfigurationOptions
+            {
+                EndPoints = { redisServer.ServerUrl },
+                ConnectTimeout = 5000
+            };
+
+            if (!string.IsNullOrEmpty(username))
+            {
+                configOptions.User = username;
+            }
+
+            if (!string.IsNullOrEmpty(password))
+            {
+                configOptions.Password = password;
+            }
+
             using var redis = await ConnectionMultiplexer.ConnectAsync(configOptions);
             var db = redis.GetDatabase();
             await db.PingAsync();
@@ -113,10 +141,41 @@ public class TestConnection : Endpoint<TestConnectionRequest, TestConnectionResp
         }
     }
 
-    private async Task<TestConnectionResponse> TestRabbitMQConnection(string? username, string? password)
+    private async Task<TestConnectionResponse> TestRabbitMQConnection(int serverId, string? username, string? password)
     {
-        // RabbitMQ connection test placeholder
-        // This would need the RabbitMQ.Client library and actual server URL
-        return await Task.FromResult(new TestConnectionResponse(false, "RabbitMQ connection test not yet implemented"));
+        try
+        {
+            var rabbitMqServer = await _rabbitMqRepository.Get(serverId);
+            if (rabbitMqServer == null)
+            {
+                return new TestConnectionResponse(false, $"RabbitMQ server with ID {serverId} not found");
+            }
+
+            ServerCredential? credential = null;
+            if (!string.IsNullOrEmpty(username) || !string.IsNullOrEmpty(password))
+            {
+                credential = new ServerCredential
+                {
+                    Username = username,
+                    Password = password
+                };
+            }
+
+            var factory = RabbitMQConfigBuilder.BuildConnectionFactory(rabbitMqServer.ServerUrl, credential);
+            await using var connection = await factory.CreateConnectionAsync();
+
+            if (connection.IsOpen)
+            {
+                return new TestConnectionResponse(true, "RabbitMQ connection successful");
+            }
+            else
+            {
+                return new TestConnectionResponse(false, "RabbitMQ connection failed: Connection not open");
+            }
+        }
+        catch (Exception ex)
+        {
+            return new TestConnectionResponse(false, $"RabbitMQ connection failed: {ex.Message}");
+        }
     }
 }
