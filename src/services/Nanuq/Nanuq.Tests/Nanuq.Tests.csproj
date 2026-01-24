@@ -30,6 +30,10 @@
     <ProjectReference Include="..\Nanuq.Kafka\Nanuq.Kafka.csproj" />
     <ProjectReference Include="..\Nanuq.Redis\Nanuq.Redis.csproj" />
     <ProjectReference Include="..\Nanuq.Sqlite\Nanuq.Sqlite.csproj" />
+    <ProjectReference Include="..\Nanuq.Security\Nanuq.Security.csproj" />
+    <ProjectReference Include="..\Nanuq.RabbitMQ\Nanuq.RabbitMQ.csproj" />
+    <ProjectReference Include="..\Nanuq.AWS\Nanuq.AWS.csproj" />
+    <ProjectReference Include="..\Nanuq.Azure\Nanuq.Azure.csproj" />
   </ItemGroup>
 
 </Project>
