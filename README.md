@@ -226,10 +226,11 @@ kubectl apply -f https://raw.githubusercontent.com/waelouf/Nanuq/refs/heads/main
 
 ## Testing
 
-Nanuq includes a comprehensive backend test suite with **70%+ code coverage**, ensuring reliability and maintainability.
+Nanuq includes comprehensive test suites for both backend and frontend with **70%+ code coverage**, ensuring reliability and maintainability.
 
 ### Running Tests
 
+**Backend Tests:**
 ```powershell
 # Navigate to the solution directory
 cd .\src\services\Nanuq\
@@ -244,13 +245,37 @@ dotnet test --verbosity detailed
 dotnet test /p:CollectCoverage=true
 ```
 
+**Frontend Tests:**
+```powershell
+# Navigate to the frontend directory
+cd .\src\app\nanuq-app\
+
+# Run all tests
+npm test
+
+# Run with coverage
+npm run test:coverage
+
+# Run with UI
+npm run test:ui
+```
+
 ### Test Coverage
 
-- **155 unit tests** across 24 test files (3,256 lines of test code)
-- **Security Components:** ~90% coverage (AesCredentialService, CredentialRepository)
-- **SQLite Repositories:** ~90% coverage (Kafka, Redis, RabbitMQ, AWS, Azure)
-- **Endpoints:** ~50% coverage (Activity Log, Credentials, Configuration)
+**Backend (155 tests, 70%+ coverage)**
+- **Security Components:** 47 tests, ~90% coverage (AesCredentialService, CredentialRepository)
+- **SQLite Repositories:** 62 tests, ~90% coverage (Kafka, Redis, RabbitMQ, AWS, Azure)
+- **Endpoints:** 32 tests, ~50% coverage (Activity Log, Credentials, Configuration)
 - **Test Frameworks:** xUnit, Moq, FluentAssertions, InMemory EF Core
+- **Execution Time:** ~47 seconds for full suite
+
+**Frontend (323 tests, 81.57% coverage)**
+- **Vuex Store Tests:** 275 tests, 86.99% average coverage
+  - 100% coverage: activityLog, azure, credentials, kafka, notifications, rabbitmq
+  - High coverage: aws (96.62%), redis (74.2%), sqlite (69.23%)
+- **Component Tests:** 48 tests, 71.55% coverage (CredentialForm)
+- **Test Frameworks:** Vitest, Vue Test Utils
+- **Execution Time:** ~20 seconds for full suite
 
 All tests follow the AAA pattern (Arrange-Act-Assert) with consistent naming conventions and comprehensive edge case coverage.
 
