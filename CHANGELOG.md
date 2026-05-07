@@ -604,6 +604,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History Summary
 
+- **2.0.1**: Quality and stability improvements with comprehensive test coverage (478 tests, 70%+ coverage)
 - **1.0.0**: Production-ready release with comprehensive testing, Docker optimization, and performance improvements
 - **0.2.0**: Security updates, package updates, and refactoring
 - **0.1.0**: Major release with Kafka, Redis, RabbitMQ support, Docker/K8s deployment
@@ -616,7 +617,7 @@ Nanuq is currently intended for use in **local development and DEV environments 
 It is not production-ready and should be thoroughly tested before any production consideration.
 
 ### Technology Stack
-- **Backend**: .NET 8.0, FastEndpoints, Entity Framework Core, SQLite, Serilog
+- **Backend**: .NET 10.0, FastEndpoints, Entity Framework Core, SQLite, Serilog
 - **Frontend**: Vue 3, Vuetify 3, Vuex 4, Vue Router 4, Axios
 - **Testing**: Vitest, xUnit, Moq, FluentAssertions
 - **Deployment**: Docker, Kubernetes

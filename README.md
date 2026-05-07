@@ -9,7 +9,7 @@
 
 ## About
 
-Nanuq **Version 2.0** is an open-source unified management platform for five critical messaging and caching systems: **Kafka**, **Redis**, **RabbitMQ**, **AWS** (SQS/SNS), and **Azure Service Bus**. Designed for developers working across local, development, staging, and production environments, Nanuq eliminates the complexity of managing multiple command-line interfaces by providing a single, intuitive UI for all platforms.
+Nanuq **Version 2.0.1** is an open-source unified management platform for five critical messaging and caching systems: **Kafka**, **Redis**, **RabbitMQ**, **AWS** (SQS/SNS), and **Azure Service Bus**. Designed for developers working across local, development, staging, and production environments, Nanuq eliminates the complexity of managing multiple command-line interfaces by providing a single, intuitive UI for all platforms.
 
 With **enterprise-grade security** featuring AES-256 encrypted credential storage, real-time monitoring dashboards, comprehensive activity tracking, and advanced data type support, Nanuq empowers developers to manage critical infrastructure operations with confidence—all from one unified interface. Focus on building applications, not managing infrastructure.
 
