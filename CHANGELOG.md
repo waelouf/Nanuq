@@ -5,6 +5,42 @@ All notable changes to the Nanuq project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] — v2.1.0
+
+### Added
+
+- **Cross-Platform Credential Encryption (IKeyProtector abstraction)**
+  - Introduced `IKeyProtector` interface replacing the v1 Windows-only DPAPI binding
+  - `DpapiKeyProtector` — Windows DPAPI (unchanged behavior for existing Windows installs)
+  - `KeychainKeyProtector` — macOS Keychain (SecKeychain)
+  - `LibSecretKeyProtector` — Linux libsecret (GNOME Keyring / KDE Wallet)
+  - `EnvelopeKeyProtector` — Docker and Kubernetes: reads master key from `NANUQ_MASTER_KEY` environment variable; application refuses to boot without a valid key protector configured — no silent insecure fallback
+  - Platform auto-detection at startup selects the appropriate protector; explicit override available via `appsettings.json`
+
+- **Migration Command**
+  - `nanuq migrate-credentials` CLI command re-encrypts existing credential store under the new key protector
+  - Required for Windows users upgrading from v2.0.x to v2.1.0 on the same machine
+  - Dry-run mode (`--dry-run`) validates migration before committing
+
+- **Multi-Architecture Docker Images**
+  - Docker Hub images now built for `linux/amd64` and `linux/arm64`
+  - Single `docker pull mbsoftsystems/nanuq:latest` pulls the correct image for the host architecture
+
+- **Self-Hosting Documentation**
+  - New `docs/self-hosting-linux.md` — end-to-end Docker Compose setup on Ubuntu/Debian including `NANUQ_MASTER_KEY` generation, systemd service, and nginx reverse proxy
+  - New `docs/self-hosting-macos.md` — Homebrew-based setup with Keychain integration
+  - New `docs/self-hosting-kubernetes.md` — validated K8s manifest deployment with Secret-based key injection
+
+### Fixed
+
+- **Linux/macOS Docker deployments no longer silently store credentials unencrypted** — v2.0.x would fall back to unprotected storage on non-Windows hosts without warning; v2.1.0 enforces protector configuration at startup and rejects boot without a valid key protector
+
+### Security
+
+- **GHSA advisory published** — Documents the v2.0.x credential encryption weakness on Linux/macOS Docker deployments (CVSS Medium ~5.3, CWE-311/CWE-327). Remediated by v2.1.0 `EnvelopeKeyProtector`. See `SECURITY.md` and the published advisory for full details and migration steps.
+
+---
+
 ## [2.0.1] - 2026-01-24
 
 ### Fixed
