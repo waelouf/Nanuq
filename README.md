@@ -25,6 +25,20 @@ Nanuq 2.0 represents a major milestone with enterprise-grade features and expand
 - **💾 Advanced Redis Support** - Full CRUD operations for 6 data types: Strings, Lists, Hashes, Sets, Sorted Sets, and Streams with pagination
 - **✨ Production Ready** - Comprehensive error handling, pagination support, retry logic, loading states, and user-friendly error messages
 
+## Roadmap
+
+**Next: v2.1 — Cross-Platform Encryption & Self-Host Anywhere** (target June 30, 2026)
+
+v2.1 removes the Windows-DPAPI dependency and adds native Linux and macOS self-hosting support via AES-GCM encryption with OS keyring providers (Windows DPAPI, macOS Keychain, Linux libsecret/D-Bus). K8s deployments gain envelope key protection with Secret-mounted master keys.
+
+Follow along and share feedback in the [v2.1 GitHub Discussion]([DISCUSSION_URL — CEO to fill in after posting]).
+
+| Version | Theme | Target |
+|---|---|---|
+| **v2.1** | Cross-platform encryption (DPAPI removal, AES-GCM, OS keyring) | **2026-06-30** |
+| v2.2 | OpenTelemetry observability across all transports | Q3 2026 |
+| v2.3+ | Kafka real-time browse, Redis Pub/Sub, Azure Event Hub — ordered by community vote | Q4 2026 |
+
 ## Feature list
 
 ### Dashboard
