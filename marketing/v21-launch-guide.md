@@ -57,7 +57,13 @@ Open `marketing/v2.1-social-posts.md`:
 - **Day 2:** Post 2 (Technical detail — IKeyProtector design)
 - **Day 3:** Post 3 (Call to action — testing on Linux)
 
-### Step 5 — Submit newsletter pitches
+### Step 5 — Post r/dotnet (Day 2, 5 min)
+
+Open `marketing/v2.1-reddit-posts.md` → r/dotnet post (Post 3):
+- Post on Day 2 — after r/selfhosted and r/devops posts have settled
+- .NET ecosystem angle: IKeyProtector interface + DI-composable credential security
+
+### Step 6 — Submit newsletter pitches
 
 Open `marketing/newsletter-pitches.md` (the v2.1 pitches — .NET Weekly + InfoQ):
 
