@@ -21,9 +21,9 @@
 `2.1.0`
 
 ### Severity
-**Medium** (CVSS 3.1 score: ~5.3)
+**Medium** (CVSS 3.1 score: 4.4 — vector: AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N)
 
-**Rationale:** Credentials are stored without platform-grade key protection on Linux/macOS, but exploitation requires local file system access to the SQLite database — it is not a remote code execution or network-accessible vulnerability. Impact is limited to self-hosted deployments on non-Windows hosts.
+**Rationale:** On Linux/macOS, the encryption key is derived from SHA-256(`hostname + username`) — both publicly readable by any local shell account. An attacker with read access to the database can reconstruct the key in a single computation and decrypt all stored credentials. Attack is local-only (not network-accessible). Privileges Required is Low (local shell account needed to read the database file).
 
 ### CWE
 - **CWE-311**: Missing Encryption of Sensitive Data
@@ -34,18 +34,17 @@
 ## Summary (for GitHub advisory form)
 
 ```
-Nanuq versions up to and including v2.0.1 use Windows DPAPI
-(ProtectedData.Protect / ProtectedData.Unprotect) as the key derivation
-mechanism for AES-256 credential encryption. On non-Windows operating
-systems (Linux, macOS), DPAPI is unavailable. Depending on the runtime
-behavior, credentials stored in the Nanuq SQLite database on a non-Windows
-host may lack platform-grade key protection, potentially allowing an
-attacker with local file system access to recover stored connection
-credentials (broker URLs, usernames, passwords, API keys).
+Nanuq v1.x and v2.0.x derive the AES-256 credential encryption key using
+SHA-256 of publicly-readable system properties (hostname and username) on
+Linux and macOS. An attacker with local read access to the Nanuq SQLite
+database can reconstruct the encryption key in a single SHA-256 computation
+and decrypt all stored credentials (broker URLs, usernames, passwords, API
+keys, connection strings).
 
-This issue affects self-hosted Nanuq deployments running in Docker
-containers on Linux hosts — the most common self-hosting configuration.
-Windows-hosted deployments are not affected.
+Windows-hosted deployments are not affected (the Windows code path uses
+DPAPI for key derivation). This issue affects self-hosted Nanuq deployments
+on Linux — including the most common Docker-on-Linux configuration — and
+macOS.
 ```
 
 ---
