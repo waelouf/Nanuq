@@ -20,7 +20,7 @@ Do NOT wait for v2.1 — the v2.0.1 distribution is independent.
 ⚠️ **Pre-flight: open private GHSA draft first (~10 min, do before posting)**
 The post says "I've filed a GHSA advisory for this." Open the private draft in GitHub before publishing so the statement is accurate. Steps:
 1. Go to github.com/waelouf/Nanuq → Security → Advisories → New draft security advisory
-2. Paste content from `_default/nanuq-ghsa-v1-key-derivation-draft.md`
+2. Paste content from `marketing/ghsa-v1-key-derivation-draft.md`
 3. Request CVE ID — it stays private until v2.1 GA
 Once the draft is open in GitHub (not published — just opened as private draft), proceed:
 
