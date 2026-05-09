@@ -17,6 +17,13 @@ Do NOT wait for v2.1 — the v2.0.1 distribution is independent.
 
 ### Step 1 — Publish Dev.to post (10 min)
 
+⚠️ **Pre-flight: open private GHSA draft first (~10 min, do before posting)**
+The post says "I've filed a GHSA advisory for this." Open the private draft in GitHub before publishing so the statement is accurate. Steps:
+1. Go to github.com/waelouf/Nanuq → Security → Advisories → New draft security advisory
+2. Paste content from `_default/nanuq-ghsa-v1-key-derivation-draft.md`
+3. Request CVE ID — it stays private until v2.1 GA
+Once the draft is open in GitHub (not published — just opened as private draft), proceed:
+
 1. Open `marketing/devto-v201-launch-post.md`
 2. Go to dev.to → New Post → paste the Body section content
 3. Set title: `Nanuq v2.0.1 — unified UI for Kafka, Redis, RabbitMQ, SQS, and Azure Service Bus`
