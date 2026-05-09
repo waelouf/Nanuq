@@ -52,7 +52,7 @@ Docker Hub.
 
 **The build**
 
-Stack: .NET 9 Minimal APIs + Vue.js 3. Total build time including tests and CI/CD 
+Stack: .NET 10 Minimal APIs + Vue.js 3. Total build time including tests and CI/CD 
 setup: about 4 months of part-time work.
 
 The hardest part wasn't the platform integrations — it was making the credential 
@@ -109,7 +109,7 @@ anything.
 ---
 
 **GitHub:** github.com/waelouf/Nanuq  
-**Stack:** .NET 9 + Vue.js 3 + Docker  
+**Stack:** .NET 10 + Vue.js 3 + Docker  
 **License:** MIT  
 **Current version:** v2.0.1 (478 tests, all passing)
 
