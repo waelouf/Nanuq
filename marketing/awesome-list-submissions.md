@@ -52,7 +52,7 @@ AES-256 encrypted credential storage. 478 automated tests (0 failures). MIT lice
 - GitHub: https://github.com/waelouf/Nanuq
 - License: MIT
 - Demo: N/A (self-hosted; Docker Compose in README)
-- Language: .NET 9 (backend), Vue.js 3 (frontend)
+- Language: .NET 10 (backend), Vue.js 3 (frontend)
 
 ## Checklist
 
@@ -79,7 +79,7 @@ creating a new "Message Queue Management" subsection). Accept their guidance.
 ```markdown
 - [Nanuq](https://github.com/waelouf/Nanuq) - Unified web UI for Kafka (topic browser,
   consumer group offsets, message publish) alongside Redis, RabbitMQ, AWS SQS, and Azure
-  Service Bus. Single Docker Compose. MIT licensed. .NET 9 + Vue.js 3.
+  Service Bus. Single Docker Compose. MIT licensed. .NET 10 + Vue.js 3.
 ```
 
 **PR body:**
@@ -99,13 +99,13 @@ License: MIT
 ## 3. awesome-dotnet
 
 **Repo:** github.com/quozd/awesome-dotnet  
-**PR title:** Add Nanuq — open source .NET 9 unified messaging infrastructure UI  
+**PR title:** Add Nanuq — open source .NET 10 unified messaging infrastructure UI  
 **Target section:** `Messaging` or `Database` → GUI
 
 **Entry to add:**
 
 ```markdown
-- [Nanuq](https://github.com/waelouf/Nanuq) - Open source .NET 9 + Vue.js 3 web UI for 
+- [Nanuq](https://github.com/waelouf/Nanuq) - Open source .NET 10 + Vue.js 3 web UI for 
   managing Kafka, Redis, RabbitMQ, AWS SQS/SNS, and Azure Service Bus from a single 
   Docker Compose interface. AES-256 encrypted credentials. 478 tests.
 ```
@@ -114,7 +114,7 @@ License: MIT
 ```
 Adding Nanuq under Messaging (or Database tools — please redirect if there's a better section).
 
-Nanuq is a .NET 9 Minimal APIs + Vue.js 3 project with:
+Nanuq is a .NET 10 Minimal APIs + Vue.js 3 project with:
 - FastEndpoints routing
 - Separate class libraries per platform (Nanuq.Kafka, Nanuq.Redis, etc.)
 - Entity Framework Core + SQLite

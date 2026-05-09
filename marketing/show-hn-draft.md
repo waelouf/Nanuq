@@ -37,7 +37,7 @@ v2.1 also ships:
 - Self-hosting guides for Linux, macOS, and Kubernetes
 - Validated K8s manifests (the K8s/ folder was always there but untested)
 
-478 tests, all passing. MIT licensed. Stack: .NET 9 + Vue.js 3.
+478 tests, all passing. MIT licensed. Stack: .NET 10 + Vue.js 3.
 
 GitHub: github.com/waelouf/Nanuq
 GHSA advisory: [link when published]

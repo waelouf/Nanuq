@@ -30,7 +30,7 @@ Quick submission for .NET Weekly consideration.
 
 Nanuq (github.com/waelouf/Nanuq) is an open-source unified web UI for managing 
 Kafka topics, Redis keys (all 6 data types), RabbitMQ, AWS SQS/SNS, and Azure 
-Service Bus — all from a single .NET 9 + Vue.js interface.
+Service Bus — all from a single .NET 10 + Vue.js interface.
 
 The v2.1 release landing soon adds something technically interesting: we're 
 replacing Windows DPAPI key derivation with a cross-platform IKeyProtector 
@@ -97,7 +97,7 @@ one interface:
 - Azure Service Bus: queues, topics, subscriptions
 
 Single Docker Compose command to run. AES-256 encrypted credential storage. 
-MIT licensed, .NET 9 + Vue.js, 478 automated tests.
+MIT licensed, .NET 10 + Vue.js, 478 automated tests.
 
 v2.1 (in development) adds proper Linux/macOS self-hosting via cross-platform 
 key protection. Currently Windows DPAPI only.

@@ -29,7 +29,7 @@ Supports:
 - AWS SQS/SNS: queue and topic management across 15 regions
 - Azure Service Bus: queues, topics, subscriptions across 30+ regions
 
-AES-256 encrypted credential storage. MIT licensed. .NET 9 backend, Vue.js 3
+AES-256 encrypted credential storage. MIT licensed. .NET 10 backend, Vue.js 3
 frontend, 478 automated tests (0 failures).
 
 GitHub: github.com/waelouf/Nanuq
