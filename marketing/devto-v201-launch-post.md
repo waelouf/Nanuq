@@ -55,7 +55,7 @@ redis.spec.js            72 tests   74% coverage
 CredentialForm.spec.js   48 tests   71% coverage
 ```
 
-**Backend (.NET 9 + xUnit):**
+**Backend (.NET 10 + xUnit):**
 ```
 AesCredentialService     47 tests   ~90% coverage
 SQLite repositories      62 tests  100% CRUD + audit
@@ -64,7 +64,7 @@ API endpoints            32 tests   50%+ coverage
 
 ## The architecture
 
-`.NET 9 Minimal APIs` backend with separate class libraries per platform:
+`.NET 10 Minimal APIs` backend with separate class libraries per platform:
 
 ```
 Nanuq.WebApi/          # FastEndpoints routing
@@ -98,7 +98,7 @@ I'll post a separate Dev.to write-up when v2.1 ships.
 
 | Layer | Technology |
 |-------|-----------|
-| Backend | .NET 9, Minimal APIs, FastEndpoints |
+| Backend | .NET 10, Minimal APIs, FastEndpoints |
 | Frontend | Vue.js 3, Vuex, Vuetify |
 | Database | SQLite + EF Core |
 | Testing | xUnit, Moq, FluentAssertions, Vitest |
