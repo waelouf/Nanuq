@@ -7,7 +7,7 @@ cover_image: https://raw.githubusercontent.com/waelouf/Nanuq/main/images/nanuq-l
 canonical_url: https://dev.to/waelouf/nanuq-unified-messaging-ui
 ---
 
-⚠️ **Pre-publish gate:** Line 85 of this post says "I've filed a GHSA advisory for this." Before publishing, open the private GHSA draft in GitHub first (instructions in `_default/nanuq-ghsa-v1-key-derivation-draft.md`, checklist at bottom of that file). The private draft can be opened now — it stays private until v2.1 GA. Opening takes ~10 minutes and requests a CVE ID. Do NOT publish this post with that sentence if the GHSA hasn't been opened in GitHub.
+⚠️ **Pre-publish gate:** Line 85 of this post says "I've filed a GHSA advisory for this." Before publishing, open the private GHSA draft in GitHub first (instructions in `marketing/ghsa-v1-key-derivation-draft.md`, checklist at bottom of that file). The private draft can be opened now — it stays private until v2.1 GA. Opening takes ~10 minutes and requests a CVE ID. Do NOT publish this post with that sentence if the GHSA hasn't been opened in GitHub.
 
 Every time I debugged a messaging stack with Kafka, Redis, and RabbitMQ in it, I spent the first 20 minutes cycling through browser tabs: Kafka UI, RedisInsight, RabbitMQ management console, back to Kafka UI. Add AWS SQS and Azure Service Bus and it's five separate tools with five credential sets.
 
