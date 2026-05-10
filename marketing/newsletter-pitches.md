@@ -86,7 +86,7 @@ Happy to answer technical questions or provide additional context for an article
 ```
 Tool submission for Console.
 
-Nanuq (nanuq.mbsoftsystems.com / github.com/waelouf/Nanuq) is an open-source, 
+Nanuq (github.com/waelouf/Nanuq) is an open-source, 
 self-hostable web UI for managing multiple messaging and caching systems from 
 one interface:
 
