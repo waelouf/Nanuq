@@ -31,7 +31,7 @@ Nanuq 2.0 represents a major milestone with enterprise-grade features and expand
 
 v2.1 removes the Windows-DPAPI dependency and adds native Linux and macOS self-hosting support via AES-GCM encryption with OS keyring providers (Windows DPAPI, macOS Keychain, Linux libsecret/D-Bus). K8s deployments gain envelope key protection with Secret-mounted master keys.
 
-Follow along and share feedback in the [v2.1 GitHub Discussion]([DISCUSSION_URL — CEO to fill in after posting]).
+Follow along and share feedback in the [v2.1 GitHub Discussion](https://github.com/waelouf/Nanuq/discussions/1).
 
 | Version | Theme | Target |
 |---|---|---|
